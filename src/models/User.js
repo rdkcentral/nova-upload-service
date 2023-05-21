@@ -1,0 +1,108 @@
+const mongoose = require('../mongo')
+const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
+const mongooseUniqueValidator = require('mongoose-unique-validator')
+
+// regexes
+const isEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+const isPasswordStrong = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+
+// User
+const UserSchema = new mongoose.Schema({
+  email: {
+    $type: String,
+    required: true,
+    unique: true,
+    index: true,
+    match: [isEmailRegex, 'invalidUserEmail']
+  },
+  type: {
+    $type: String,
+    enum: ['dev', 'mvpd', 'admin'],
+    default: 'dev'
+  },
+  password: {
+    $type: String,
+    required: true
+  },
+  salt: String,
+  status: {
+    $type: String,
+    default: 'ok'
+  },
+  lastLoginAt: {
+    $type: Date,
+    default: null
+  }
+}, { typeKey: '$type', timestamps: true })
+
+// unique field validator
+UserSchema.plugin(mongooseUniqueValidator)
+
+// set/generate password from clear-text pasword
+UserSchema.methods.setPassword = function (password) {
+  this.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
+  this.password = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex')
+}
+
+// check if the given password is the same with the one in the record
+UserSchema.methods.isValidPassword = function (password) {
+  var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex')
+  return this.password === hash
+}
+
+// generate JWT token
+UserSchema.methods.generateJWT = function () {
+  return jwt.sign({
+    id : this.id,
+    email: this.email
+  }, process.env.JWT_SECRET_KEY,
+  { expiresIn: parseInt(process.env.JWT_VALID_FOR) })
+}
+
+UserSchema.methods.toObjectWithToken = function () {
+  const user = this.toObject()
+  user.token = this.generateJWT()
+  user.tokenExpiredAt = (new Date((new Date()).getTime() + (process.env.JWT_VALID_FOR * 1000))).toUTCString()
+  return user
+}
+
+// check password strength
+UserSchema.methods.isPasswordStrong = function () {
+  return isPasswordStrong.test(this.password)
+}
+
+// automatically generate password hash if the password is modified
+UserSchema.pre('validate', function (next) {
+  if (this.isModified('password')) {
+    if (this.isPasswordStrong()) {
+      this.setPassword(this.password)
+    } else {
+      this.invalidate('password', 'invalidUserPassword')
+    }
+  }
+  next()
+})
+
+// Object output transformation
+UserSchema.set('toObject', {
+  transform: (doc, converted) => {
+    delete converted._id
+    delete converted.password
+    delete converted.salt
+  }
+})
+
+// JSON output transformation
+UserSchema.set('toObject', {
+  transform: (doc, converted) => {
+    delete converted._id
+    delete converted.password
+    delete converted.salt
+  }
+})
+
+module.exports = {
+  schema: UserSchema,
+  model: mongoose.model('User', UserSchema)
+}

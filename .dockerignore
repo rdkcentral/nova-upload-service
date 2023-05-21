@@ -1,0 +1,8 @@
+docs/
+.vscode
+node_modules
+.editorconfig
+.env
+.env.example
+.eslintrc.js
+.git
