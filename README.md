@@ -57,8 +57,6 @@ We use the Minio service to mimic the S3 storage in the dev environment. To acce
 
 > Every time you run `docker-compose up` command, the current setup tries to make sure a Minio bucket named `ugap` exists. If the bucket does not exist, it will be created. If the bucket exists, it will give an error. You can ignore this error. In both cases, the service used for creating the bucket will automatically stop and that is also normal.
 
-```
-
 ## API Routes
 
 [Routes List](./docs/apiRoutes.md)
