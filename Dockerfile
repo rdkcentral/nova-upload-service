@@ -2,11 +2,6 @@ FROM node:lts
 
 EXPOSE 3000
 
-# temporarily install mongodb database tools
-RUN wget "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-debian10-x86_64-100.6.1.deb" -O /tmp/mongodb-database-tools.deb && \
-    dpkg -i /tmp/mongodb-database-tools.deb && \
-    rm /tmp/mongodb-database-tools.deb
-
 # set workdir & copy all files
 WORKDIR /usr/src/app
 COPY . .
