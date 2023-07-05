@@ -7,10 +7,14 @@
     "start": "node src/index.js",
     "start:dev": "nodemon -r ./dotenv.js src/index.js",
     "test": "mocha -b ./dotenv.js src/tests",
-    "test:container": "docker-compose exec  --env MONGODB_DB=ugapApiTest  ugap-api npm run test"
+    "test:container": "docker-compose exec  --env MONGODB_DB=ugapApiTest  ugap-api npm run test",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
   },
   "nodemonConfig": {
-    "ignore": ["data/mongo/*.json"]
+    "ignore": [
+      "data/mongo/*.json"
+    ]
   },
   "dependencies": {
     "aws-sdk": "^2.1210.0",
@@ -26,8 +30,11 @@
   "devDependencies": {
     "chai": "^4.3.6",
     "eslint": "^8.19.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.3",
+    "prettier": "^2.8.8",
     "supertest": "^6.2.4"
   }
 }

@@ -1,20 +1,18 @@
-
 // fixme: this must be improved by checking different Mongoose error types
 function send(res, message, error) {
-
   const errorResponse = {
     status: 'error',
     message: message,
-    errors: []
+    errors: [],
   }
 
   if (error) {
     if (error.name && error.name == 'ValidationError') {
       for (const [key, value] of Object.entries(error.errors)) {
-        if(value.kind == 'user defined' || value.kind == 'required'){
+        if (value.kind == 'user defined' || value.kind == 'required') {
           errorResponse.errors.push(value.message)
         } else {
-          const errorCode = (value.kind == 'unique') ? 'Exists' : 'Invalid'
+          const errorCode = value.kind == 'unique' ? 'Exists' : 'Invalid'
           errorResponse.errors.push(`${key}${errorCode}`)
         }
       }
@@ -30,5 +28,5 @@ function send(res, message, error) {
 }
 
 module.exports = {
-  send
+  send,
 }

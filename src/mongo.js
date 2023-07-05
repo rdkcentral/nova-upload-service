@@ -4,7 +4,7 @@ const connectionString = `mongodb://${process.env.MONGODB_HOST}:${process.env.MO
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  autoIndex: true
+  autoIndex: true,
 })
 
 const outputOptions = {
@@ -13,7 +13,7 @@ const outputOptions = {
   minimize: false,
   transform: (doc, converted) => {
     delete converted._id
-  }
+  },
 }
 
 mongoose.set('toJSON', outputOptions)
