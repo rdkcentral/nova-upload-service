@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken')
 // this will be replaced as we progress because we will need different permissions of each user type
 const authRequired = (req, res, next) => {
   if (req.headers.authorization) {
-
     const token = req.headers.authorization.split(' ').pop()
     let isAuthenticated = false
     let currentUser
@@ -26,5 +25,5 @@ const authRequired = (req, res, next) => {
 }
 
 module.exports = {
-  authRequired
+  authRequired,
 }

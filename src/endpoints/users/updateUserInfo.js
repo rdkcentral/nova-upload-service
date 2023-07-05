@@ -3,41 +3,41 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    let { currentPassword, email, password} = req.body
+    let { currentPassword, email, password } = req.body
 
-    currentPassword = currentPassword ? currentPassword.toString(): ''
+    currentPassword = currentPassword ? currentPassword.toString() : ''
     email = email ? email.toString() : ''
     password = password ? password.toString() : ''
 
-    const user = await UserModel.findOne({_id: req.user.id})
+    const user = await UserModel.findOne({ _id: req.user.id })
 
-    if(!user){
+    if (!user) {
       return res.status(404).json({
         status: 'error',
-        message: 'not found'
+        message: 'not found',
       })
     }
 
-    if(!currentPassword || !user.isValidPassword(currentPassword)) {
+    if (!currentPassword || !user.isValidPassword(currentPassword)) {
       return res.status(400).json({
         status: 'error',
-        message: 'valid current password is required'
+        message: 'valid current password is required',
       })
     }
 
-    if(email){
+    if (email) {
       user.email = email
     }
-    if(password){
+    if (password) {
       user.password = password
     }
 
     await user.save()
     res.json({
       data: user.toObject(),
-      status: 'success'
+      status: 'success',
     })
-  } catch(e){
+  } catch (e) {
     console.error(e)
     return errorResponse.send(res, 'userUpdateFailed', e)
   }

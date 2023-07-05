@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const savedUser = await UserModel.create(req.body)
     res.status(201).json({
       data: savedUser.toObjectWithToken(),
-      status: 'success'
+      status: 'success',
     })
   } catch (e) {
     console.error(e)
