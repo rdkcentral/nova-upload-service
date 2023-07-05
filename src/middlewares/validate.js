@@ -7,11 +7,11 @@ const validateId = (req, res, next) => {
   } else {
     res.status(400).json({
       status: 'error',
-      message: 'invalid id'
+      message: 'invalid id',
     })
   }
 }
 
 module.exports = {
-  validateId
+  validateId,
 }
