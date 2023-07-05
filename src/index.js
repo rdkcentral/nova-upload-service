@@ -12,6 +12,9 @@ app.use(bodyParser.json({ limit: process.env.MAX_REQUEST_BODY_SIZE }))
 app.use('/v1/login', require('./routes/login'))
 app.use('/v1/users', require('./routes/users'))
 
+// application paths
+app.use('/v1/applications', require('./routes/applications'))
+
 // http 404 error handler
 app.use((req, res) => {
   res.status(404).json({
