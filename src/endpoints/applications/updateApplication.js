@@ -3,14 +3,14 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const result = await ApplicationModel.findOne({ _id: req.params.id})
+    const result = await ApplicationModel.findOne({ _id: req.params.id })
 
     if (!result) {
       return res.sendStatus(404)
     }
 
     for (const key in req.body) {
-      if ((key in result) && result[key] !== req.body[key] && key !== 'id') {
+      if (key in result && result[key] !== req.body[key] && key !== 'id') {
         result.set(key, req.body[key])
       }
     }
@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     await result.save()
     res.json({
       data: result.toObject(),
-      status: 'success'
+      status: 'success',
     })
   } catch (e) {
     console.log(e)
