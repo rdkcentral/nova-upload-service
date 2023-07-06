@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const savedresult = await ApplicationModel.create(req.body)
     res.status(201).json({
       data: savedresult.toObject(),
-      status: 'success'
+      status: 'success',
     })
   } catch (e) {
     errorResponse.send(res, 'applicationCreated failed', e)

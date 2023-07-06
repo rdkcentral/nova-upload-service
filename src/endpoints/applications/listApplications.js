@@ -3,12 +3,14 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const data = await ApplicationModel.find({status: 'active'}, null, { sort: { createdAt: -1 } })
+    const data = await ApplicationModel.find({ status: 'active' }, null, {
+      sort: { createdAt: -1 },
+    })
     res.json({
       data,
-      status: 'success'
+      status: 'success',
     })
-  } catch (e){
+  } catch (e) {
     console.error(e)
     errorResponse.send(res, 'applicationList failed', e)
   }
