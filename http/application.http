@@ -1,0 +1,45 @@
+# Application API
+
+## Variables
+@application_id = 64a6ca0504c82437608d9761
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTZhNWU3ZjAyY2U3Y2Y3NDMzZTQwZCIsImVtYWlsIjoidGVzdDJAdGVzdC5jb20iLCJpYXQiOjE2ODg2NDMwNDcsImV4cCI6MTY4ODY1Mzg0N30.DKZ9YUO3nVMF1oXQdvjx6_efS005AZtbX6EcWU2fsf4
+
+### Create an application
+
+POST http://localhost:3000/v1/applications/ HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Test name",
+  "identifier": "test identifier2"
+}
+
+
+### List all applications
+
+GET http://localhost:3000/v1/applications/ HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Get application details
+
+GET http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Update application
+
+PUT http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "location": "location bla"
+}
+
+### Delete application
+
+DELETE http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
