@@ -1,0 +1,43 @@
+# Authentication API
+
+## Variables
+@email=test@test.com
+@password=Welcome123!
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YTZhNWU3ZjAyY2U3Y2Y3NDMzZTQwZCIsImVtYWlsIjoidGVzdDJAdGVzdC5jb20iLCJpYXQiOjE2ODg2NDMwNDcsImV4cCI6MTY4ODY1Mzg0N30.DKZ9YUO3nVMF1oXQdvjx6_efS005AZtbX6EcWU2fsf4
+
+### Login
+
+POST http://localhost:3000/v1/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+
+### Register
+
+POST http://localhost:3000/v1/users/ HTTP/1.1
+content-type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### Retrieve user info
+
+GET http://localhost:3000/v1/users/me HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Update user info
+
+PATCH http://localhost:3000/v1/users/me HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "foo@bar.com",
+}
