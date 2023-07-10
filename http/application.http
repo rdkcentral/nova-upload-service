@@ -6,7 +6,7 @@
 
 ### Create an application
 
-POST http://localhost:3000/v1/applications/ HTTP/1.1
+POST http://localhost:3000/applications/ HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -18,19 +18,19 @@ Authorization: Bearer {{token}}
 
 ### List all applications
 
-GET http://localhost:3000/v1/applications/ HTTP/1.1
+GET http://localhost:3000/applications/ HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Get application details
 
-GET http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+GET http://localhost:3000/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update application
 
-PUT http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+PUT http://localhost:3000/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -40,6 +40,6 @@ Authorization: Bearer {{token}}
 
 ### Delete application
 
-DELETE http://localhost:3000/v1/applications/{{application_id}} HTTP/1.1
+DELETE http://localhost:3000/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

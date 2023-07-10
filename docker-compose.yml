@@ -1,24 +1,6 @@
 version: '3.1'
 
 services:
-  ugap-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/usr/src/app
-      - ugap-api-node-modules:/opt/npm
-    working_dir: /usr/src/app
-    ports:
-      - "3000:3000"
-      # node inspect port
-      - "9229:9229"
-    depends_on:
-      - mongo
-      - createbuckets
-    environment:
-      NODE_PORT: 3000
-
   mongo:
     image: mongo
     restart: always
@@ -26,6 +8,8 @@ services:
       - mongo-data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - serviceNet
 
   mongo-admin:
     image: mongo-express
@@ -38,6 +22,8 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+    networks:
+      - serviceNet
 
   minio:
     image: minio/minio
@@ -51,6 +37,8 @@ services:
     environment:
       MINIO_ROOT_USER: myAccessKey
       MINIO_ROOT_PASSWORD: mySecretKey
+    networks:
+      - serviceNet
 
   createbuckets:
     image: minio/mc
@@ -64,8 +52,13 @@ services:
       /usr/bin/mc policy set download myminio/ugap;
       exit 0;
       "
+    networks:
+      - serviceNet
 
 volumes:
   mongo-data:
-  ugap-api-node-modules:
   minio-data:
+
+networks:
+  serviceNet:
+    name: serviceNet

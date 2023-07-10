@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ugap-api
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: nodejs16.x
+    Handler: src/handlers/index.handler
+    Architectures:
+    - x86_64
+    Timeout: 10 #in seconds
+    MemorySize: 128
+    Environment:
+      Variables:
+        JWT_SECRET_KEY: "secret"
+        JWT_VALID_FOR: "10800"
+        AWS_ACCESS_KEY_ID: "myAccessKey"
+        AWS_SECRET_ACCESS_KEY: "mySecretKey"
+        AWS_DEFAULT_REGION: "us-east-1"
+        AWS_S3_BUCKET: "ugap"
+        AWS_S3_ENDPOINT: "http://127.0.0.1:9000"
+        MONGODB_HOST: "mongo"
+        MONGODB_PORT: "27017"
+        MONGODB_DB: "ugap"
+
+  Api:
+    Cors:
+      AllowMethods: "'GET, POST, PUT, DELETE'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'*'"
+
+Resources:
+
+  # Users
+  loginUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: User login (session create) function
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: POST
+
+  createUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: User create/register
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: POST
+
+  getUserInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: (Logged in) user info
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /users/me
+            Method: GET
+
+  updateUserInfo:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: (Logged in) user info patch/update
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /users/me
+            Method: PUT
+
+  # Applications
+  listApplications:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: List applications
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /applications
+            Method: GET
+
+  getApplication:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Get application info
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /applications/{id}
+            Method: GET
+
+  createApplication:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Create application
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /applications
+            Method: POST
+
+  updateApplication:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Update/Patch application info
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /applications/{id}
+            Method: PUT
+
+  deleteApplication:
+      Type: AWS::Serverless::Function
+      Properties:
+        Description: delete application
+        Events:
+          Api:
+            Type: Api
+            Properties:
+              Path: /applications/{id}
+              Method: DELETE
+
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/v1/prod/"
