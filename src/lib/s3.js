@@ -10,19 +10,11 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
-/**
- * Persist image to storage bucket at specified key
- * @param {String} bucket  name of the bucket
- * @param {String} key destination of file
- * @param {Buffer} body image buffer
- * @returns a promise
- */
 const putObject = async (bucket, key, body) => {
   const params = { Bucket: bucket, Key: key, Body: body }
   return await s3.putObject(params).promise()
 }
 
-// putObject with file path
 const putObjectWithFilePath = async (bucket, key, filePath) => {
   const params = {
     Bucket: bucket,
