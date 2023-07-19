@@ -1,0 +1,32 @@
+// fixme: this must be improved by checking different Mongoose error types
+function send(res, message, error) {
+  const errorResponse = {
+    status: 'error',
+    message: message,
+    errors: [],
+  }
+
+  if (error) {
+    if (error.name && error.name == 'ValidationError') {
+      for (const [key, value] of Object.entries(error.errors)) {
+        if (value.kind == 'user defined' || value.kind == 'required') {
+          errorResponse.errors.push(value.message)
+        } else {
+          const errorCode = value.kind == 'unique' ? 'Exists' : 'Invalid'
+          errorResponse.errors.push(`${key}${errorCode}`)
+        }
+      }
+    }
+    if (error.name && error.name == 'Error') {
+      errorResponse.errors.push(error.message)
+    }
+    return res.status(400).json(errorResponse)
+  }
+
+  // otherwise it must be server error
+  res.sendStatus(500)
+}
+
+module.exports = {
+  send,
+}

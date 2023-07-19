@@ -4,8 +4,10 @@
   "description": "uGAP API Service",
   "main": "src/index.js",
   "scripts": {
-    "start:dev": "sam local start-api --docker-network=serviceNet",
-    "build:dev": "sam build --cached",
+    "start": "node src/index.js",
+    "start:dev": "nodemon -r ./dotenv.js src/index.js",
+    "test": "mocha -b ./dotenv.js src/tests",
+    "test:container": "docker-compose exec  --env MONGODB_DB=ugapApiTest  ugap-api npm run test",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix"
   },
@@ -33,7 +35,6 @@
     "mocha": "^10.0.0",
     "nodemon": "^2.0.3",
     "prettier": "^2.8.8",
-    "samwatch": "^0.0.25-development",
     "supertest": "^6.2.4"
   }
 }
