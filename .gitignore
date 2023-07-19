@@ -104,6 +104,3 @@ dist
 .tern-port
 
 .DS_Store
-
-# AWS SAM build output
-.aws-sam/

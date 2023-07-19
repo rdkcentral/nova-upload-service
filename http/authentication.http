@@ -7,7 +7,7 @@
 
 ### Login
 
-POST http://localhost:3000/login HTTP/1.1
+POST http://localhost:3000/v1/login HTTP/1.1
 content-type: application/json
 
 {
@@ -18,7 +18,7 @@ content-type: application/json
 
 ### Register
 
-POST http://localhost:3000/users/ HTTP/1.1
+POST http://localhost:3000/v1/users/ HTTP/1.1
 content-type: application/json
 
 {
@@ -28,13 +28,13 @@ content-type: application/json
 
 ### Retrieve user info
 
-GET http://localhost:3000/users/me HTTP/1.1
+GET http://localhost:3000/v1/users/me HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update user info
 
-PATCH http://localhost:3000/users/me HTTP/1.1
+PATCH http://localhost:3000/v1/users/me HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
