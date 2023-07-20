@@ -8,7 +8,9 @@
     "start:dev": "nodemon -r ./dotenv.js src/server.js",
     "test": "node -r ./dotenv.js ./tests/suite.js | node_modules/.bin/tap-diff || true",
     "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix"
+    "lint:fix": "eslint . --ext .js --fix",
+    "coverage": "c8 npm run test",
+    "report": "c8 report"
   },
   "nodemonConfig": {
     "ignore": [
@@ -28,6 +30,7 @@
     "mongoose-unique-validator": "^3.1.0"
   },
   "devDependencies": {
+    "c8": "^8.0.0",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
