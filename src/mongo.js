@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
-const connectionString = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`
+const connectionString =
+  process.env.MONGODB_URL ||
+  `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`
+
+mongoose.set('strictQuery', false)
+
 mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
