@@ -2,14 +2,14 @@
 
 const test = require('tape')
 const request = require('supertest')
-const setup = require('./setup')
+const { initApp } = require('./setup')
 
 const email = 'test@foo.com'
 const password = 'Hello1213'
 let token
 
 test('POST /users - Creating a user', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/users')
       .send({ email, password })
@@ -52,7 +52,7 @@ test('POST /users - Creating a user', function (assert) {
 })
 
 test('POST /users - Creating a user with an existing email', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/users')
       .send({ email, password })
@@ -78,7 +78,7 @@ test('POST /users - Creating a user with an existing email', function (assert) {
 })
 
 test('POST /users - Creating a user without a password', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/users')
       .send({ email: 'test2@foo.com' })
@@ -104,7 +104,7 @@ test('POST /users - Creating a user without a password', function (assert) {
 })
 
 test('POST /login - Login as a user', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/login')
       .send({ email, password })
@@ -144,7 +144,7 @@ test('POST /login - Login as a user', function (assert) {
 })
 
 test('POST /login - Login with an email that does not exist', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/login')
       .send({ email: 'bla@bla.bla', password })
@@ -167,7 +167,7 @@ test('POST /login - Login with an email that does not exist', function (assert) 
 })
 
 test('POST /login - Login with a wrong password', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/login')
       .send({ email, password: 'wrong!!!' })
@@ -190,7 +190,7 @@ test('POST /login - Login with a wrong password', function (assert) {
 })
 
 test('POST /login - Login without email or password', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .post('/login')
       .expect(401)
@@ -212,7 +212,7 @@ test('POST /login - Login without email or password', function (assert) {
 })
 
 test('GET /users/me - Get user details for logged in user', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .get('/users/me')
       .set({ Authorization: `Bearer ${token}` })
@@ -249,7 +249,7 @@ test('GET /users/me - Get user details for logged in user', function (assert) {
 })
 
 test('GET /users/me - Get user details for logged in user without passing a token', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .get('/users/me')
       .expect(403)
@@ -264,7 +264,7 @@ test('GET /users/me - Get user details for logged in user without passing a toke
 
 test('PUT /users/me - Update password for logged in user', function (assert) {
   const newPassword = 'Welcome123'
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .patch('/users/me')
       .set({ Authorization: `Bearer ${token}` })

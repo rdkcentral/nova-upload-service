@@ -2,10 +2,10 @@
 
 const test = require('tape')
 const request = require('supertest')
-const setup = require('./setup')
+const { initApp } = require('./setup')
 
 test('GET /404 - 404', function (assert) {
-  setup().then((app) => {
+  initApp().then((app) => {
     request(app)
       .get('/')
       .expect(404)
