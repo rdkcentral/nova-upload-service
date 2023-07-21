@@ -210,3 +210,55 @@ test('POST /login - Login without email or password', function (assert) {
       })
   })
 })
+
+test('GET /users/me - Get user details for logged in user', function (assert) {
+  setup().then((app) => {
+    request(app)
+      .get('/users/me')
+      .set({ Authorization: `Bearer ${token}` })
+      .expect(200)
+      .then((res) => {
+        const expectedDataKeys = [
+          'email',
+          'type',
+          'status',
+          'lastLoginAt',
+          'createdAt',
+          'updatedAt',
+          'id',
+        ]
+
+        assert.same(
+          Object.keys(res.body.data),
+          expectedDataKeys,
+          'Should return an object with the specified keys'
+        )
+
+        assert.same(
+          res.body.data.email,
+          email,
+          'Should return the email matching the token'
+        )
+
+        assert.end()
+      })
+      .catch((err) => {
+        assert.end(err)
+      })
+  })
+})
+
+test('GET /users/me - Get user details for logged in user without passing a token', function (assert) {
+  setup().then((app) => {
+    request(app)
+      .get('/users/me')
+      // .set({ Authorization: `Bearer ${token}` })
+      .expect(403)
+      .then(() => {
+        assert.end()
+      })
+      .catch((err) => {
+        assert.end(err)
+      })
+  })
+})
