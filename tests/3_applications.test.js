@@ -4,7 +4,7 @@ const test = require('tape')
 const request = require('supertest')
 const { initApp, userToken } = require('./setup')
 
-test('GET /applications - Retrieving applications', async function (assert) {
+test('GET /applications - Retrieving applications', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
