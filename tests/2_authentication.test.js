@@ -252,10 +252,32 @@ test('GET /users/me - Get user details for logged in user without passing a toke
   setup().then((app) => {
     request(app)
       .get('/users/me')
-      // .set({ Authorization: `Bearer ${token}` })
       .expect(403)
       .then(() => {
         assert.end()
+      })
+      .catch((err) => {
+        assert.end(err)
+      })
+  })
+})
+
+test('PUT /users/me - Update password for logged in user', function (assert) {
+  const newPassword = 'Welcome123'
+  setup().then((app) => {
+    request(app)
+      .patch('/users/me')
+      .set({ Authorization: `Bearer ${token}` })
+      .send({ currentPassword: password, password: newPassword })
+      .expect(200)
+      .then(() => {
+        request(app)
+          .post('/login')
+          .send({ email, password: newPassword })
+          .expect(201)
+          .then(() => {
+            assert.end()
+          })
       })
       .catch((err) => {
         assert.end(err)
