@@ -7,7 +7,9 @@ module.exports = async (req, res) => {
       {
         //status: 'active'
       },
-      null,
+      {
+        versions: 0,
+      },
       {
         sort: { createdAt: -1 },
       }
