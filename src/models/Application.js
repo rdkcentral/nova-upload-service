@@ -1,6 +1,8 @@
 const mongoose = require('../mongo')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
 
+const ApplicationVersionSchema = require('./ApplicationVersion').schema
+
 // Application
 const ApplicationSchema = new mongoose.Schema(
   {
@@ -42,12 +44,7 @@ const ApplicationSchema = new mongoose.Schema(
       $type: String,
       default: null,
     },
-    versions: [
-      {
-        $type: mongoose.Schema.Types.ObjectId,
-        ref: 'Version',
-      },
-    ],
+    versions: [ApplicationVersionSchema],
     changeLog: [
       {
         $type: Object,
