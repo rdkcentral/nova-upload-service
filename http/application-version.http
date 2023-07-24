@@ -2,7 +2,7 @@
 
 ## Variables
 @application_id = 64bec772437fbe26056c043d
-@version_id = 64a6ca0504c82437608d9761
+@version_id = 64bec92b65727bfe54828383
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY5MDIyMDE4OCwiZXhwIjoxNjkwMjMwOTg4fQ.adE0sG0RqiVVTRwHCJtZopONSUK0P8QEVeQLhgniwbM
 
 ### Create an application version
@@ -23,7 +23,7 @@ GET http://localhost:3000/applications/{{application_id}}/versions HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
-### Get application details
+### Get application version details
 
 GET http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json

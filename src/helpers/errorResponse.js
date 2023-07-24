@@ -24,7 +24,7 @@ function send(res, message, error) {
   }
 
   // otherwise it must be server error
-  res.sendStatus(500)
+  res.sendStatus(500).json(errorResponse)
 }
 
 module.exports = {
