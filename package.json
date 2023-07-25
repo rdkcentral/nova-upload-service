@@ -2,10 +2,10 @@
   "name": "ugap-api",
   "version": "0.1.0",
   "description": "uGAP API Service",
-  "main": "src/index.js",
+  "main": "src/serverless.js",
   "scripts": {
-    "start": "node src/index.js",
-    "start:dev": "nodemon -r ./dotenv.js src/index.js",
+    "start": "node src/server.js",
+    "start:dev": "nodemon -r ./dotenv.js src/server.js",
     "test": "mocha -b ./dotenv.js src/tests",
     "test:container": "docker-compose exec  --env MONGODB_DB=ugapApiTest  ugap-api npm run test",
     "lint": "eslint . --ext .js",
@@ -17,6 +17,7 @@
     ]
   },
   "dependencies": {
+    "@vendia/serverless-express": "^4.10.4",
     "aws-sdk": "^2.1210.0",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
