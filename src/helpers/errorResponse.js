@@ -1,5 +1,12 @@
 // fixme: this must be improved by checking different Mongoose error types
 function send(res, message, error) {
+  console.log('====================================')
+  console.log('Error response')
+  console.log('====================================')
+  console.log(message)
+  console.log(error)
+  console.log('------------------------------------')
+
   const errorResponse = {
     status: 'error',
     message: message,

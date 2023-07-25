@@ -6,32 +6,34 @@ module.exports = async (req, res) => {
   try {
     const application = await ApplicationModel.findOne({
       _id: req.params.applicationId,
+    }).catch((e) => {
+      throw new Error('application not found', { cause: e })
     })
 
     if (application) {
-      try {
-        const body = {
-          version: req.body.version,
-          changelog: req.body.changelog,
-          appIdentifier: application.identifier,
-          applicationId: application.id,
-        }
-        const applicationVersion = await ApplicationVersionModel.create(body)
-
-        application.versions.push(applicationVersion)
-        await application.save()
-
-        res.status(200).json({
-          data: applicationVersion.toObject(),
-          status: 'success',
-        })
-      } catch (e) {
-        errorResponse.send(res, 'applicationVersionCreate failed', e)
+      const body = {
+        version: req.body.version,
+        changelog: req.body.changelog,
+        appIdentifier: application.identifier,
+        applicationId: application._id,
       }
-    } else {
-      errorResponse.send(res, 'application not found')
+      const applicationVersion = await ApplicationVersionModel.create(
+        body
+      ).catch((e) => {
+        throw new Error('applicationVersionCreate failed', { cause: e })
+      })
+
+      application.versions.push(applicationVersion)
+      await application.save().catch((e) => {
+        throw new Error('applicationUpdate failed', { cause: e })
+      })
+
+      res.status(200).json({
+        data: applicationVersion.toObject(),
+        status: 'success',
+      })
     }
   } catch (e) {
-    errorResponse.send(res, 'applicationGet failed', e)
+    return errorResponse.send(res, e.message, e)
   }
 }
