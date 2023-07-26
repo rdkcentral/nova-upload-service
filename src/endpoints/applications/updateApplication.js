@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
         result.set(key, req.body[key])
       }
     }
-    result.status = 1
+    // result.status = 1
     await result.save()
     res.json({
       data: result.toObject(),
