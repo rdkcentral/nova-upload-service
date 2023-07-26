@@ -5,6 +5,8 @@ module.exports = async (req, res) => {
   try {
     const application = await ApplicationModel.findOne({
       _id: req.params.applicationId,
+    }).catch((e) => {
+      throw new Error('applicationVersionGet failed', { cause: e })
     })
 
     if (application) {
@@ -14,6 +16,6 @@ module.exports = async (req, res) => {
       })
     }
   } catch (e) {
-    errorResponse.send(res, 'applicationGet failed', e)
+    return errorResponse.send(res, e.message, e)
   }
 }

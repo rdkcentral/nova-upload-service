@@ -4,8 +4,10 @@ const errorResponse = require('../../helpers/errorResponse')
 module.exports = async (req, res) => {
   try {
     const result = await ApplicationVersionModel.deleteOne({
-      application: req.params.applicationId,
+      applicationId: req.params.applicationId,
       _id: req.params.id,
+    }).catch((e) => {
+      throw new Error('applicationDelete failed', { cause: e })
     })
 
     if (result.deletedCount > 0) {
@@ -16,6 +18,6 @@ module.exports = async (req, res) => {
       return res.sendStatus(404)
     }
   } catch (e) {
-    return errorResponse.send(res, 'applicationVersionDelete failed', e)
+    return errorResponse.send(res, e.message, e)
   }
 }

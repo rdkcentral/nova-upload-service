@@ -4,8 +4,10 @@ const errorResponse = require('../../helpers/errorResponse')
 module.exports = async (req, res) => {
   try {
     const applicationVersion = await ApplicationVersionModel.findOne({
-      application: req.params.applicationId,
+      applicationId: req.params.applicationId,
       _id: req.params.id,
+    }).catch((e) => {
+      throw new Error('applicationVersionGet failed', { cause: e })
     })
 
     if (applicationVersion) {
@@ -18,14 +20,19 @@ module.exports = async (req, res) => {
           applicationVersion.set(key, req.body[key])
         }
       }
+
+      await applicationVersion.save().catch((e) => {
+        throw new Error('applicationVersionUpdate failed', { cause: e })
+      })
+
       return res.status(200).json({
         data: applicationVersion.toObject(),
         status: 'success',
       })
     } else {
-      return errorResponse.send(res, 'Application version not found')
+      throw new Error('Application version not found')
     }
   } catch (e) {
-    return errorResponse.send(res, 'applicationVersionUpdate failed', e)
+    return errorResponse.send(res, e.message, e)
   }
 }

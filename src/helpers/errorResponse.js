@@ -1,6 +1,6 @@
 // fixme: this must be improved by checking different Mongoose error types
 function send(res, message, error) {
-  if (process.env.DEBUG_LOGGING === true) {
+  if (process.env.DEBUG_LOGGING === 'true') {
     console.log('====================================')
     console.log('Error response')
     console.log('====================================')

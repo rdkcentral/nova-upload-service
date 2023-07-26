@@ -4,8 +4,10 @@ const errorResponse = require('../../helpers/errorResponse')
 module.exports = async (req, res) => {
   try {
     const applicationVersion = await ApplicationVersionModel.findOne({
-      application: req.params.applicationId,
+      applicationId: req.params.applicationId,
       _id: req.params.id,
+    }).catch((e) => {
+      throw new Error('applicationVersionGet failed', { cause: e })
     })
 
     if (applicationVersion) {
@@ -14,9 +16,9 @@ module.exports = async (req, res) => {
         status: 'success',
       })
     } else {
-      return errorResponse.send(res, 'Application version not found')
+      res.sendStatus(404)
     }
   } catch (e) {
-    return errorResponse.send(res, 'applicationVersionGet failed', e)
+    return errorResponse.send(res, e.message, e)
   }
 }
