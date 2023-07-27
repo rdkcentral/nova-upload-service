@@ -262,7 +262,7 @@ test('GET /users/me - Get user details for logged in user without passing a toke
   })
 })
 
-test('PUT /users/me - Update password for logged in user', function (assert) {
+test('PATCH /users/me - Update password for logged in user', function (assert) {
   const newPassword = 'Welcome123'
   initApp().then((app) => {
     request(app)
