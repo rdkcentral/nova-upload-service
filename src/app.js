@@ -13,6 +13,10 @@ app.use('/users', require('./routes/users'))
 
 // application paths
 app.use('/applications', require('./routes/applications'))
+app.use(
+  '/applications/:applicationId/versions',
+  require('./routes/application-versions')
+)
 
 // http 404 error handler
 app.use((req, res) => {

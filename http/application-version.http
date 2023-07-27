@@ -1,0 +1,46 @@
+# Application API
+
+## Variables
+@application_id = 64bec772437fbe26056c043d
+@version_id = 64bec9719f9f201117bd0e1b
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY5MDIyMDE4OCwiZXhwIjoxNjkwMjMwOTg4fQ.adE0sG0RqiVVTRwHCJtZopONSUK0P8QEVeQLhgniwbM
+
+### Create an application version
+
+POST http://localhost:3000/applications/{{application_id}}/versions HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "version": "1.1.0",
+  "changelog": "Added another cool new feature!"
+}
+
+
+### List all applications versions
+
+GET http://localhost:3000/applications/{{application_id}}/versions HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Get application version details
+
+GET http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+### Update application
+
+PUT http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "changelog": "Fixing a typo in my changelog"
+}
+
+### Delete application
+
+DELETE http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}

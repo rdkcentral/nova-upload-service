@@ -1,5 +1,14 @@
 // fixme: this must be improved by checking different Mongoose error types
 function send(res, message, error) {
+  if (process.env.DEBUG_LOGGING === 'true') {
+    console.log('====================================')
+    console.log('Error response')
+    console.log('====================================')
+    console.log(message)
+    console.log(error)
+    console.log('------------------------------------')
+  }
+
   const errorResponse = {
     status: 'error',
     message: message,
@@ -24,7 +33,7 @@ function send(res, message, error) {
   }
 
   // otherwise it must be server error
-  res.sendStatus(500)
+  res.sendStatus(500).json(errorResponse)
 }
 
 module.exports = {

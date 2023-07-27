@@ -26,7 +26,22 @@ const userToken = async function (app) {
     })
 }
 
+let application
+
+const createApplication = async function (app) {
+  if (application) return application
+  return request(app)
+    .post('/applications')
+    .send({ name: 'My App', identifier: 'app.identifier' })
+    .set({ Authorization: `Bearer ${token}` })
+    .then((res) => {
+      application = res.body.data
+      return application
+    })
+}
+
 module.exports = {
   initApp,
   userToken,
+  createApplication,
 }
