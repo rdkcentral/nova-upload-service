@@ -2,6 +2,7 @@ const mongoose = require('../mongo')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
+const softDelete = require('./plugins/softDelete')
 
 // regexes
 const isEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
@@ -111,8 +112,11 @@ UserSchema.set('toObject', {
     delete converted._id
     delete converted.password
     delete converted.salt
+    delete converted.deleted
   },
 })
+
+UserSchema.plugin(softDelete)
 
 module.exports = {
   schema: UserSchema,

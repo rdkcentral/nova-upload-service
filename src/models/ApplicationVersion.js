@@ -1,5 +1,6 @@
 const mongoose = require('../mongo')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
+const softDelete = require('./plugins/softDelete')
 
 // ApplicationVersion
 const ApplicationVersionSchema = new mongoose.Schema(
@@ -34,6 +35,7 @@ const ApplicationVersionSchema = new mongoose.Schema(
 )
 
 ApplicationVersionSchema.plugin(mongooseUniqueValidator)
+ApplicationVersionSchema.plugin(softDelete)
 
 module.exports = {
   schema: ApplicationVersionSchema,
