@@ -7,16 +7,20 @@ module.exports = (schema) => {
   })
 
   schema.pre(['find', 'findOne'], function () {
-    this.where({ deleted: false })
+    if (!this.options.skipDeletedCheck) {
+      this.where({ deleted: false })
+    }
   })
 
-  schema.methods.delete = function () {
-    this.deleted = true
-    this.save()
+  schema.statics.delete = function (query) {
+    return this.findOneAndUpdate(query, { deleted: true }, { new: true })
   }
 
-  schema.methods.restore = function () {
-    this.deleted = false
-    this.save()
+  schema.statics.restore = function (query) {
+    return this.findOneAndUpdate(query, { deleted: false }, { new: true })
+  }
+
+  schema.statics.findDeleted = function (query) {
+    return this.find(query, null, { skipDeletedCheck: true })
   }
 }

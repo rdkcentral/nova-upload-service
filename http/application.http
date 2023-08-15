@@ -1,8 +1,8 @@
 # Application API
 
 ## Variables
-@application_id = 64a6ca0504c82437608d9761
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY5MDIyMTQ5MywiZXhwIjoxNjkwMjMyMjkzfQ.Ltv824QoN_turrMlaorI93EpO97qi-cBfMX_djR_aQA
+@application_id = 64db28ffde5e19f81f035c1f
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGIxOGVkMTZiYWIyOGMwNzgwODA0MSIsImVtYWlsIjoidGVzdDNAdGVzdC5jb20iLCJpYXQiOjE2OTIwODAzNjUsImV4cCI6MTY5MjA5MTE2NX0.DZBq5OXqBvgh9sVLLP--J3tqCqd6rIL09ITc991wnVM
 
 ### Create an application
 
@@ -12,7 +12,7 @@ Authorization: Bearer {{token}}
 
 {
   "name": "Test name",
-  "identifier": "test identifier2"
+  "identifier": "test identifier3"
 }
 
 
@@ -41,5 +41,12 @@ Authorization: Bearer {{token}}
 ### Delete application
 
 DELETE http://localhost:3000/applications/{{application_id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+
+### Restore application
+
+PATCH http://localhost:3000/applications/{{application_id}}/restore HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

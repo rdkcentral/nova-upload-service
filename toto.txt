@@ -1,6 +1,0 @@
-todo:
-- add field for uploaded
-- add soft deleting in general
-- improve error response
-- review application model
-- work on first version of publisher
