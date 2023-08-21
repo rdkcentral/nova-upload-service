@@ -18,6 +18,12 @@ router.get(
   authRequired,
   require('../endpoints/applications/listApplications')
 )
+router.patch(
+  '/:id/restore',
+  authRequired,
+  validateId,
+  require('../endpoints/applications/restoreApplication')
+)
 router.put(
   '/:id',
   authRequired,

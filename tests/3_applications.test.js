@@ -150,3 +150,28 @@ test('DELETE /applications/:id - Remove application', function (assert) {
     })
   })
 })
+
+test('PATCH /applications/:id/restore - Undo remove application', function (assert) {
+  initApp().then((app) => {
+    userToken(app).then((token) => {
+      request(app)
+        .patch(`/applications/${applicationId}/restore`)
+        // note might need different permissions
+        .set({ Authorization: `Bearer ${token}` })
+        .send({ deleted: false })
+        .expect(200)
+        .then(() => {
+          request(app)
+            .get(`/applications/${applicationId}`)
+            .set({ Authorization: `Bearer ${token}` })
+            .expect(200)
+            .then(() => {
+              assert.end()
+            })
+        })
+        .catch((err) => {
+          assert.end(err)
+        })
+    })
+  })
+})
