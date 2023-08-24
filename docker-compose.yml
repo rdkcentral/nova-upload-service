@@ -69,7 +69,7 @@ services:
       exit 0;
       "
   minio-lambda-bridge:
-    image: minio-lambda-bridge
+    image: uguraslan/minio-lambda-bridge:latest
     environment:
       MINIO_HOST: minio
       MINIO_PORT: 9000
