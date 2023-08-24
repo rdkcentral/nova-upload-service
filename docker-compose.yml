@@ -77,10 +77,13 @@ services:
       MINIO_SECRET_KEY: mySecretKey
       MINIO_NOTIFICATIONS_BUCKET: ugap
       MINIO_NOTIFICATIONS_PREFIX:
-      MINIO_NOTIFICATIONS_SUFFIX:
-      MINIO_NOTIFICATIONS_EVENTS: "s3:ObjectCreated:*, s3:ObjectRemoved:*"
-      EVENT_LAMBDA_FUNCTION_PATH: s3Lambda/ObjectCreated.js
+      MINIO_NOTIFICATIONS_SUFFIX: .zip
+      MINIO_NOTIFICATIONS_EVENTS: "s3:ObjectCreated:*"
+      EVENT_LAMBDA_FUNCTION_PATH: s3Lambda/objectCreated.js
       EVENT_LAMBDA_HANDLER: handler
+      AWS_ENDPOINT_URL_S3: http://minio:9000
+      AWS_ACCESS_KEY_ID: myAccessKey
+      AWS_SECRET_ACCESS_KEY: mySecretKey
     volumes:
       - ./s3Lambda:/usr/src/app/s3Lambda
     depends_on:

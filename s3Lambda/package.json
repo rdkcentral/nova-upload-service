@@ -1,0 +1,14 @@
+{
+  "name": "s3lambda",
+  "version": "1.0.0",
+  "description": "Extracts application file when it is created on S3 bucket",
+  "main": "objectCreated.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "unzipper": "^0.10.14"
+  }
+}
