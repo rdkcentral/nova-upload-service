@@ -15,7 +15,6 @@ services:
       - "9229:9229"
     depends_on:
       - mongo
-      - createbuckets
     environment:
       NODE_PORT: 3000
 
@@ -51,6 +50,11 @@ services:
     environment:
       MINIO_ROOT_USER: myAccessKey
       MINIO_ROOT_PASSWORD: mySecretKey
+      # MINIO_NOTIFY_WEBHOOK_ENABLE_S3EVENT: "on"
+      # MINIO_NOTIFY_WEBHOOK_ENDPOINT_S3EVENT: http://ugap-api:3000/webhook
+      # /usr/bin/mc event add myminio/ugap arn:minio:sqs::S3EVENT:webhook -p --event put;
+    depends_on:
+      - ugap-api
 
   createbuckets:
     image: minio/mc
@@ -64,6 +68,23 @@ services:
       /usr/bin/mc policy set download myminio/ugap;
       exit 0;
       "
+  minio-lambda-bridge:
+    image: minio-lambda-bridge
+    environment:
+      MINIO_HOST: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: myAccessKey
+      MINIO_SECRET_KEY: mySecretKey
+      MINIO_NOTIFICATIONS_BUCKET: ugap
+      MINIO_NOTIFICATIONS_PREFIX:
+      MINIO_NOTIFICATIONS_SUFFIX:
+      MINIO_NOTIFICATIONS_EVENTS: "s3:ObjectCreated:*, s3:ObjectRemoved:*"
+      EVENT_LAMBDA_FUNCTION_PATH: s3Lambda/ObjectCreated.js
+      EVENT_LAMBDA_HANDLER: handler
+    volumes:
+      - ./s3Lambda:/usr/src/app/s3Lambda
+    depends_on:
+      - createbuckets
 
 volumes:
   mongo-data:
