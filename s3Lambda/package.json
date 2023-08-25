@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mongodb": "^5.8.1",
     "unzipper": "^0.10.14"
   }
 }

@@ -84,6 +84,9 @@ services:
       AWS_ENDPOINT_URL_S3: http://minio:9000
       AWS_ACCESS_KEY_ID: myAccessKey
       AWS_SECRET_ACCESS_KEY: mySecretKey
+      MONGODB_HOST: mongo
+      MONGODB_PORT: 27017
+      MONGODB_DB: ugapApi
     volumes:
       - ./s3Lambda:/usr/src/app/s3Lambda
     depends_on:
