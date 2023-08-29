@@ -7,10 +7,11 @@ module.exports = async (req, res) => {
       applicationId: req.params.applicationId,
       _id: req.params.id,
     }).catch((e) => {
-      throw new Error('applicationDelete failed', { cause: e })
+      throw new Error('applicationVersionDelete failed', { cause: e })
     })
 
-    if (result.deleted === true) {
+    // result can be undefined if the applicationVersion is not found
+    if (result && result.deleted === true) {
       return res.json({
         status: 'success',
       })
