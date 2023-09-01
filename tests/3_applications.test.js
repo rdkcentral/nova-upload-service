@@ -4,8 +4,6 @@ const test = require('tape')
 const request = require('supertest')
 const { initApp, userToken } = require('./setup')
 
-console.log(userToken)
-
 let applicationId
 const name = 'My test App'
 const identifier = 'my.test.app'
