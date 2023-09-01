@@ -6,7 +6,10 @@ module.exports = async (req, res) => {
     const result = await ApplicationModel.findOne({ _id: req.params.id })
 
     if (!result) {
-      return res.sendStatus(404)
+      return res.status(404).json({
+        status: 'error',
+        message: 'Application not found',
+      })
     }
 
     for (const key in req.body) {

@@ -22,13 +22,14 @@ const ApplicationVersionSchema = new mongoose.Schema(
       // index: true // ??
       required: true,
     },
-    changelog: {
+    status: {
+      $type: String,
+      enum: ['active', 'inactive'], //will be decided later
+      default: 'inactive',
+    },
+    changeLog: {
       $type: String,
       required: true,
-    },
-    updatedAt: {
-      $type: Date,
-      default: Date.now,
     },
   },
   { typeKey: '$type', timestamps: true }

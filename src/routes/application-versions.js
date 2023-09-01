@@ -28,6 +28,13 @@ router.put(
   require('../endpoints/application-versions/updateVersion')
 )
 
+router.patch(
+  '/:id/restore',
+  authRequired,
+  validateId,
+  require('../endpoints/application-versions/restoreVersion')
+)
+
 router.delete(
   '/:id',
   authRequired,

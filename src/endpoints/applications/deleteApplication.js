@@ -16,7 +16,10 @@ module.exports = async (req, res) => {
       })
     }
 
-    return res.sendStatus(404)
+    return res.status(404).json({
+      status: 'error',
+      message: 'Application not found',
+    })
   } catch (e) {
     console.error(e)
     errorResponse.send(res, 'applicationDelete failed', e)

@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     if (application) {
       const body = {
         version: req.body.version,
-        changelog: req.body.changelog,
+        changeLog: req.body.changeLog,
         appIdentifier: application.identifier,
         applicationId: application._id,
       }
@@ -33,6 +33,11 @@ module.exports = async (req, res) => {
         status: 'success',
       })
     }
+
+    return res.status(404).json({
+      status: 'error',
+      message: 'Application version not found',
+    })
   } catch (e) {
     return errorResponse.send(res, e.message, e)
   }

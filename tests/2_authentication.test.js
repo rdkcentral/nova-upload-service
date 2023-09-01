@@ -28,7 +28,7 @@ test('POST /users - Creating a user', function (assert) {
           'updatedAt',
           'id',
           'token',
-          'tokenExpiredAt',
+          'tokenExpiresAt',
         ]
 
         assert.same(
@@ -123,7 +123,7 @@ test('POST /login - Login as a user', function (assert) {
           'updatedAt',
           'id',
           'token',
-          'tokenExpiredAt',
+          'tokenExpiresAt',
         ]
 
         assert.same(
