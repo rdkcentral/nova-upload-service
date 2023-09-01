@@ -1,0 +1,22 @@
+tags:
+- Application versions
+summary: "Gets the list of application versions for a given application"
+description: "Gets the list of application versions for a given application"
+operationId: "listApplicationVersionss"
+security:
+  - JWT: [user]
+responses:
+  200:
+    description: "Application version list"
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: "../../schemas/ApplicationVersion.yml"
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"
+  404:
+    $ref: "../../errors/http404.yml"

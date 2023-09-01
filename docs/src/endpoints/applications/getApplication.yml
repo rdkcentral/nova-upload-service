@@ -1,0 +1,20 @@
+tags:
+- Applications
+summary: "Gets a specific application with given app Id"
+description: "Gets a specific application with given app Id"
+operationId: "getApplication"
+security:
+  - JWT: [user]
+responses:
+  200:
+    description: "Application data"
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/ApplicationWithVersions.yml"
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"
+  404:
+    $ref: "../../errors/http404.yml"

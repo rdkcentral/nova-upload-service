@@ -1,0 +1,12 @@
+description: "Authorization required"
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          default: 'error'
+        message:
+          type: string
+          example: 'Authorization required'

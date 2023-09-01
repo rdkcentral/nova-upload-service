@@ -1,0 +1,50 @@
+tags:
+- Users
+summary: "Updates user data"
+description: "Updates user data (email and password), requires current password."
+operationId: "updateUserInfo"
+security:
+  - JWT: [user]
+requestBody:
+  required: true
+  description: "User data"
+  content:
+    application/json:
+      schema:
+        required:
+          - email
+          - password
+        type: object
+        properties:
+          currentPassword:
+            type: string
+            format: password
+            pattern: '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$'
+            description: "The existing password for the user"
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+            format: password
+            pattern: '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$'
+            description: "The password must contain at least one uppercase letter, one number, and one lowercase letter, and must be at least 8 characters long."
+responses:
+  201:
+    description: "User data updated"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/User.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"

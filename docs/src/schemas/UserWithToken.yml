@@ -1,0 +1,13 @@
+allOf:
+  - $ref: './User.yml'
+  - type: object
+    properties:
+      token:
+        type: string
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        description: "JWT token for authentication"
+      tokenExpiresAt:
+        type: string
+        format: date-time
+        example: "Wed, 30 Aug 2023 01:20:37 GMT"
+        description: "Token expiration date in GMT"

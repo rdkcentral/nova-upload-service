@@ -1,0 +1,42 @@
+tags:
+- Users
+summary: "Creates user"
+description: "The user sign up operation that can be used by anyone."
+operationId: "createUser"
+security: []
+requestBody:
+  required: true
+  description: "User data"
+  content:
+    application/json:
+      schema:
+        required:
+          - email
+          - password
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+            format: password
+            pattern: '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$'
+            description: "The password must contain at least one uppercase letter, one number, and one lowercase letter, and must be at least 8 characters long."
+responses:
+  201:
+    description: "User is created"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/UserWithToken.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"

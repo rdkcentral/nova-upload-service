@@ -1,0 +1,26 @@
+tags:
+- Applications
+summary: "Restores an application deleted before"
+description: "Restores an application deleted before"
+operationId: "restoreApplication"
+security:
+  - JWT: [admin]
+responses:
+  200:
+    description: "Application is restored"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"
+  404:
+    $ref: "../../errors/http404.yml"
