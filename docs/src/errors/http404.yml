@@ -1,0 +1,12 @@
+description: "Item/object/path not found"
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          default: 'error'
+        message:
+          type: string
+          example: 'Not found'

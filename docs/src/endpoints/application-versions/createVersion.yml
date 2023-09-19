@@ -1,0 +1,47 @@
+tags:
+- Application versions
+summary: "Creates application version"
+description: "Creates application version"
+operationId: "createApplicationVersion"
+security:
+  - JWT: [user]
+requestBody:
+  required: true
+  description: "App version data"
+  content:
+    application/json:
+      schema:
+        required:
+          - version
+          - changeLog
+        type: object
+        properties:
+          version:
+            type: string
+            description: A unique identifier for the app version
+            example: v5.4.1
+          changeLog:
+            type: string
+            description: Log for the version create
+            example: v5.4.1 has been released
+responses:
+  201:
+    description: "Application is created"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/ApplicationVersion.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"
+  404:
+    $ref: "../../errors/http404.yml"

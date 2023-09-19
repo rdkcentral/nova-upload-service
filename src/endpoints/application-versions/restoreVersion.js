@@ -3,15 +3,15 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const result = await ApplicationVersionModel.delete({
+    const result = await ApplicationVersionModel.restore({
       applicationId: req.params.applicationId,
       _id: req.params.id,
     }).catch((e) => {
-      throw new Error('applicationVersionDelete failed', { cause: e })
+      throw new Error('applicationVersionRestore failed', { cause: e })
     })
 
-    // result can be undefined if the applicationVersion is not found
-    if (result && result.deleted === true) {
+    // result can be undefined if the application is not found
+    if (result && result.deleted === false) {
       return res.json({
         status: 'success',
       })
@@ -22,6 +22,7 @@ module.exports = async (req, res) => {
       message: 'Application version not found',
     })
   } catch (e) {
-    return errorResponse.send(res, e.message, e)
+    console.error(e)
+    errorResponse.send(res, 'applicationVersionRestore failed', e)
   }
 }

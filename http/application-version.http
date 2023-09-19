@@ -13,7 +13,7 @@ Authorization: Bearer {{token}}
 
 {
   "version": "1.1.0",
-  "changelog": "Added another cool new feature!"
+  "changeLog": "Added another cool new feature!"
 }
 
 
@@ -36,7 +36,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "changelog": "Fixing a typo in my changelog"
+  "changeLog": "Fixing a typo in my changeLog"
 }
 
 ### Delete application version

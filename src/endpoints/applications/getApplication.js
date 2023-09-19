@@ -8,7 +8,10 @@ module.exports = async (req, res) => {
       // status: 'active',
     })
     if (!result) {
-      return res.sendStatus(404)
+      return res.status(404).json({
+        status: 'error',
+        message: 'Application not found',
+      })
     }
     res.json({
       data: result,

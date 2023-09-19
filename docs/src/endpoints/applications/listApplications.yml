@@ -1,0 +1,20 @@
+tags:
+- Applications
+summary: "Gets the list of applications"
+description: "Gets the list of applications managed by the logged-in user"
+operationId: "listApplications"
+security:
+  - JWT: [user]
+responses:
+  200:
+    description: "Application list"
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: "../../schemas/Application.yml"
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"

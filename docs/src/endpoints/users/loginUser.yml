@@ -1,0 +1,41 @@
+tags:
+- Authentication
+summary: "Creates authentication token"
+description: "Creates authentication token for the user"
+operationId: "login user"
+security: []
+requestBody:
+  required: true
+  description: "Credentials"
+  content:
+    application/json:
+      schema:
+        required:
+          - email
+          - password
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+          password:
+            type: string
+            format: password
+            pattern: '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$'
+responses:
+  201:
+    description: "Authentication token is created"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/UserWithToken.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"

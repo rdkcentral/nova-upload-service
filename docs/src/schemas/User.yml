@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    format: bson-objectid
+    example: "507f1f77bcf86cd799439011"
+    description: "Unique identifier for the user"
+  email:
+    type: string
+    format: email
+    description: User email address. Must be unique.
+  type:
+    type: string
+    enum: ['dev', 'mvpd', 'admin']
+    default: 'dev'
+    description: Type of user.
+  status:
+    type: string
+    default: 'ok'
+    description: Status of the user account.
+  lastLoginAt:
+    type: string
+    format: date-time
+    default: null
+    example: '2023-08-29T22:20:37.615Z'
+    description: Timestamp of the user's last login.
+  createdAt:
+    type: string
+    format: date-time
+    default: null
+    example: '2023-08-29T22:20:37.615Z'
+    description: Create time of the user record.
+  updatedAt:
+    type: string
+    format: date-time
+    default: null
+    example: '2023-08-29T22:20:37.615Z'
+    description: Time of last update of the user record.
+required:
+  - email
+  - password

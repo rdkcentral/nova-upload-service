@@ -10,7 +10,10 @@
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "coverage": "c8 npm run test",
-    "report": "c8 report"
+    "report": "c8 report",
+    "docs:serve": "http-server ./docs -p 7700 -c-1 --open=index.html",
+    "docs:merge": "swagger-cli bundle docs/src/openapi.base.yml --outfile docs/openapi.yml --type yaml",
+    "docs:dev": "nodemon -e yml -w docs/src --exec 'npm run docs:merge && npm run docs:serve'"
   },
   "nodemonConfig": {
     "ignore": [
@@ -36,10 +39,12 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "globby": "^11.1.0",
+    "http-server": "^14.1.1",
     "mongodb-memory-server": "^8.13.0",
     "nodemon": "^2.0.3",
     "prettier": "^2.8.8",
     "supertest": "^6.3.3",
+    "swagger-cli": "^4.0.4",
     "tap-diff": "^0.1.1",
     "tape": "^5.6.6"
   }

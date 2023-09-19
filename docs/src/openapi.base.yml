@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  description: |
+    uGAP API reference documentation.
+  version: 1.0.0
+  title: uGAP API documentation
+
+servers:
+  - url: http://localhost:3000
+    description: Local Server
+
+tags:
+  - name: Authentication
+    description: Login endpoint
+  - name: Users
+    description: User endpoints
+  - name: Applications
+    description: Application endpoints
+  - name: Application versions
+    description: Application version endpoint
+
+security:
+  - JWT: []
+
+paths:
+
+  # /users
+  /users:
+    post:
+      $ref: "./endpoints/users/createUser.yml"
+
+  /users/me:
+    get:
+      $ref: "./endpoints/users/getUserInfo.yml"
+    patch:
+      $ref: "./endpoints/users/updateUserInfo.yml"
+
+  # /login
+  /login:
+    post:
+      $ref: "./endpoints/users/loginUser.yml"
+
+  # applications
+  /applications:
+    post:
+      $ref: "./endpoints/applications/createApplication.yml"
+    get:
+      $ref: "./endpoints/applications/listApplications.yml"
+  /applications/:applicationId:
+    parameters:
+    - name: applicationId
+      in: path
+      required: true
+      description: The ID of the application to retrieve
+      schema:
+        type: string
+    get:
+      $ref: "./endpoints/applications/getApplication.yml"
+    put:
+      $ref: "./endpoints/applications/updateApplication.yml"
+    delete:
+      $ref: "./endpoints/applications/deleteApplication.yml"
+  /applications/:applicationId/restore:
+    parameters:
+    - name: applicationId
+      in: path
+      required: true
+      description: The ID of the application to retrieve
+      schema:
+        type: string
+    patch:
+      $ref: "./endpoints/applications/restoreApplication.yml"
+
+  # application versions
+  /applications/:applicationId/versions:
+    parameters:
+    - name: applicationId
+      in: path
+      required: true
+      description: The ID of the application to retrieve
+      schema:
+        type: string
+    post:
+      $ref: "./endpoints/application-versions/createVersion.yml"
+    get:
+      $ref: "./endpoints/application-versions/listVersions.yml"
+  /applications/:applicationId/versions/:versionId:
+    parameters:
+    - name: applicationId
+      in: path
+      required: true
+      description: The ID of the application to retrieve
+      schema:
+        type: string
+    - name: versionId
+      in: path
+      required: true
+      description: The ID of the application version to retrieve
+      schema:
+        type: string
+    get:
+      $ref: "./endpoints/application-versions/getVersion.yml"
+    put:
+      $ref: "./endpoints/application-versions/updateVersion.yml"
+    delete:
+      $ref: "./endpoints/application-versions/deleteVersion.yml"
+  /applications/:applicationId/versions/:versionId/restore:
+    parameters:
+    - name: applicationId
+      in: path
+      required: true
+      description: The ID of the application to retrieve
+      schema:
+        type: string
+    - name: versionId
+      in: path
+      required: true
+      description: The ID of the application version to retrieve
+      schema:
+        type: string
+    patch:
+      $ref: "./endpoints/application-versions/restoreVersion.yml"
+
+components:
+  securitySchemes:
+    JWT: # Login required
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

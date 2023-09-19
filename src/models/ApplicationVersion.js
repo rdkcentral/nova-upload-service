@@ -22,6 +22,11 @@ const ApplicationVersionSchema = new mongoose.Schema(
       // index: true // ??
       required: true,
     },
+    status: {
+      $type: String,
+      enum: ['active', 'inactive'], //will be decided later
+      default: 'inactive',
+    },
     uploadStatus: {
       $type: String,
       enum: ['pending', 'ready', 'error'],
@@ -34,10 +39,6 @@ const ApplicationVersionSchema = new mongoose.Schema(
     changelog: {
       $type: String,
       required: true,
-    },
-    updatedAt: {
-      $type: Date,
-      default: Date.now,
     },
   },
   { typeKey: '$type', timestamps: true }

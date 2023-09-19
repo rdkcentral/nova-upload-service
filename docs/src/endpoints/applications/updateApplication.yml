@@ -1,0 +1,66 @@
+tags:
+- Applications
+summary: "Updates application data"
+description: "Updates application data"
+operationId: "updateApplication"
+security:
+  - JWT: [user]
+requestBody:
+  required: true
+  description: "App data"
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          identifier:
+            type: string
+            description: A unique identifier for the app
+            example: my-cool-app
+          name:
+            type: string
+            description: A name for the app
+            example: My cool app
+          info:
+            type: string
+            description: A description text for the app
+          metadata:
+            type: object
+            description: Metadata object that can contain any app-specific custom data
+          isHosted:
+            type: boolean
+            default: true
+            description: If the app is hosted on the service or is served over an external service
+          location:
+            type: string
+            description: The location (URL) of the app if it is hosted externally
+          status:
+            type: string
+            enum: ["active", "inactive"]
+            example: "inactive"
+            description: The status of the app
+            default: 'inactive'
+          image:
+            type: string
+            description: The URL of the application image
+responses:
+  200:
+    description: "Application is updated"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/ApplicationWithVersions.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  400:
+    $ref: "../../errors/http400.yml"
+  401:
+    $ref: "../../errors/http401.yml"
+  404:
+    $ref: "../../errors/http404.yml"

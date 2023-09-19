@@ -32,10 +32,7 @@ const ApplicationSchema = new mongoose.Schema(
     status: {
       $type: String,
       enum: ['active', 'inactive'], //will be other statuses
-    },
-    updatedAt: {
-      $type: Date,
-      default: Date.now,
+      default: 'inactive',
     },
     isHosted: {
       $type: Boolean,

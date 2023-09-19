@@ -151,6 +151,23 @@ test('DELETE /applications/:id - Remove application', function (assert) {
   })
 })
 
+test('DELETE /applications/:id - Remove non-existing application', function (assert) {
+  initApp().then((app) => {
+    userToken(app).then((token) => {
+      request(app)
+        .delete('/applications/01e125710000000000000000') // object id belongs to 1970-01-01 00:00:01
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(404)
+        .then(() => {
+          assert.end()
+        })
+        .catch((err) => {
+          assert.end(err)
+        })
+    })
+  })
+})
+
 test('PATCH /applications/:id/restore - Undo remove application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
@@ -158,7 +175,6 @@ test('PATCH /applications/:id/restore - Undo remove application', function (asse
         .patch(`/applications/${applicationId}/restore`)
         // note might need different permissions
         .set({ Authorization: `Bearer ${token}` })
-        .send({ deleted: false })
         .expect(200)
         .then(() => {
           request(app)
@@ -168,6 +184,23 @@ test('PATCH /applications/:id/restore - Undo remove application', function (asse
             .then(() => {
               assert.end()
             })
+        })
+        .catch((err) => {
+          assert.end(err)
+        })
+    })
+  })
+})
+
+test('DELETE /applications/:id/restore - Try to restore non-existing application', function (assert) {
+  initApp().then((app) => {
+    userToken(app).then((token) => {
+      request(app)
+        .patch('/applications/01e125710000000000000000/restore') // object id belongs to 1970-01-01 00:00:01
+        .set({ Authorization: `Bearer ${token}` })
+        .expect(404)
+        .then(() => {
+          assert.end()
         })
         .catch((err) => {
           assert.end(err)

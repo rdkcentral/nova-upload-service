@@ -5,7 +5,11 @@ const request = require('supertest')
 const { initApp } = require('./setup')
 
 const email = 'test@foo.com'
+const newEmail = 'newtest@foo.com'
 const password = 'Hello1213'
+const newPassword = 'Welcome123'
+const invalidPassword = 'W'
+
 let token
 
 test('POST /users - Creating a user', function (assert) {
@@ -24,7 +28,7 @@ test('POST /users - Creating a user', function (assert) {
           'updatedAt',
           'id',
           'token',
-          'tokenExpiredAt',
+          'tokenExpiresAt',
         ]
 
         assert.same(
@@ -119,7 +123,7 @@ test('POST /login - Login as a user', function (assert) {
           'updatedAt',
           'id',
           'token',
-          'tokenExpiredAt',
+          'tokenExpiresAt',
         ]
 
         assert.same(
@@ -263,7 +267,6 @@ test('GET /users/me - Get user details for logged in user without passing a toke
 })
 
 test('PATCH /users/me - Update password for logged in user', function (assert) {
-  const newPassword = 'Welcome123'
   initApp().then((app) => {
     request(app)
       .patch('/users/me')
@@ -274,6 +277,44 @@ test('PATCH /users/me - Update password for logged in user', function (assert) {
         request(app)
           .post('/login')
           .send({ email, password: newPassword })
+          .expect(201)
+          .then(() => {
+            assert.end()
+          })
+      })
+      .catch((err) => {
+        assert.end(err)
+      })
+  })
+})
+
+test('PATCH /users/me - Update password with an invalid password for logged in user', function (assert) {
+  initApp().then((app) => {
+    request(app)
+      .patch('/users/me')
+      .set({ Authorization: `Bearer ${token}` })
+      .send({ currentPassword: password, password: invalidPassword })
+      .expect(400)
+      .then(() => {
+        assert.end()
+      })
+      .catch((err) => {
+        assert.end(err)
+      })
+  })
+})
+
+test('PATCH /users/me - Update email for logged in user', function (assert) {
+  initApp().then((app) => {
+    request(app)
+      .patch('/users/me')
+      .set({ Authorization: `Bearer ${token}` })
+      .send({ currentPassword: newPassword, email: newEmail })
+      .expect(200)
+      .then(() => {
+        request(app)
+          .post('/login')
+          .send({ email: newEmail, password: newPassword })
           .expect(201)
           .then(() => {
             assert.end()

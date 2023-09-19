@@ -3,16 +3,25 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const result = await ApplicationModel.restore({ _id: req.params.id })
-    if (result.deleted === false) {
+    const result = await ApplicationModel.restore({
+      _id: req.params.id,
+    }).catch((e) => {
+      throw new Error('applicationRestore failed', { cause: e })
+    })
+
+    // result can be undefined if the application is not found
+    if (result && result.deleted === false) {
       return res.json({
         status: 'success',
       })
     }
 
-    return res.sendStatus(404)
+    return res.status(404).json({
+      status: 'error',
+      message: 'Application not found',
+    })
   } catch (e) {
     console.error(e)
-    errorResponse.send(res, 'applicationDelete failed', e)
+    errorResponse.send(res, 'applicationRestore failed', e)
   }
 }

@@ -15,9 +15,12 @@ module.exports = async (req, res) => {
         data: applicationVersion.toObject(),
         status: 'success',
       })
-    } else {
-      res.sendStatus(404)
     }
+
+    return res.status(404).json({
+      status: 'error',
+      message: 'Application version not found',
+    })
   } catch (e) {
     return errorResponse.send(res, e.message, e)
   }

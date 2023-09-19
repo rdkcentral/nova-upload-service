@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
       applicationId: req.params.applicationId,
       _id: req.params.id,
     }).catch((e) => {
-      throw new Error('applicationVersionGet failed', { cause: e })
+      throw new Error('applicationVersionUpdate failed', { cause: e })
     })
 
     if (applicationVersion) {
@@ -29,9 +29,12 @@ module.exports = async (req, res) => {
         data: applicationVersion.toObject(),
         status: 'success',
       })
-    } else {
-      throw new Error('Application version not found')
     }
+
+    return res.status(404).json({
+      status: 'error',
+      message: 'Application version not found',
+    })
   } catch (e) {
     return errorResponse.send(res, e.message, e)
   }
