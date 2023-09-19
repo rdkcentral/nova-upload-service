@@ -22,6 +22,15 @@ const ApplicationVersionSchema = new mongoose.Schema(
       // index: true // ??
       required: true,
     },
+    uploadStatus: {
+      $type: String,
+      enum: ['pending', 'ready', 'error'],
+      default: '',
+    },
+    versionPath: {
+      $type: String,
+      default: '',
+    },
     changelog: {
       $type: String,
       required: true,
