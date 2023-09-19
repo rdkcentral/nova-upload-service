@@ -29,7 +29,7 @@ GET http://localhost:3000/applications/{{application_id}}/versions/{{version_id}
 content-type: application/json
 Authorization: Bearer {{token}}
 
-### Update application
+### Update application version details
 
 PUT http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
@@ -39,8 +39,19 @@ Authorization: Bearer {{token}}
   "changeLog": "Fixing a typo in my changeLog"
 }
 
-### Delete application
+### Delete application version
 
 DELETE http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
+
+### Upload application version
+
+POST http://localhost:3000/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fileName": "my-cool-app-v1.1.0.zip",
+  "file": "UEsDBBQDAAAAAI9pGFcAAAAAAAAAAAAAAAAHAAAAaW1hZ2VzL1BLAwQUAwAAAACTaRhXAAAAAAAAAAAAAAAADQAAAGltYWdlcy9pY29ucy9QSwMECgMAAAAAk2kYVwAAAAAAAAAAAAAAABUAAABpbWFnZXMvaWNvbnMvaWNvbi5wbmdQSwMECgMAAAAAjGkYVwAAAAAAAAAAAAAAABEAAABpbWFnZXMvaW1hZ2UxLmpwZ1BLAwQKAwAAAACEaRhXAAAAAAAAAAAAAAAACAAAAHRlc3QucG5nUEsDBAoDAAAAAIRpGFcAAAAAAAAAAAAAAAANAAAAdGVzdGZpbGUxLnR4dFBLAQI/AxQDAAAAAI9pGFcAAAAAAAAAAAAAAAAHACQAAAAAAAAAEID9QQAAAABpbWFnZXMvCgAgAAAAAAABABgAAKNP33vW2QEA0UDMg9bZAQB33smD1tkBUEsBAj8DFAMAAAAAk2kYVwAAAAAAAAAAAAAAAA0AJAAAAAAAAAAQgP1BJQAAAGltYWdlcy9pY29ucy8KACAAAAAAAAEAGACAwHvje9bZAQBY1M+D1tkBAHfeyYPW2QFQSwECPwMKAwAAAACTaRhXAAAAAAAAAAAAAAAAFQAkAAAAAAAAACCAtIFQAAAAaW1hZ2VzL2ljb25zL2ljb24ucG5nCgAgAAAAAAABABgAgMB743vW2QGAwHvje9bZAQB33smD1tkBUEsBAj8DCgMAAAAAjGkYVwAAAAAAAAAAAAAAABEAJAAAAAAAAAAggLSBgwAAAGltYWdlcy9pbWFnZTEuanBnCgAgAAAAAAABABgAgIUj23vW2QGAhSPbe9bZAQB33smD1tkBUEsBAj8DCgMAAAAAhGkYVwAAAAAAAAAAAAAAAAgAJAAAAAAAAAAggLSBsgAAAHRlc3QucG5nCgAgAAAAAAABABgAALQy0nvW2QEA0UDMg9bZAQB33smD1tkBUEsBAj8DCgMAAAAAhGkYVwAAAAAAAAAAAAAAAA0AJAAAAAAAAAAggLSB2AAAAHRlc3RmaWxlMS50eHQKACAAAAAAAAEAGAAAtDLSe9bZAQC0MtJ71tkBAHfeyYPW2QFQSwUGAAAAAAYABgA7AgAAAwEAAAAA"
+}

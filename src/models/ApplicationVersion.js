@@ -27,7 +27,16 @@ const ApplicationVersionSchema = new mongoose.Schema(
       enum: ['active', 'inactive'], //will be decided later
       default: 'inactive',
     },
-    changeLog: {
+    uploadStatus: {
+      $type: String,
+      enum: ['pending', 'ready', 'error'],
+      default: '',
+    },
+    versionPath: {
+      $type: String,
+      default: '',
+    },
+    changelog: {
       $type: String,
       required: true,
     },

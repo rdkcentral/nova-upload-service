@@ -42,4 +42,11 @@ router.delete(
   require('../endpoints/application-versions/deleteVersion')
 )
 
+router.post(
+  '/:id/upload',
+  authRequired,
+  validateId,
+  require('../endpoints/application-versions/uploadVersion')
+)
+
 module.exports = router

@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
         throw new Error('applicationUpdate failed', { cause: e })
       })
 
-      res.status(200).json({
+      res.status(201).json({
         data: applicationVersion.toObject(),
         status: 'success',
       })

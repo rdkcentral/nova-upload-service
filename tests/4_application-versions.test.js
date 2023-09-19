@@ -19,7 +19,7 @@ test('POST /applications/:appId/versions - Creating an new application version',
             version,
             changeLog,
           })
-          .expect(200)
+          .expect(201)
           .then((res) => {
             assert.equal(
               res.body.data.version,
