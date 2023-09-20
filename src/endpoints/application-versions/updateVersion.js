@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const applicationVersion = await ApplicationVersionModel.findOne({
       applicationId: req.params.applicationId,
       _id: req.params.id,
+      userId: req.user.id,
     }).catch((e) => {
       throw new Error('applicationVersionUpdate failed', { cause: e })
     })

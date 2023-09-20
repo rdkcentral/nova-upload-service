@@ -5,6 +5,7 @@ module.exports = async (req, res) => {
   try {
     const result = await ApplicationModel.delete({
       _id: req.params.id,
+      userId: req.user.id,
     }).catch((e) => {
       throw new Error('applicationDelete failed', { cause: e })
     })

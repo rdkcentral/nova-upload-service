@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const result = await ApplicationVersionModel.restore({
       applicationId: req.params.applicationId,
       _id: req.params.id,
+      userId: req.user.id, // TODO: not all users should be able to restore
     }).catch((e) => {
       throw new Error('applicationVersionRestore failed', { cause: e })
     })

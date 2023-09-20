@@ -13,6 +13,10 @@ const ApplicationSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
+    userId: {
+      $type: mongoose.ObjectId,
+      index: true,
+    },
     name: {
       $type: String,
       required: true,

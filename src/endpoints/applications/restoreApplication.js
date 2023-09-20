@@ -5,6 +5,7 @@ module.exports = async (req, res) => {
   try {
     const result = await ApplicationModel.restore({
       _id: req.params.id,
+      userId: req.user.id, // TODO: not all users should be able to restore
     }).catch((e) => {
       throw new Error('applicationRestore failed', { cause: e })
     })

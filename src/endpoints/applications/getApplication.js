@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const result = await ApplicationModel.findOne({
       _id: req.params.id,
       // status: 'active',
+      userId: req.user.id,
     })
     if (!result) {
       return res.status(404).json({
