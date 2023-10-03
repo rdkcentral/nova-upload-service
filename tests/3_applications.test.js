@@ -8,11 +8,11 @@ let applicationId
 const name = 'My test App'
 const identifier = 'my.test.app'
 
-test('POST /applications - Creating an new application', function (assert) {
+test('POST /admin/applications - Creating an new application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .post('/applications')
+        .post('/admin/applications')
         .set({ Authorization: `Bearer ${token}` })
         .send({
           name,
@@ -42,11 +42,11 @@ test('POST /applications - Creating an new application', function (assert) {
 // - test create app without token
 // - test create app without required data
 
-test('GET /applications - Retrieving applications', function (assert) {
+test('GET /admin/applications - Retrieving applications', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .get('/applications')
+        .get('/admin/applications')
         .set({ Authorization: `Bearer ${token}` })
         .expect(200)
         .then((res) => {
@@ -63,10 +63,10 @@ test('GET /applications - Retrieving applications', function (assert) {
   })
 })
 
-test('GET /applications - Retrieving applications without sending a token', function (assert) {
+test('GET /admin/applications - Retrieving applications without sending a token', function (assert) {
   initApp().then((app) => {
     request(app)
-      .get('/applications')
+      .get('/admin/applications')
       .expect(403)
       .then(() => {
         assert.end()
@@ -77,11 +77,11 @@ test('GET /applications - Retrieving applications without sending a token', func
   })
 })
 
-test('GET /applications/:id - Retrieving application details', function (assert) {
+test('GET /admin/applications/:id - Retrieving application details', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .get(`/applications/${applicationId}`)
+        .get(`/admin/applications/${applicationId}`)
         .set({ Authorization: `Bearer ${token}` })
         .expect(200)
         .then((res) => {
@@ -104,12 +104,12 @@ test('GET /applications/:id - Retrieving application details', function (assert)
   })
 })
 
-test('PUT /applications/:id - Editing application details', function (assert) {
+test('PUT /admin/applications/:id - Editing application details', function (assert) {
   const newName = 'My awesome test App'
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .put(`/applications/${applicationId}`)
+        .put(`/admin/applications/${applicationId}`)
         .set({ Authorization: `Bearer ${token}` })
         .send({ name: newName })
         .expect(200)
@@ -128,7 +128,7 @@ test('PUT /applications/:id - Editing application details', function (assert) {
   })
 })
 
-test('DELETE /applications/:id - Remove application', function (assert) {
+test('DELETE /admin/applications/:id - Remove application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
@@ -151,7 +151,7 @@ test('DELETE /applications/:id - Remove application', function (assert) {
   })
 })
 
-test('DELETE /applications/:id - Remove non-existing application', function (assert) {
+test('DELETE /admin/applications/:id - Remove non-existing application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
@@ -168,11 +168,11 @@ test('DELETE /applications/:id - Remove non-existing application', function (ass
   })
 })
 
-test('PATCH /applications/:id/restore - Undo remove application', function (assert) {
+test('PATCH /admin/applications/:id/restore - Undo remove application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .patch(`/applications/${applicationId}/restore`)
+        .patch(`/admin/applications/${applicationId}/restore`)
         // note might need different permissions
         .set({ Authorization: `Bearer ${token}` })
         .expect(200)
@@ -192,7 +192,7 @@ test('PATCH /applications/:id/restore - Undo remove application', function (asse
   })
 })
 
-test('DELETE /applications/:id/restore - Try to restore non-existing application', function (assert) {
+test('DELETE /admin/applications/:id/restore - Try to restore non-existing application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)

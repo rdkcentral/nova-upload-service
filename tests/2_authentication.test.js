@@ -12,10 +12,10 @@ const invalidPassword = 'W'
 
 let token
 
-test('POST /users - Creating a user', function (assert) {
+test('POST /admin/users - Creating a user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/users')
+      .post('/admin/users')
       .send({ email, password })
       .expect(201)
       .then((res) => {
@@ -55,10 +55,10 @@ test('POST /users - Creating a user', function (assert) {
   })
 })
 
-test('POST /users - Creating a user with an existing email', function (assert) {
+test('POST /admin/users - Creating a user with an existing email', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/users')
+      .post('/admin/users')
       .send({ email, password })
       .expect(400)
       .then((res) => {
@@ -81,10 +81,10 @@ test('POST /users - Creating a user with an existing email', function (assert) {
   })
 })
 
-test('POST /users - Creating a user without a password', function (assert) {
+test('POST /admin/users - Creating a user without a password', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/users')
+      .post('/admin/users')
       .send({ email: 'test2@foo.com' })
       .expect(400)
       .then((res) => {
@@ -107,10 +107,10 @@ test('POST /users - Creating a user without a password', function (assert) {
   })
 })
 
-test('POST /login - Login as a user', function (assert) {
+test('POST /admin/login - Login as a user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/login')
+      .post('/admin/login')
       .send({ email, password })
       .expect(201)
       .then((res) => {
@@ -147,10 +147,10 @@ test('POST /login - Login as a user', function (assert) {
   })
 })
 
-test('POST /login - Login with an email that does not exist', function (assert) {
+test('POST /admin/login - Login with an email that does not exist', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/login')
+      .post('/admin/login')
       .send({ email: 'bla@bla.bla', password })
       .expect(401)
       .then((res) => {
@@ -170,10 +170,10 @@ test('POST /login - Login with an email that does not exist', function (assert) 
   })
 })
 
-test('POST /login - Login with a wrong password', function (assert) {
+test('POST /admin/login - Login with a wrong password', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/login')
+      .post('/admin/login')
       .send({ email, password: 'wrong!!!' })
       .expect(401)
       .then((res) => {
@@ -193,10 +193,10 @@ test('POST /login - Login with a wrong password', function (assert) {
   })
 })
 
-test('POST /login - Login without email or password', function (assert) {
+test('POST /admin/login - Login without email or password', function (assert) {
   initApp().then((app) => {
     request(app)
-      .post('/login')
+      .post('/admin/login')
       .expect(401)
       .then((res) => {
         const expected = { status: 'error', message: 'invalidUserCredentials' }
@@ -215,10 +215,10 @@ test('POST /login - Login without email or password', function (assert) {
   })
 })
 
-test('GET /users/me - Get user details for logged in user', function (assert) {
+test('GET /admin/users/me - Get user details for logged in user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .get('/users/me')
+      .get('/admin/users/me')
       .set({ Authorization: `Bearer ${token}` })
       .expect(200)
       .then((res) => {
@@ -252,10 +252,10 @@ test('GET /users/me - Get user details for logged in user', function (assert) {
   })
 })
 
-test('GET /users/me - Get user details for logged in user without passing a token', function (assert) {
+test('GET /admin/users/me - Get user details for logged in user without passing a token', function (assert) {
   initApp().then((app) => {
     request(app)
-      .get('/users/me')
+      .get('/admin/users/me')
       .expect(403)
       .then(() => {
         assert.end()
@@ -266,16 +266,16 @@ test('GET /users/me - Get user details for logged in user without passing a toke
   })
 })
 
-test('PATCH /users/me - Update password for logged in user', function (assert) {
+test('PATCH /admin/users/me - Update password for logged in user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .patch('/users/me')
+      .patch('/admin/users/me')
       .set({ Authorization: `Bearer ${token}` })
       .send({ currentPassword: password, password: newPassword })
       .expect(200)
       .then(() => {
         request(app)
-          .post('/login')
+          .post('/admin/login')
           .send({ email, password: newPassword })
           .expect(201)
           .then(() => {
@@ -288,10 +288,10 @@ test('PATCH /users/me - Update password for logged in user', function (assert) {
   })
 })
 
-test('PATCH /users/me - Update password with an invalid password for logged in user', function (assert) {
+test('PATCH /admin/users/me - Update password with an invalid password for logged in user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .patch('/users/me')
+      .patch('/admin/users/me')
       .set({ Authorization: `Bearer ${token}` })
       .send({ currentPassword: password, password: invalidPassword })
       .expect(400)
@@ -304,16 +304,16 @@ test('PATCH /users/me - Update password with an invalid password for logged in u
   })
 })
 
-test('PATCH /users/me - Update email for logged in user', function (assert) {
+test('PATCH /admin/users/me - Update email for logged in user', function (assert) {
   initApp().then((app) => {
     request(app)
-      .patch('/users/me')
+      .patch('/admin/users/me')
       .set({ Authorization: `Bearer ${token}` })
       .send({ currentPassword: newPassword, email: newEmail })
       .expect(200)
       .then(() => {
         request(app)
-          .post('/login')
+          .post('/admin/login')
           .send({ email: newEmail, password: newPassword })
           .expect(201)
           .then(() => {
