@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
   try {
     const application = await ApplicationModel.findOne({
       _id: req.params.applicationId,
+      userId: req.user.id,
     }).catch((e) => {
       throw new Error('application not found', { cause: e })
     })
@@ -16,6 +17,7 @@ module.exports = async (req, res) => {
         changeLog: req.body.changeLog,
         appIdentifier: application.identifier,
         applicationId: application._id,
+        userId: req.user.id,
       }
       const applicationVersion = await ApplicationVersionModel.create(
         body

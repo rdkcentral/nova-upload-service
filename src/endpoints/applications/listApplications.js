@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const data = await ApplicationModel.find(
       {
         //status: 'active'
+        userId: req.user.id,
       },
       {
         versions: 0,

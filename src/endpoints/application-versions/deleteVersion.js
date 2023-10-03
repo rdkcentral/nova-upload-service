@@ -6,6 +6,7 @@ module.exports = async (req, res) => {
     const result = await ApplicationVersionModel.delete({
       applicationId: req.params.applicationId,
       _id: req.params.id,
+      userId: req.user.id,
     }).catch((e) => {
       throw new Error('applicationVersionDelete failed', { cause: e })
     })

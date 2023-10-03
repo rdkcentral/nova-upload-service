@@ -19,8 +19,12 @@ const ApplicationVersionSchema = new mongoose.Schema(
     applicationId: {
       $type: mongoose.ObjectId,
       ref: 'Application',
-      // index: true // ??
+      index: true,
       required: true,
+    },
+    userId: {
+      $type: mongoose.ObjectId,
+      index: true,
     },
     status: {
       $type: String,

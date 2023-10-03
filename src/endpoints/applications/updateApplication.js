@@ -3,7 +3,10 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const result = await ApplicationModel.findOne({ _id: req.params.id })
+    const result = await ApplicationModel.findOne({
+      _id: req.params.id,
+      userId: req.user.id,
+    })
 
     if (!result) {
       return res.status(404).json({

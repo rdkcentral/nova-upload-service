@@ -9,6 +9,7 @@ module.exports = async (req, res) => {
     const applicationVersion = await ApplicationVersionModel.findOne({
       applicationId: req.params.applicationId,
       _id: req.params.id,
+      userId: req.user.id,
     }).catch((e) => {
       throw new Error('applicationVersionGet failed', { cause: e })
     })
@@ -17,6 +18,7 @@ module.exports = async (req, res) => {
       // for consistency, we must not allow to upload if the application is not hosted
       const application = await ApplicationModel.findOne({
         _id: req.params.applicationId,
+        userId: req.user.id,
       }).catch((e) => {
         throw new Error('applicationGet failed', { cause: e })
       })
