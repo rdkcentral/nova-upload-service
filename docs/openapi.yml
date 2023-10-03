@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   description: |
-    uGAP API reference documentation.
+    Nova Backend reference documentation.
   version: 1.0.0
-  title: uGAP API documentation
+  title: Nova Backend documentation
 servers:
   - url: 'http://localhost:3000'
     description: Local Server

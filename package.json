@@ -1,7 +1,7 @@
 {
-  "name": "ugap-api",
+  "name": "nova-backend",
   "version": "0.1.0",
-  "description": "uGAP API Service",
+  "description": "Nova Backend",
   "main": "src/serverless.js",
   "scripts": {
     "start": "node src/server.js",

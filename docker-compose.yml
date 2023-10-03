@@ -1,13 +1,13 @@
 version: '3.1'
 
 services:
-  ugap-api:
+  nova-backend:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - .:/usr/src/app
-      - ugap-api-node-modules:/opt/npm
+      - nova-backend-node-modules:/opt/npm
     working_dir: /usr/src/app
     ports:
       - "3000:3000"
@@ -54,7 +54,7 @@ services:
       # MINIO_NOTIFY_WEBHOOK_ENDPOINT_S3EVENT: http://ugap-api:3000/webhook
       # /usr/bin/mc event add myminio/ugap arn:minio:sqs::S3EVENT:webhook -p --event put;
     depends_on:
-      - ugap-api
+      - nova-backend
 
   createbuckets:
     image: minio/mc
@@ -64,8 +64,8 @@ services:
       /bin/sh -c "
       sleep 10;
       /usr/bin/mc config host add myminio http://minio:9000 myAccessKey mySecretKey;
-      /usr/bin/mc mb myminio/ugap;
-      /usr/bin/mc policy set download myminio/ugap;
+      /usr/bin/mc mb myminio/nova;
+      /usr/bin/mc policy set download myminio/nova;
       exit 0;
       "
   minio-lambda-bridge:
@@ -75,7 +75,7 @@ services:
       MINIO_PORT: 9000
       MINIO_ACCESS_KEY: myAccessKey
       MINIO_SECRET_KEY: mySecretKey
-      MINIO_NOTIFICATIONS_BUCKET: ugap
+      MINIO_NOTIFICATIONS_BUCKET: nova
       MINIO_NOTIFICATIONS_PREFIX:
       MINIO_NOTIFICATIONS_SUFFIX: .zip
       MINIO_NOTIFICATIONS_EVENTS: "s3:ObjectCreated:*"
@@ -86,7 +86,7 @@ services:
       AWS_SECRET_ACCESS_KEY: mySecretKey
       MONGODB_HOST: mongo
       MONGODB_PORT: 27017
-      MONGODB_DB: ugapApi
+      MONGODB_DB: novaBackend
     volumes:
       - ./s3Lambda:/usr/src/app/s3Lambda
     depends_on:
@@ -94,5 +94,5 @@ services:
 
 volumes:
   mongo-data:
-  ugap-api-node-modules:
+  nova-backend-node-modules:
   minio-data:
