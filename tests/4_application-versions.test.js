@@ -6,14 +6,14 @@ const { initApp, userToken, createApplication } = require('./setup')
 
 let applicationVersion
 
-test('POST /applications/:appId/versions - Creating an new application version', function (assert) {
+test('POST /admin/applications/:appId/versions - Creating an new application version', function (assert) {
   const version = '1.0.0'
   const changeLog = 'Made the app 10x more awesome!!'
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
         request(app)
-          .post(`/applications/${application.id}/versions`)
+          .post(`/admin/applications/${application.id}/versions`)
           .set({ Authorization: `Bearer ${token}` })
           .send({
             version,
@@ -47,16 +47,16 @@ test('POST /applications/:appId/versions - Creating an new application version',
 })
 
 // todo
-test('POST /applications/:appId/versions - Creating an new application version with an existing version number', function (assert) {
+test('POST /admin/applications/:appId/versions - Creating an new application version with an existing version number', function (assert) {
   assert.end()
 })
 
-test('GET /applications/:appId/versions - Retrieve versions of an application', function (assert) {
+test('GET /admin/applications/:appId/versions - Retrieve versions of an application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
         request(app)
-          .get(`/applications/${application.id}/versions`)
+          .get(`/admin/applications/${application.id}/versions`)
           .set({ Authorization: `Bearer ${token}` })
           .expect(200)
           .then((res) => {
@@ -77,13 +77,13 @@ test('GET /applications/:appId/versions - Retrieve versions of an application', 
   })
 })
 
-test('GET /applications/:appId/versions/:applicationVersionId - Retrieve details of an application-version', function (assert) {
+test('GET /admin/applications/:appId/versions/:applicationVersionId - Retrieve details of an application-version', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
         request(app)
           .get(
-            `/applications/${application.id}/versions/${applicationVersion.id}`
+            `/admin/applications/${application.id}/versions/${applicationVersion.id}`
           )
           .set({ Authorization: `Bearer ${token}` })
           .expect(200)
@@ -101,14 +101,14 @@ test('GET /applications/:appId/versions/:applicationVersionId - Retrieve details
   })
 })
 
-test('PUT /applications/:appId/versions/:applicationVersionId - Update an application-version', function (assert) {
+test('PUT /admin/applications/:appId/versions/:applicationVersionId - Update an application-version', function (assert) {
   const updatedChangelog = 'Made the app 100x more awesome!!'
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
         request(app)
           .put(
-            `/applications/${application.id}/versions/${applicationVersion.id}`
+            `/admin/applications/${application.id}/versions/${applicationVersion.id}`
           )
           .set({ Authorization: `Bearer ${token}` })
           .send({
@@ -128,20 +128,20 @@ test('PUT /applications/:appId/versions/:applicationVersionId - Update an applic
   })
 })
 
-test('DELETE /applications/:appId/versions/:applicationVersionId - Delete an application-version', function (assert) {
+test('DELETE /admin/applications/:appId/versions/:applicationVersionId - Delete an application-version', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
         request(app)
           .delete(
-            `/applications/${application.id}/versions/${applicationVersion.id}`
+            `/admin/applications/${application.id}/versions/${applicationVersion.id}`
           )
           .set({ Authorization: `Bearer ${token}` })
           .expect(200)
           .then(() => {
             request(app)
               .get(
-                `/applications/${application.id}/versions/${applicationVersion.id}`
+                `/admin/applications/${application.id}/versions/${applicationVersion.id}`
               )
               .set({ Authorization: `Bearer ${token}` })
               .expect(404)

@@ -7,7 +7,7 @@
 
 ### Create an application version
 
-POST http://localhost:3000/applications/{{application_id}}/versions HTTP/1.1
+POST http://localhost:3000/admin/applications/{{application_id}}/versions HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -19,19 +19,19 @@ Authorization: Bearer {{token}}
 
 ### List all applications versions
 
-GET http://localhost:3000/applications/{{application_id}}/versions HTTP/1.1
+GET http://localhost:3000/admin/applications/{{application_id}}/versions HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Get application version details
 
-GET http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+GET http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update application version details
 
-PUT http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+PUT http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -41,13 +41,13 @@ Authorization: Bearer {{token}}
 
 ### Delete application version
 
-DELETE http://localhost:3000/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+DELETE http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Upload application version
 
-POST http://localhost:3000/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
+POST http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 

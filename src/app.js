@@ -8,13 +8,13 @@ app.use(cors())
 app.use(bodyParser.json({ limit: process.env.MAX_REQUEST_BODY_SIZE }))
 
 // user paths
-app.use('/login', require('./routes/login'))
-app.use('/users', require('./routes/users'))
+app.use('/admin/login', require('./routes/login'))
+app.use('/admin/users', require('./routes/users'))
 
 // application paths
-app.use('/applications', require('./routes/applications'))
+app.use('/admin/applications', require('./routes/applications'))
 app.use(
-  '/applications/:applicationId/versions',
+  '/admin/applications/:applicationId/versions',
   require('./routes/application-versions')
 )
 
