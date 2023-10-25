@@ -1,13 +1,14 @@
 # Application API
 
 ## Variables
+@host=http://localhost:3000
 @application_id = 64bec772437fbe26056c043d
 @version_id = 64bec9719f9f201117bd0e1b
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY5MDIyMDE4OCwiZXhwIjoxNjkwMjMwOTg4fQ.adE0sG0RqiVVTRwHCJtZopONSUK0P8QEVeQLhgniwbM
 
 ### Create an application version
 
-POST http://localhost:3000/admin/applications/{{application_id}}/versions HTTP/1.1
+POST {{host}}/admin/applications/{{application_id}}/versions HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -19,19 +20,19 @@ Authorization: Bearer {{token}}
 
 ### List all applications versions
 
-GET http://localhost:3000/admin/applications/{{application_id}}/versions HTTP/1.1
+GET {{host}}/admin/applications/{{application_id}}/versions HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Get application version details
 
-GET http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+GET {{host}}/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update application version details
 
-PUT http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+PUT {{host}}/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -41,13 +42,13 @@ Authorization: Bearer {{token}}
 
 ### Delete application version
 
-DELETE http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
+DELETE {{host}}/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Upload application version
 
-POST http://localhost:3000/admin/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
+POST {{host}}/admin/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 

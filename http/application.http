@@ -1,12 +1,13 @@
 # Application API
 
 ## Variables
+@host=http://localhost:3000
 @application_id = 64db28ffde5e19f81f035c1f
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZGIxOGVkMTZiYWIyOGMwNzgwODA0MSIsImVtYWlsIjoidGVzdDNAdGVzdC5jb20iLCJpYXQiOjE2OTIwODAzNjUsImV4cCI6MTY5MjA5MTE2NX0.DZBq5OXqBvgh9sVLLP--J3tqCqd6rIL09ITc991wnVM
 
 ### Create an application
 
-POST http://localhost:3000/admin/applications/ HTTP/1.1
+POST {{host}}/admin/applications/ HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -18,19 +19,19 @@ Authorization: Bearer {{token}}
 
 ### List all applications
 
-GET http://localhost:3000/admin/applications/ HTTP/1.1
+GET {{host}}/admin/applications/ HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Get application details
 
-GET http://localhost:3000/admin/applications/{{application_id}} HTTP/1.1
+GET {{host}}/admin/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update application
 
-PUT http://localhost:3000/admin/applications/{{application_id}} HTTP/1.1
+PUT {{host}}/admin/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
@@ -40,13 +41,13 @@ Authorization: Bearer {{token}}
 
 ### Delete application
 
-DELETE http://localhost:3000/admin/applications/{{application_id}} HTTP/1.1
+DELETE {{host}}/admin/applications/{{application_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 
 ### Restore application
 
-PATCH http://localhost:3000/admin/applications/{{application_id}}/restore HTTP/1.1
+PATCH {{host}}/admin/applications/{{application_id}}/restore HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}

@@ -1,13 +1,14 @@
 # Authentication API
 
 ## Variables
+@host=http://localhost:3000
 @email=test@test.com
 @password=Welcome123!
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY4OTk2NTgwMywiZXhwIjoxNjg5OTc2NjAzfQ.m9JK75DewufMSRJwqP2W5prDu7I6k07491GrjDLpERo
 
 ### Login
 
-POST http://localhost:3000/admin/login HTTP/1.1
+POST {{host}}/admin/login HTTP/1.1
 content-type: application/json
 
 {
@@ -18,7 +19,7 @@ content-type: application/json
 
 ### Register
 
-POST http://localhost:3000/admin/users/ HTTP/1.1
+POST {{host}}/admin/users/ HTTP/1.1
 content-type: application/json
 
 {
@@ -28,16 +29,17 @@ content-type: application/json
 
 ### Retrieve user info
 
-GET http://localhost:3000/admin/users/me HTTP/1.1
+GET {{host}}/admin/users/me HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 ### Update user info
 
-PATCH http://localhost:3000/admin/users/me HTTP/1.1
+PATCH {{host}}/admin/users/me HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
 {
   "email": "foo@bar.com",
+  "password": "{{password}}"
 }
