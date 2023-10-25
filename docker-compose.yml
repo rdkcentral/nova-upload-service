@@ -51,8 +51,8 @@ services:
       MINIO_ROOT_USER: myAccessKey
       MINIO_ROOT_PASSWORD: mySecretKey
       # MINIO_NOTIFY_WEBHOOK_ENABLE_S3EVENT: "on"
-      # MINIO_NOTIFY_WEBHOOK_ENDPOINT_S3EVENT: http://ugap-api:3000/webhook
-      # /usr/bin/mc event add myminio/ugap arn:minio:sqs::S3EVENT:webhook -p --event put;
+      # MINIO_NOTIFY_WEBHOOK_ENDPOINT_S3EVENT: http://nova-api:3000/webhook
+      # /usr/bin/mc event add myminio/nova arn:minio:sqs::S3EVENT:webhook -p --event put;
     depends_on:
       - nova-backend
 
