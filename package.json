@@ -2,7 +2,7 @@
   "name": "nova-backend",
   "version": "0.1.0",
   "description": "Nova Backend",
-  "main": "src/serverless.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "start:dev": "nodemon -r ./dotenv.js src/server.js",
