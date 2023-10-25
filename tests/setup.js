@@ -18,7 +18,7 @@ let token
 const userToken = async function (app) {
   if (token) return token
   return request(app)
-    .post('/users')
+    .post('/admin/users')
     .send({ email: 'test@test.com', password: 'Password1234' })
     .then((res) => {
       token = res.body.data.token
@@ -31,7 +31,7 @@ let application
 const createApplication = async function (app) {
   if (application) return application
   return request(app)
-    .post('/applications')
+    .post('/admin/applications')
     .send({ name: 'My App', identifier: 'app.identifier' })
     .set({ Authorization: `Bearer ${token}` })
     .then((res) => {

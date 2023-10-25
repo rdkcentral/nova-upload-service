@@ -132,12 +132,12 @@ test('DELETE /admin/applications/:id - Remove application', function (assert) {
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .delete(`/applications/${applicationId}`)
+        .delete(`/admin/applications/${applicationId}`)
         .set({ Authorization: `Bearer ${token}` })
         .expect(200)
         .then(() => {
           request(app)
-            .get(`/applications/${applicationId}`)
+            .get(`/admin/applications/${applicationId}`)
             .set({ Authorization: `Bearer ${token}` })
             .expect(404)
             .then(() => {
@@ -155,7 +155,7 @@ test('DELETE /admin/applications/:id - Remove non-existing application', functio
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
-        .delete('/applications/01e125710000000000000000') // object id belongs to 1970-01-01 00:00:01
+        .delete('/admin/applications/01e125710000000000000000') // object id belongs to 1970-01-01 00:00:01
         .set({ Authorization: `Bearer ${token}` })
         .expect(404)
         .then(() => {
@@ -178,7 +178,7 @@ test('PATCH /admin/applications/:id/restore - Undo remove application', function
         .expect(200)
         .then(() => {
           request(app)
-            .get(`/applications/${applicationId}`)
+            .get(`/admin/applications/${applicationId}`)
             .set({ Authorization: `Bearer ${token}` })
             .expect(200)
             .then(() => {

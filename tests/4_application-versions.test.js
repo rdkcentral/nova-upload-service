@@ -8,7 +8,7 @@ let applicationVersion
 
 test('POST /admin/applications/:appId/versions - Creating an new application version', function (assert) {
   const version = '1.0.0'
-  const changeLog = 'Made the app 10x more awesome!!'
+  const changelog = 'Made the app 10x more awesome!!'
   initApp().then((app) => {
     userToken(app).then((token) => {
       createApplication(app).then((application) => {
@@ -17,7 +17,7 @@ test('POST /admin/applications/:appId/versions - Creating an new application ver
           .set({ Authorization: `Bearer ${token}` })
           .send({
             version,
-            changeLog,
+            changelog,
           })
           .expect(201)
           .then((res) => {
@@ -27,8 +27,8 @@ test('POST /admin/applications/:appId/versions - Creating an new application ver
               'Should store an application version record with the correct version'
             )
             assert.equal(
-              res.body.data.changeLog,
-              changeLog,
+              res.body.data.changelog,
+              changelog,
               'Should store an application version record with the correct changeLog'
             )
 
@@ -112,12 +112,12 @@ test('PUT /admin/applications/:appId/versions/:applicationVersionId - Update an 
           )
           .set({ Authorization: `Bearer ${token}` })
           .send({
-            changeLog: updatedChangelog,
+            changelog: updatedChangelog,
           })
           .expect(200)
           .then((res) => {
             assert.equal(
-              res.body.data.changeLog,
+              res.body.data.changelog,
               updatedChangelog,
               'Should return the updated value'
             )

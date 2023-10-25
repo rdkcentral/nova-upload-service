@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     })
 
     if (application) {
-      res.status(200).json({
+      return res.status(200).json({
         data: application.versions.toObject(),
         status: 'success',
       })

@@ -14,10 +14,11 @@ module.exports = async (req, res) => {
     if (application) {
       const body = {
         version: req.body.version,
-        changeLog: req.body.changeLog,
+        changelog: req.body.changelog,
         appIdentifier: application.identifier,
         applicationId: application._id,
         userId: req.user.id,
+        uploadStatus: 'pending',
       }
       const applicationVersion = await ApplicationVersionModel.create(
         body
@@ -30,12 +31,11 @@ module.exports = async (req, res) => {
         throw new Error('applicationUpdate failed', { cause: e })
       })
 
-      res.status(201).json({
+      return res.status(201).json({
         data: applicationVersion.toObject(),
         status: 'success',
       })
     }
-
     return res.status(404).json({
       status: 'error',
       message: 'Application version not found',
