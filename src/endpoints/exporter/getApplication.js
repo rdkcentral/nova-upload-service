@@ -1,23 +1,30 @@
 const ApplicationModel = require('../../models/Application').model
 const errorResponse = require('../../helpers/errorResponse')
 
+const formatters = require('../../formatters')
+
 module.exports = async (req, res) => {
   try {
-    const result = await ApplicationModel.findOne({
+    const application = await ApplicationModel.findOne({
       _id: req.params.id,
-      // status: 'active',
-      userId: req.user.id,
+      status: 'active',
     })
-    if (!result) {
+    if (!application) {
       return res.status(404).json({
         status: 'error',
         message: 'Application not found',
       })
     }
-    res.json({
-      data: result,
-      status: 'success',
-    })
+
+    const formatter =
+      (req.query.format && formatters[req.query.format]) || formatters.default
+
+    res.json(
+      formatter.response({
+        data: formatter.application(application),
+        status: 'success',
+      })
+    )
   } catch (e) {
     errorResponse.send(res, 'applicationGet failed', e)
   }

@@ -7,6 +7,9 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json({ limit: process.env.MAX_REQUEST_BODY_SIZE }))
 
+// exporter
+app.use('/applications', require('./routes/exporter'))
+
 // user paths
 app.use('/admin/login', require('./routes/login'))
 app.use('/admin/users', require('./routes/users'))
