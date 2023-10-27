@@ -1,8 +1,8 @@
 # Application API
 
 ## Variables
-@application_id = 64db28ffde5e19f81f035c1f
-
+@application_id = 6538eb2a187d953adcbaacca
+@version_id = 653bb090e283874f14cb22cc
 
 ### List all applications
 
@@ -14,9 +14,19 @@ content-type: application/json
 GET http://localhost:3000/applications?format=minimal HTTP/1.1
 content-type: application/json
 
+### List all applications with non-existing formatter (should use default instead)
+
+GET http://localhost:3000/applications?format=nothing HTTP/1.1
+content-type: application/json
+
 ### Get application details
 
 GET http://localhost:3000/applications/{{application_id}} HTTP/1.1
+content-type: application/json
+
+### Get application details with minimal formatter
+
+GET http://localhost:3000/applications/{{application_id}}?format=minimal HTTP/1.1
 content-type: application/json
 
 

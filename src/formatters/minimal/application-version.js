@@ -1,7 +1,8 @@
 module.exports = (applicationVersion) => {
   applicationVersion = applicationVersion.toObject()
 
-  // todo
-
-  return applicationVersion
+  return {
+    version: applicationVersion.version,
+    versionPath: applicationVersion.versionPath,
+  }
 }

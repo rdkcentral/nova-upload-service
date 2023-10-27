@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     const applicationVersion = await ApplicationVersionModel.findOne({
       applicationId: req.params.applicationId,
       _id: req.params.id,
-      status: 'active',
+      status: 'inactive',
     }).catch((e) => {
       throw new Error('applicationVersionGet failed', { cause: e })
     })
@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
 
       return res.status(200).json(
         formatter.response({
-          data: formatter.applicationVerson(applicationVersion),
+          data: formatter.applicationVersion(applicationVersion),
           status: 'success',
         })
       )
