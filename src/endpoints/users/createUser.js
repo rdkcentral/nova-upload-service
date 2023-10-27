@@ -9,7 +9,6 @@ module.exports = async (req, res) => {
       status: 'success',
     })
   } catch (e) {
-    // console.error(e)
     errorResponse.send(res, 'userCreationFailed', e)
   }
 }

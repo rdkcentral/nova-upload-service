@@ -16,7 +16,6 @@ module.exports = async (req, res) => {
       status: 'success',
     })
   } catch (e) {
-    console.error(e)
     res.status(500).json({
       status: 'error',
       message: 'user could not be retrieved',

@@ -22,7 +22,6 @@ module.exports = async (req, res) => {
       message: 'Application not found',
     })
   } catch (e) {
-    console.error(e)
     errorResponse.send(res, 'applicationDelete failed', e)
   }
 }

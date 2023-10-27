@@ -23,7 +23,6 @@ module.exports = async (req, res) => {
       message: 'Application version not found',
     })
   } catch (e) {
-    console.error(e)
     errorResponse.send(res, 'applicationVersionRestore failed', e)
   }
 }

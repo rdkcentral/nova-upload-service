@@ -38,7 +38,6 @@ module.exports = async (req, res) => {
       status: 'success',
     })
   } catch (e) {
-    console.error(e)
     return errorResponse.send(res, 'userUpdateFailed', e)
   }
 }
