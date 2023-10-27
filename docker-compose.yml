@@ -1,13 +1,13 @@
 version: '3.1'
 
 services:
-  nova-backend:
+  nova-upload-service:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - .:/usr/src/app
-      - nova-backend-node-modules:/opt/npm
+      - nova-upload-service-node-modules:/opt/npm
     working_dir: /usr/src/app
     ports:
       - "3000:3000"
@@ -54,7 +54,7 @@ services:
       # MINIO_NOTIFY_WEBHOOK_ENDPOINT_S3EVENT: http://nova-api:3000/webhook
       # /usr/bin/mc event add myminio/nova arn:minio:sqs::S3EVENT:webhook -p --event put;
     depends_on:
-      - nova-backend
+      - nova-upload-service
 
   createbuckets:
     image: minio/mc
@@ -86,7 +86,7 @@ services:
       AWS_SECRET_ACCESS_KEY: mySecretKey
       MONGODB_HOST: mongo
       MONGODB_PORT: 27017
-      MONGODB_DB: novaBackend
+      MONGODB_DB: novaUploadService
     volumes:
       - ./s3Lambda:/usr/src/app/s3Lambda
     depends_on:
@@ -94,5 +94,5 @@ services:
 
 volumes:
   mongo-data:
-  nova-backend-node-modules:
+  nova-upload-service-node-modules:
   minio-data:

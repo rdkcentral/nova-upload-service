@@ -1,7 +1,7 @@
 {
-  "name": "nova-backend",
+  "name": "nova-upload-service",
   "version": "0.1.0",
-  "description": "Nova Backend",
+  "description": "Nova Upload Service",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

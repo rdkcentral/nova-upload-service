@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   description: |
-    Nova Backend reference documentation.
+    Nova Upload Service reference documentation.
   version: 1.0.0
-  title: Nova Backend documentation
+  title: Nova Upload Service documentation
 
 servers:
   - url: http://localhost:3000

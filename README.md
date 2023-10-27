@@ -1,4 +1,4 @@
-Nova Backend
+Nova Upload Service
 =========
 
 ## Getting started
@@ -22,7 +22,7 @@ For non-production environments, copying `.env.example` as `.env` is enough for 
 | `JWT_SECRET_KEY` | `secret` | the secret key for JWT |
 | `MONGODB_HOST` | `mongo` | the host name for MongoDB |
 | `MONGODB_PORT` | `27017` | the port number for MongoDB |
-| `MONGODB_DB` | `novaBackend` | the database name for MongoDB |
+| `MONGODB_DB` | `novaUploadService` | the database name for MongoDB |
 | `MAX_REQUEST_BODY_SIZE` | `1mb` | the maximum size of request body |
 | `AWS_ACCESS_KEY_ID` | `myAccessKey` | the access key for AWS (or locally Minio) |
 | `AWS_SECRET_ACCESS_KEY` | `mySecretKey` | the secret key for AWS (or locally Minio) |
@@ -34,7 +34,7 @@ For non-production environments, copying `.env.example` as `.env` is enough for 
 
 ### Running Dev Environment
 
-The Nova Backend uses MongoDB as the database and Minio as the S3 storage. To run all required services at once, we use Docker Compose. To run the dev environment, run the following command in the root directory of the project :
+The Nova Upload Service uses MongoDB as the database and Minio as the S3 storage. To run all required services at once, we use Docker Compose. To run the dev environment, run the following command in the root directory of the project :
 
 ```bash
 # install dependencies
@@ -48,7 +48,7 @@ docker-compose up
 
 #### Managing Database
 
-To access the database, you can use MongoDB Compass or any other MongoDB GUI. The default connection string is `mongodb://localhost:27017/novaBackend` while Docker Compose services are running.
+To access the database, you can use MongoDB Compass or any other MongoDB GUI. The default connection string is `mongodb://localhost:27017/novaUploadService` while Docker Compose services are running.
 
 You can also use the mongo-express service included in the Docker Compose file. To access mongo-express, go to `http://localhost:8081` in your browser. The default username is `root` and the password is `example`.
 
