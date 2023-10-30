@@ -6,9 +6,11 @@ module.exports = async (req, res) => {
     const application = await ApplicationModel.findOne({
       _id: req.params.applicationId,
       userId: req.user.id,
-    }).catch((e) => {
-      throw new Error('applicationVersionList failed', { cause: e })
     })
+      .populate('versions') //needed to get fresh data
+      .catch((e) => {
+        throw new Error('applicationVersionList failed', { cause: e })
+      })
 
     if (application) {
       return res.status(200).json({
