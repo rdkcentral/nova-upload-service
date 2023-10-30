@@ -1,5 +1,5 @@
 {
-  "name": "s3lambda",
+  "name": "s3-event-handler",
   "version": "1.0.0",
   "description": "Extracts application file when it is created on S3 bucket",
   "main": "objectCreated.js",
