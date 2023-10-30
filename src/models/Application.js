@@ -12,6 +12,10 @@ const ApplicationSchema = new mongoose.Schema(
       index: true,
       unique: true,
       required: true,
+      match: [
+        /^(?=.{1,63}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/,
+        'invalidApplicationIdentifier', // identifier = subdomain on CF, so it needs to be a valid subdomain
+      ],
     },
     userId: {
       $type: mongoose.ObjectId,
