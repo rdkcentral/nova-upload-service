@@ -1,13 +1,21 @@
 require('aws-sdk/lib/maintenance_mode_message').suppress = true
 const AWS = require('aws-sdk')
 const unzipper = require('unzipper')
+const mime = require('mime')
 
-const s3 = new AWS.S3({
-  endpoint: process.env.AWS_ENDPOINT_URL_S3 || '', // Minio endpoint
-  s3ForcePathStyle: true, // Use path-style URLs
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-})
+// options for dev/prod
+const options = {
+  s3ForcePathStyle: true,
+}
+
+// dev options (if AWS_ENDPOINT_URL_S3 is set then it is dev mode because we only do that for minio)
+if (process.env.AWS_ENDPOINT_URL_S3) {
+  options.endpoint = process.env.AWS_ENDPOINT_URL_S3 // minio endpoint
+  options.accessKeyId = process.env.AWS_ACCESS_KEY_ID
+  options.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+}
+
+const s3 = new AWS.S3(options)
 
 // eslint-disable-next-line no-unused-vars
 exports.handler = async function (event, context) {
@@ -52,6 +60,7 @@ exports.handler = async function (event, context) {
           Bucket: bucket.name,
           Key: destinationPath,
           Body: entry,
+          ContentType: mime.getType(fileName) || 'application/octet-stream',
         }
 
         promises.push(s3.upload(uploadParams).promise())
@@ -79,7 +88,9 @@ exports.handler = async function (event, context) {
 let cachedDb = null
 async function connectToDatabase() {
   const MongoClient = require('mongodb').MongoClient
-  const MONGODB_URI = `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}?retryWrites=true&w=majority`
+  const MONGODB_URI =
+    process.env.MONGODB_URL ||
+    `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}?retryWrites=true&w=majority`
 
   if (cachedDb) {
     return cachedDb
