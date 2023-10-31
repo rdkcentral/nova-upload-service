@@ -6,7 +6,7 @@ const { initApp, userToken } = require('./setup')
 
 let applicationId
 const name = 'My test App'
-const identifier = 'my.test.app'
+const identifier = 'myTestApp'
 
 test('POST /admin/applications - Creating an new application', function (assert) {
   initApp().then((app) => {

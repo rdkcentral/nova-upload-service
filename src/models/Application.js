@@ -2,8 +2,6 @@ const mongoose = require('../mongo')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
 const softDelete = require('./plugins/softDelete')
 
-const ApplicationVersionSchema = require('./ApplicationVersion').schema
-
 // Application
 const ApplicationSchema = new mongoose.Schema(
   {
@@ -46,7 +44,12 @@ const ApplicationSchema = new mongoose.Schema(
       $type: String,
       default: null,
     },
-    versions: [ApplicationVersionSchema],
+    versions: [
+      {
+        $type: mongoose.ObjectId,
+        ref: 'ApplicationVersion',
+      },
+    ],
     changeLog: [
       {
         $type: Object,
