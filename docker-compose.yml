@@ -79,7 +79,7 @@ services:
       MINIO_NOTIFICATIONS_PREFIX:
       MINIO_NOTIFICATIONS_SUFFIX: .zip
       MINIO_NOTIFICATIONS_EVENTS: "s3:ObjectCreated:*"
-      EVENT_LAMBDA_FUNCTION_PATH: lambdas/s3EventHandler/objectCreated.js
+      EVENT_LAMBDA_FUNCTION_PATH: s3EventHandler/objectCreated.js
       EVENT_LAMBDA_HANDLER: handler
       AWS_ENDPOINT_URL_S3: http://minio:9000
       AWS_ACCESS_KEY_ID: myAccessKey
@@ -88,7 +88,7 @@ services:
       MONGODB_PORT: 27017
       MONGODB_DB: novaUploadService
     volumes:
-      - ./s3EventHandler:/usr/src/app/s3EventHandler
+      - ./lambdas/s3EventHandler:/usr/src/app/s3EventHandler
     depends_on:
       - createbuckets
 

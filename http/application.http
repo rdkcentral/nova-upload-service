@@ -1,9 +1,10 @@
 # Application API
 
 ## Variables
-@host=http://localhost:3000
-@application_id = 64db28ffde5e19f81f035c1f
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzhlYWMxMGI5M2VkODY0ZmEyOGViNyIsImVtYWlsIjoidGVzdDEwMEB0ZXN0LmNvbSIsImlhdCI6MTY5ODIyODkyOSwiZXhwIjoxNjk4MjM5NzI5fQ.F3knIsXIoHulDYCgob77SP7Z_jPvNaFs4HaN_qZf2FI
+# @host=http://localhost:3000
+@host=http://nova.us-east-2.elasticbeanstalk.com
+@application_id = 6542b9e43f2495872e109b3a
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 ### Create an application
 
@@ -12,8 +13,8 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Test name",
-  "identifier": "test identifier3"
+  "name": "Blits Sample App",
+  "identifier": "blits-demo"
 }
 
 
@@ -36,7 +37,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "location": "location bla"
+  "name": "Blits Example App"
 }
 
 ### Delete application

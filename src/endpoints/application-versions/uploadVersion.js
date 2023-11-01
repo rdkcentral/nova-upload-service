@@ -1,8 +1,40 @@
 const ApplicationVersionModel = require('../../models/ApplicationVersion').model
 const ApplicationModel = require('../../models/Application').model
 const errorResponse = require('../../helpers/errorResponse')
-const s3 = require('../../helpers/awsS3')
-const fileType = require('file-type')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
+const AWS = require('aws-sdk')
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_DEFAULT_REGION,
+  endpoint: process.env.AWS_S3_ENDPOINT,
+  s3ForcePathStyle: true,
+  signatureVersion: 'v4',
+})
+
+// multer & multer-s3 setup
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.AWS_S3_BUCKET,
+    key: function (req, file, cb) {
+      const appVersion = req.appVersion
+      const appIdentifier = req.appIdentifier
+      const uploadDir = `uploads/${appIdentifier}/${appVersion}`
+      const filename = file.originalname.replace(/\/|\\/g, '_')
+      const uploadPath = `${uploadDir}/${filename}`
+      cb(null, uploadPath)
+    },
+    fileFilter: function (req, file, cb) {
+      if (file.mimetype !== 'application/zip') {
+        return cb(null, false)
+      }
+      cb(null, true)
+    },
+  }),
+}).single('file') // 'file' is the name of the field for multipart upload
 
 module.exports = async (req, res) => {
   try {
@@ -26,38 +58,29 @@ module.exports = async (req, res) => {
         throw new Error('applicationNotHosted')
       }
 
-      if (req.body.file && req.body.file.length > 0) {
-        // get request body as binary and save it to S3
-        const uploadedFile = Buffer.from(req.body.file, 'base64')
-        const fileName = req.body.fileName.replace(/\/|\\/g, '_')
-        const bucket = process.env.AWS_S3_BUCKET
-        const appVersion = applicationVersion.version
-        const appIdentifier = application.identifier
-        const uploadDir = `uploads/${appIdentifier}/${appVersion}`
-        const uploadPath = `${uploadDir}/${fileName}`
-        const fileTypeResult = await fileType.fromBuffer(uploadedFile)
+      req.appIdentifier = application.identifier
+      req.appVersion = applicationVersion.version
 
-        if (fileTypeResult.mime !== 'application/zip') {
-          throw new Error('Uploaded file is not a zip file')
+      upload(req, res, async function (error) {
+        if (error) {
+          throw new Error('fileUploadFailed', { cause: error })
+        }
+        if (req.file.mimetype !== 'application/zip') {
+          throw new Error('fileTypeInvalid')
+        }
+        if (!req.file) {
+          throw new Error('fileIsMissing')
         }
 
-        try {
-          await s3.putObject(bucket, uploadPath, uploadedFile)
+        // File is uploaded update application version
+        applicationVersion.uploadStatus = 'pending'
+        await applicationVersion.save()
 
-          // file has been uploaded, update application version
-          applicationVersion.uploadStatus = 'pending'
-          await applicationVersion.save()
-
-          return res.status(200).json({
-            data: applicationVersion.toObject(),
-            status: 'success',
-          })
-        } catch (e) {
-          throw new Error('Application upload failed', { cause: e })
-        }
-      } else {
-        throw new Error('File data is empty')
-      }
+        return res.status(200).json({
+          data: applicationVersion.toObject(),
+          status: 'success',
+        })
+      })
     } else {
       throw new Error('Application version not found')
     }
