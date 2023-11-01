@@ -33,8 +33,8 @@ const ApplicationVersionSchema = new mongoose.Schema(
     },
     uploadStatus: {
       $type: String,
-      enum: ['pending', 'ready', 'error'],
-      default: '',
+      enum: ['none', 'pending', 'ready', 'error'],
+      default: 'none',
     },
     versionPath: {
       $type: String,
