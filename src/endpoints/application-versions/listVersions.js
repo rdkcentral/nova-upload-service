@@ -3,14 +3,13 @@ const ApplicationVersionModel = require('../../models/ApplicationVersion').model
 
 module.exports = async (req, res) => {
   try {
+    console.log(req.params)
     let data = await ApplicationVersionModel.find({
       applicationId: req.params.applicationId,
       userId: req.user.id,
+    }).catch((e) => {
+      throw new Error('applicationVersionList failed', { cause: e })
     })
-      .populate('versions') //needed to get fresh data
-      .catch((e) => {
-        throw new Error('applicationVersionList failed', { cause: e })
-      })
 
     return res.status(200).json({
       data: data || [],
