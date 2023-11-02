@@ -7,33 +7,34 @@ exports.handler = async (event) => {
   const domainName = request.headers.host[0].value
   const subdomain = domainName.split('.')[0]
 
-     // Check if the root path is requested
+  // Check if the root path is requested
   if (request.uri === '/') {
     // Generate the redirect URL
     const redirectUrl = `https://${domainName}/latest/index.html`
 
-      // Return a 302 Temporary Redirect response
-      const response = {
+    // Return a 302 Temporary Redirect response
+    const response = {
       status: '302',
       statusDescription: 'Found',
       headers: {
-        location: [{
+        location: [
           {
             key: 'Location',
-          value: redirectUrl,
-        }],
+            value: redirectUrl,
+          },
+        ],
         // Optionally, you can add other headers here as needed
       },
-    };
+    }
 
     return response
   } else {
     // Rewrite URL to match desired structure and append index.html if the request is for root
     if (request.uri.endsWith('/')) {
       request.uri = `/apps/${subdomain}${request.uri}index.html`
-  } else {
+    } else {
       request.uri = `/apps/${subdomain}${request.uri}`
-  }
+    }
     console.log(request.uri)
   }
 

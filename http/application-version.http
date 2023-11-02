@@ -3,8 +3,8 @@
 ## Variables
 # @host=http://localhost:3000
 @host=http://nova.us-east-2.elasticbeanstalk.com
-@application_id = 6542b9e43f2495872e109b3a
-@version_id = 6542bae73f2495872e109b46
+@application_id = 6542f3bd2bbf4b78507a2cd0
+@version_id = 6542f3f42bbf4b78507a2cd8
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 ### Create an application version
@@ -14,7 +14,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "version": "0.1.1",
+  "version": "2.4.1",
   "changelog": "Fixed the bugs related to routes"
 }
 
@@ -48,10 +48,10 @@ Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="blitsSampleApp.zip"
+Content-Disposition: form-data; name="file"; filename="sampleApp.zip"
 Content-Type: application/zip
 
-< ./blitsSampleApp.zip
+< ./sampleApp.zip
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Delete application version

@@ -3,7 +3,7 @@
 ## Variables
 # @host=http://localhost:3000
 @host=http://nova.us-east-2.elasticbeanstalk.com
-@application_id = 6542b9e43f2495872e109b3a
+@application_id = 6542f3bd2bbf4b78507a2cd0
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 ### Create an application
@@ -13,8 +13,8 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Blits Sample App",
-  "identifier": "blits-demo"
+  "name": "Sample App",
+  "identifier": "sample-app"
 }
 
 
@@ -37,7 +37,7 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "Blits Example App"
+  "status": "active"
 }
 
 ### Delete application
