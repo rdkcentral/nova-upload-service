@@ -56,14 +56,24 @@ exports.handler = async function (event, context) {
 
       const type = entry.type
       if (type === 'File') {
+        const fileMime = mime.getType(fileName) || 'application/octet-stream'
         const uploadParams = {
           Bucket: bucket.name,
           Key: destinationPath,
           Body: entry,
-          ContentType: mime.getType(fileName) || 'application/octet-stream',
+          ContentType: fileMime,
+        }
+
+        // upload also to latest folder
+        const latestUploadParams = {
+          Bucket: bucket.name,
+          Key: destinationPath.replace(appVersion, 'latest'),
+          Body: entry,
+          ContentType: fileMime,
         }
 
         promises.push(s3.upload(uploadParams).promise())
+        promises.push(s3.upload(latestUploadParams).promise())
       } else {
         entry.autodrain()
       }
