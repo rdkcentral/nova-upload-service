@@ -83,6 +83,27 @@ exports.handler = async function (event, context) {
     try {
       await Promise.all(promises)
       console.log('Successfully extracted zip file.')
+
+      // New code to copy the apps/<app-identifier>/<version>/ folder to the apps/<app-identifier>/latest/ folder
+      const sourcePrefix = `apps/${appIdentifier}/${appVersion}/`
+      const destPrefix = `apps/${appIdentifier}/latest/`
+      const listParams = {
+        Bucket: bucket.name,
+        Prefix: sourcePrefix,
+      }
+      const { Contents } = await s3.listObjectsV2(listParams).promise()
+      const copyPromises = Contents.map(async (object) => {
+        const copySource = `${bucket.name}/${object.Key}`
+        const destKey = object.Key.replace(sourcePrefix, destPrefix)
+        const copyParams = {
+          CopySource: copySource,
+          Bucket: bucket.name,
+          Key: destKey,
+        }
+        return s3.copyObject(copyParams).promise()
+      })
+      await Promise.all(copyPromises)
+      console.log('Successfully copied folder.')
     } catch (err) {
       status = false
       console.error('Error extracting zip file:', err)
