@@ -21,8 +21,8 @@ const upload = multer({
     bucket: process.env.AWS_S3_BUCKET,
     key: function (req, file, cb) {
       const appVersion = req.appVersion
-      const appIdentifier = req.appIdentifier
-      const uploadDir = `uploads/${appIdentifier}/${appVersion}`
+      const appSubDomain = req.appSubDomain
+      const uploadDir = `uploads/${appSubDomain}/${appVersion}`
       const filename = file.originalname.replace(/\/|\\/g, '_')
       const uploadPath = `${uploadDir}/${filename}`
       cb(null, uploadPath)
@@ -58,8 +58,8 @@ module.exports = async (req, res) => {
         throw new Error('applicationNotHosted')
       }
 
-      req.appIdentifier = application.identifier
       req.appVersion = applicationVersion.version
+      req.appSubDomain = application.subdomain
 
       upload(req, res, async function (error) {
         if (error) {
