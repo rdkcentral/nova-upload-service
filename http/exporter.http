@@ -1,7 +1,7 @@
 # Application API
 
 ## Variables
-@host=http://nova.us-east-2.elasticbeanstalk.com
+@host=http://localhost:3000
 @application_id = 6542b9e43f2495872e109b3a
 @version_id = 6542bae73f2495872e109b46
 

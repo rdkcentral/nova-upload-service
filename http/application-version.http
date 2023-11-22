@@ -2,7 +2,7 @@
 
 ## Variables
 # @host=http://localhost:3000
-@host=http://nova.us-east-2.elasticbeanstalk.com
+@host=http://localhost:3000
 @application_id = 6542f3bd2bbf4b78507a2cd0
 @version_id = 6542f3f42bbf4b78507a2cd8
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
