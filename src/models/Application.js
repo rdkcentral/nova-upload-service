@@ -1,8 +1,7 @@
 const mongoose = require('../mongo')
 const mongooseUniqueValidator = require('mongoose-unique-validator')
 const softDelete = require('./plugins/softDelete')
-
-const ApplicationVersionSchema = require('./ApplicationVersion').schema
+const ShortUniqueId = require('short-unique-id')
 
 // Application
 const ApplicationSchema = new mongoose.Schema(
@@ -42,11 +41,23 @@ const ApplicationSchema = new mongoose.Schema(
       $type: Boolean,
       default: true,
     },
+    subdomain: {
+      $type: String,
+      unique: true,
+      index: true, //needed for S3 event handler
+      default: null,
+      immutable: true,
+    },
     location: {
       $type: String,
       default: null,
     },
-    versions: [ApplicationVersionSchema],
+    versions: [
+      {
+        $type: mongoose.ObjectId,
+        ref: 'ApplicationVersion',
+      },
+    ],
     changeLog: [
       {
         $type: Object,
@@ -63,6 +74,18 @@ const ApplicationSchema = new mongoose.Schema(
 
 ApplicationSchema.plugin(mongooseUniqueValidator)
 ApplicationSchema.plugin(softDelete)
+
+ApplicationSchema.pre('validate', function (next) {
+  // always auto-generate subdomain (even isHosted is false)
+  if (!this.subdomain) {
+    const uid = new ShortUniqueId({
+      dictionary: 'alphanum_lower',
+      length: 16,
+    })
+    this.subdomain = uid.randomUUID()
+  }
+  next()
+})
 
 module.exports = {
   schema: ApplicationSchema,

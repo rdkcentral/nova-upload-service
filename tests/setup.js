@@ -32,7 +32,7 @@ const createApplication = async function (app) {
   if (application) return application
   return request(app)
     .post('/admin/applications')
-    .send({ name: 'My App', identifier: 'app.identifier' })
+    .send({ name: 'My App', identifier: 'appidentifier' })
     .set({ Authorization: `Bearer ${token}` })
     .then((res) => {
       application = res.body.data

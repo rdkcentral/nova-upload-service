@@ -25,7 +25,7 @@ exports.handler = async function (event, context) {
     const pathParts = object.key.split('/')
     const zipFileName = pathParts.pop()
     const appVersion = pathParts.pop()
-    const appIdentifier = pathParts.pop()
+    const appSubDomain = pathParts.pop()
 
     // Check if the object is a zip file
     if (!object.key.endsWith('.zip')) {
@@ -56,14 +56,24 @@ exports.handler = async function (event, context) {
 
       const type = entry.type
       if (type === 'File') {
+        const fileMime = mime.getType(fileName) || 'application/octet-stream'
         const uploadParams = {
           Bucket: bucket.name,
           Key: destinationPath,
           Body: entry,
-          ContentType: mime.getType(fileName) || 'application/octet-stream',
+          ContentType: fileMime,
+        }
+
+        // upload also to latest folder
+        const latestUploadParams = {
+          Bucket: bucket.name,
+          Key: destinationPath.replace(appVersion, 'latest'),
+          Body: entry,
+          ContentType: fileMime,
         }
 
         promises.push(s3.upload(uploadParams).promise())
+        promises.push(s3.upload(latestUploadParams).promise())
       } else {
         entry.autodrain()
       }
@@ -73,13 +83,34 @@ exports.handler = async function (event, context) {
     try {
       await Promise.all(promises)
       console.log('Successfully extracted zip file.')
+
+      // New code to copy the apps/<appSubDomain>/<version>/ folder to the apps/<app-identifier>/latest/ folder
+      const sourcePrefix = `apps/${appSubDomain}/${appVersion}/`
+      const destPrefix = `apps/${appSubDomain}/latest/`
+      const listParams = {
+        Bucket: bucket.name,
+        Prefix: sourcePrefix,
+      }
+      const { Contents } = await s3.listObjectsV2(listParams).promise()
+      const copyPromises = Contents.map(async (object) => {
+        const copySource = `${bucket.name}/${object.Key}`
+        const destKey = object.Key.replace(sourcePrefix, destPrefix)
+        const copyParams = {
+          CopySource: copySource,
+          Bucket: bucket.name,
+          Key: destKey,
+        }
+        return s3.copyObject(copyParams).promise()
+      })
+      await Promise.all(copyPromises)
+      console.log('Successfully copied folder.')
     } catch (err) {
       status = false
       console.error('Error extracting zip file:', err)
     }
 
     // update application version
-    await updateApplicationVersion(appIdentifier, appVersion, status)
+    await updateApplicationVersion(appSubDomain, appVersion, status)
   } catch (error) {
     console.error('Error:', error)
   }
@@ -103,28 +134,38 @@ async function connectToDatabase() {
   return db
 }
 
-async function updateApplicationVersion(appIdentifier, appVersion, status) {
+async function updateApplicationVersion(appSubDomain, appVersion, status) {
   try {
     const db = await connectToDatabase()
-    const collection = await db.collection('applicationversions')
-    const filter = { appIdentifier: appIdentifier, version: appVersion }
 
-    // set uploadStatus to 'ready' if status=true, or 'error' if status=false
-    // set versionPath to 'apps/<appIdentifier>/<appVersion>' if status=true, or '' if status=false
-    const update = {
-      $set: {
-        uploadStatus: status ? 'ready' : 'error',
-        versionPath: status ? `apps/${appIdentifier}/${appVersion}` : '',
-      },
+    // get application data to obtain the application identifier
+    const application = await db.collection('applications').findOne({
+      subdomain: appSubDomain,
+    })
+
+    if (application) {
+      const collection = await db.collection('applicationversions')
+      const filter = {
+        appIdentifier: application.identifier,
+        version: appVersion,
+      }
+
+      const update = {
+        $set: {
+          uploadStatus: status ? 'ready' : 'error',
+          versionPath: status ? `apps/${appSubDomain}/${appVersion}` : '',
+        },
+      }
+
+      const result = await collection.updateOne(filter, update)
+      console.log(
+        `${result.modifiedCount} record has been updated with uploadStatus: ${
+          status ? 'ready' : 'error'
+        }`
+      )
+    } else {
+      throw new Error(`Application with subdomain ${appSubDomain} not found`)
     }
-
-    // updateOne with await
-    const result = await collection.updateOne(filter, update)
-    console.log(
-      `${result.modifiedCount} record has been updated with uploadStatus: ${
-        status ? 'ready' : 'error'
-      }`
-    )
   } catch (error) {
     console.error('Application version update error :', error)
   }

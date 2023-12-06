@@ -1,10 +1,11 @@
 # Authentication API
 
 ## Variables
+# @host=http://localhost:3000
 @host=http://localhost:3000
-@email=test100@test.com
+@email=test@example.com
 @password=Welcome123!
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjgxZmM2ODU0MTM4MmJkMzNlOGUzYiIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY4OTk2NTgwMywiZXhwIjoxNjg5OTc2NjAzfQ.m9JK75DewufMSRJwqP2W5prDu7I6k07491GrjDLpERo
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 ### Login
 

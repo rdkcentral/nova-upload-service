@@ -104,8 +104,8 @@ dist
 .tern-port
 
 .DS_Store
-
 .aws-sam
+http/local
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

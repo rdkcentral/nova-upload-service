@@ -1,10 +1,11 @@
 # Application API
 
 ## Variables
+# @host=http://localhost:3000
 @host=http://localhost:3000
-@application_id = 6538eb2a187d953adcbaacca
-@version_id = 64bec9719f9f201117bd0e1b
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MzhlYWMxMGI5M2VkODY0ZmEyOGViNyIsImVtYWlsIjoidGVzdDEwMEB0ZXN0LmNvbSIsImlhdCI6MTY5ODQxMDU4NywiZXhwIjoxNjk4NDIxMzg3fQ.4CrHziie2Oo_vWpQnYJkpCzSrlAU-IjkKZPaBmlS62I
+@application_id = 6542f3bd2bbf4b78507a2cd0
+@version_id = 6542f3f42bbf4b78507a2cd8
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 ### Create an application version
 
@@ -13,8 +14,8 @@ content-type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "version": "1.1.0",
-  "changelog": "Added another cool new feature!"
+  "version": "2.4.1",
+  "changelog": "Fixed the bugs related to routes"
 }
 
 
@@ -40,19 +41,28 @@ Authorization: Bearer {{token}}
   "changelog": "Fixing a typo in my changelog"
 }
 
+### Upload application version
+
+POST {{host}}/admin/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="sampleApp.zip"
+Content-Type: application/zip
+
+< ./sampleApp.zip
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 ### Delete application version
 
 DELETE {{host}}/admin/applications/{{application_id}}/versions/{{version_id}} HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
-### Upload application version
+### Restore application
 
-POST {{host}}/admin/applications/{{application_id}}/versions/{{version_id}}/upload HTTP/1.1
+PATCH {{host}}/admin/applications/{{application_id}}/versions/{{version_id}}/restore HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{token}}
 
-{
-  "fileName": "my-cool-app-v1.1.0.zip",
-  "file": "UEsDBBQDAAAAAI9pGFcAAAAAAAAAAAAAAAAHAAAAaW1hZ2VzL1BLAwQUAwAAAACTaRhXAAAAAAAAAAAAAAAADQAAAGltYWdlcy9pY29ucy9QSwMECgMAAAAAk2kYVwAAAAAAAAAAAAAAABUAAABpbWFnZXMvaWNvbnMvaWNvbi5wbmdQSwMECgMAAAAAjGkYVwAAAAAAAAAAAAAAABEAAABpbWFnZXMvaW1hZ2UxLmpwZ1BLAwQKAwAAAACEaRhXAAAAAAAAAAAAAAAACAAAAHRlc3QucG5nUEsDBAoDAAAAAIRpGFcAAAAAAAAAAAAAAAANAAAAdGVzdGZpbGUxLnR4dFBLAQI/AxQDAAAAAI9pGFcAAAAAAAAAAAAAAAAHACQAAAAAAAAAEID9QQAAAABpbWFnZXMvCgAgAAAAAAABABgAAKNP33vW2QEA0UDMg9bZAQB33smD1tkBUEsBAj8DFAMAAAAAk2kYVwAAAAAAAAAAAAAAAA0AJAAAAAAAAAAQgP1BJQAAAGltYWdlcy9pY29ucy8KACAAAAAAAAEAGACAwHvje9bZAQBY1M+D1tkBAHfeyYPW2QFQSwECPwMKAwAAAACTaRhXAAAAAAAAAAAAAAAAFQAkAAAAAAAAACCAtIFQAAAAaW1hZ2VzL2ljb25zL2ljb24ucG5nCgAgAAAAAAABABgAgMB743vW2QGAwHvje9bZAQB33smD1tkBUEsBAj8DCgMAAAAAjGkYVwAAAAAAAAAAAAAAABEAJAAAAAAAAAAggLSBgwAAAGltYWdlcy9pbWFnZTEuanBnCgAgAAAAAAABABgAgIUj23vW2QGAhSPbe9bZAQB33smD1tkBUEsBAj8DCgMAAAAAhGkYVwAAAAAAAAAAAAAAAAgAJAAAAAAAAAAggLSBsgAAAHRlc3QucG5nCgAgAAAAAAABABgAALQy0nvW2QEA0UDMg9bZAQB33smD1tkBUEsBAj8DCgMAAAAAhGkYVwAAAAAAAAAAAAAAAA0AJAAAAAAAAAAggLSB2AAAAHRlc3RmaWxlMS50eHQKACAAAAAAAAEAGAAAtDLSe9bZAQC0MtJ71tkBAHfeyYPW2QFQSwUGAAAAAAYABgA7AgAAAwEAAAAA"
-}

@@ -18,17 +18,12 @@ module.exports = async (req, res) => {
         appIdentifier: application.identifier,
         applicationId: application._id,
         userId: req.user.id,
-        uploadStatus: 'pending',
+        uploadStatus: 'none',
       }
       const applicationVersion = await ApplicationVersionModel.create(
         body
       ).catch((e) => {
         throw new Error('applicationVersionCreate failed', { cause: e })
-      })
-
-      application.versions.push(applicationVersion)
-      await application.save().catch((e) => {
-        throw new Error('applicationUpdate failed', { cause: e })
       })
 
       return res.status(201).json({

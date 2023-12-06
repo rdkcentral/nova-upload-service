@@ -1,25 +1,19 @@
 const errorResponse = require('../../helpers/errorResponse')
-const ApplicationModel = require('../../models/Application').model
+const ApplicationVersionModel = require('../../models/ApplicationVersion').model
 
 module.exports = async (req, res) => {
   try {
-    const application = await ApplicationModel.findOne({
-      _id: req.params.applicationId,
+    console.log(req.params)
+    let data = await ApplicationVersionModel.find({
+      applicationId: req.params.applicationId,
       userId: req.user.id,
     }).catch((e) => {
       throw new Error('applicationVersionList failed', { cause: e })
     })
 
-    if (application) {
-      return res.status(200).json({
-        data: application.versions.toObject(),
-        status: 'success',
-      })
-    }
-
-    return res.status(404).json({
-      status: 'error',
-      message: 'Application not found',
+    return res.status(200).json({
+      data: data || [],
+      status: 'success',
     })
   } catch (e) {
     return errorResponse.send(res, e.message, e)
