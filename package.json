@@ -1,7 +1,12 @@
 {
   "name": "nova-upload-service",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Nova Upload Service",
+  "author": "Michiel van der Geest <hello@michielvandergeest.com>",
+  "contributors": [
+    "Uğur Aslan <ugur@uguraslan.net>"
+  ],
+  "license": "Apache-2.0",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
