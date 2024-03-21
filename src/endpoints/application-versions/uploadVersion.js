@@ -84,11 +84,11 @@ module.exports = async (req, res) => {
         if (error) {
           throw new Error('fileUploadFailed', { cause: error })
         }
-        if (req.file.mimetype !== 'application/zip') {
-          throw new Error('fileTypeInvalid')
-        }
         if (!req.file) {
           throw new Error('fileIsMissing')
+        }
+        if (req.file.mimetype !== 'application/zip') {
+          throw new Error('fileTypeInvalid')
         }
 
         // File is uploaded update application version
