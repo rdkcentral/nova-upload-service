@@ -25,3 +25,8 @@ const app = require('./app.js')
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
+
+// Global Error  Handling
+process.on('uncaughtException', (err) => {
+  console.log('UncaughtException', err)
+})
