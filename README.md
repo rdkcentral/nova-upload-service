@@ -60,3 +60,14 @@ We use the Minio service to mimic the S3 storage in the dev environment. To acce
 ## API Routes
 
 [Routes List](./docs/apiRoutes.md)
+
+## Creating Docker Production Image
+
+The Nova Upload Service was planned to deploy as Lambda functions. The project supports running a standalone run Node.js framework too.
+You should use Dockerfile.production to deploy as a container for the production and stages environments.
+
+```bash
+# Create image with "nova-upload-service-prod: tag
+docker build -t nova-upload-service-prod -f Dockerfile.prod .
+
+```

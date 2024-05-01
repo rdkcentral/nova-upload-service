@@ -1,0 +1,14 @@
+#Current lts-slim version is 20.12.2-bookworm-slim
+FROM node:20.12.2-bookworm-slim
+
+EXPOSE 3000
+
+# set workdir & copy all files
+WORKDIR /usr/src/app
+COPY . .
+
+# install npm packages
+RUN npm cache verify && npm ci
+
+# run application
+CMD ["./docker.init.sh", "npm", "run", "start"]
