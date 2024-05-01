@@ -33,6 +33,14 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
+const ACCEPTED_MIMETYPES = [
+  'application/zip',
+  'application/zip-compressed',
+  'application/x-zip',
+  'application/x-zip-compressed',
+  'multipart/x-zip',
+]
+
 // multer & multer-s3 setup
 const upload = multer({
   storage: multerS3({
@@ -47,7 +55,7 @@ const upload = multer({
       cb(null, uploadPath)
     },
     fileFilter: function (req, file, cb) {
-      if (file.mimetype !== 'application/zip') {
+      if (!ACCEPTED_MIMETYPES.includes(file.mimetype)) {
         return cb(null, false)
       }
       cb(null, true)
@@ -87,7 +95,7 @@ module.exports = async (req, res) => {
         if (!req.file) {
           throw new Error('fileIsMissing')
         }
-        if (req.file.mimetype !== 'application/zip') {
+        if (!ACCEPTED_MIMETYPES.includes(req.file.mimetype)) {
           throw new Error('fileTypeInvalid')
         }
 
