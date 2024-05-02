@@ -89,24 +89,28 @@ module.exports = async (req, res) => {
       req.appSubDomain = application.subdomain
 
       upload(req, res, async function (error) {
-        if (error) {
-          throw new Error('fileUploadFailed', { cause: error })
-        }
-        if (!req.file) {
-          throw new Error('fileIsMissing')
-        }
-        if (!ACCEPTED_MIMETYPES.includes(req.file.mimetype)) {
-          throw new Error('fileTypeInvalid')
-        }
+        try {
+          if (error) {
+            throw new Error('fileUploadFailed', { cause: error })
+          }
+          if (!req.file) {
+            throw new Error('fileIsMissing')
+          }
+          if (!ACCEPTED_MIMETYPES.includes(req.file.mimetype)) {
+            throw new Error('fileTypeInvalid')
+          }
 
-        // File is uploaded update application version
-        applicationVersion.uploadStatus = 'pending'
-        await applicationVersion.save()
+          // File is uploaded update application version
+          applicationVersion.uploadStatus = 'pending'
+          await applicationVersion.save()
 
-        return res.status(200).json({
-          data: applicationVersion.toObject(),
-          status: 'success',
-        })
+          return res.status(200).json({
+            data: applicationVersion.toObject(),
+            status: 'success',
+          })
+        } catch (e) {
+          return errorResponse.send(res, e.message, e)
+        }
       })
     } else {
       throw new Error('Application version not found')
