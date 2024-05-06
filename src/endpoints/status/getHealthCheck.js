@@ -32,13 +32,19 @@ const s3 = new AWS.S3({
 module.exports = async (req, res) => {
   try {
     const dbState = mongoose.connection.readyState
-    const bucketState = await bucketStatus()
+
+    const resultData = {
+      dbState: dbState,
+    }
+
+    if (
+      process.env.CHECK_BUCKET_STATE &&
+      process.env.CHECK_BUCKET_STATE === 'true'
+    )
+      resultData.bucketState = await bucketStatus()
 
     res.status(200).json({
-      data: {
-        dbState: dbState,
-        bucketState: bucketState,
-      },
+      data: resultData,
       status: 'success',
     })
   } catch (e) {
