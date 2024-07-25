@@ -28,6 +28,15 @@ module.exports = async (req, res) => {
   const user = await UserModel.findOne({ email })
 
   if (user && user.isValidPassword(password)) {
+
+    // Check it the password is expired (90days)
+    if (user.isExpired()) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'PasswordExpired',
+      })
+    }
+
     try {
       // update lastlogin
       await UserModel.updateOne({ email }, { lastLoginAt: new Date() })
