@@ -25,7 +25,7 @@ const softDelete = require('./plugins/softDelete')
 
 // regexes
 const isEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-const isPasswordStrong = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+const isPasswordStrong = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-\/:-@[-`{-~]).{16,}$/
 
 // User
 const UserSchema = new mongoose.Schema(
