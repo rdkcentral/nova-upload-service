@@ -46,6 +46,10 @@ const UserSchema = new mongoose.Schema(
       $type: String,
       required: true,
     },
+    passwordUpdated: {
+      $type: Date,
+      default: null,
+    },
     salt: String,
     status: {
       $type: String,
@@ -64,10 +68,38 @@ UserSchema.plugin(mongooseUniqueValidator)
 
 // set/generate password from clear-text pasword
 UserSchema.methods.setPassword = function (password) {
+  if (!this.checkPasswordLength) {
+    this.invalidate('password', 'PasswordToShort')
+    return false
+  }
+
   this.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
   this.password = crypto
     .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
     .toString('hex')
+  this.passwordUpdated = new Date(new Date().getTime()).toUTCString()
+}
+
+UserSchema.methods.checkPasswordLength = function (password) {
+  // check if password length is greater below 16.
+  if(password.length < 16) {
+    console.error('"Invalid Password. Password is to short"')
+    return false
+  }
+  return true
+}
+
+UserSchema.methods.isExpired = function () {
+  const days = 90
+  const date = this.passwordUpdated
+  const expireDate = new Date(Date.now() + days * 24*60*60*1000).toUTCString();
+
+  // check if password is expired
+  if(date && date < expireDate) {
+    console.error("Password expired")
+    return true
+  }
+  return false
 }
 
 // check if the given password is the same with the one in the record
