@@ -25,42 +25,46 @@ const softDelete = require('./plugins/softDelete')
 
 // regexes
 const isEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-const isPasswordStrong = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-\/:-@[-`{-~]).{16,}$/
+const isPasswordStrong =
+  /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-\/:-@[-`{-~]).{16,}$/
 
 // User
+const PasswordSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true }, // Automatically generate _id
+  password: { type: String, required: true },
+  passwordUpdated: { type: Date, default: Date.now },
+  salt: { type: String, required: true },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     email: {
-      $type: String,
+      type: String,
       required: true,
       unique: true,
       index: true,
       match: [isEmailRegex, 'invalidUserEmail'],
     },
     type: {
-      $type: String,
+      type: String,
       enum: ['dev', 'mvpd', 'admin'],
       default: 'dev',
     },
-    password: {
-      $type: String,
+    passwordHistory: {
+      type: [Object], //Should be PasswordSchema, but it is not working
+      default: [],
       required: true,
     },
-    passwordUpdated: {
-      $type: Date,
-      default: null,
-    },
-    salt: String,
     status: {
-      $type: String,
+      type: String,
       default: 'ok',
     },
     lastLoginAt: {
-      $type: Date,
+      type: Date,
       default: null,
     },
   },
-  { typeKey: '$type', timestamps: true }
+  { timestamps: true }
 )
 
 // unique field validator
@@ -68,35 +72,44 @@ UserSchema.plugin(mongooseUniqueValidator)
 
 // set/generate password from clear-text pasword
 UserSchema.methods.setPassword = function (password) {
-  if (!this.checkPasswordLength) {
+  if (!this.checkPasswordLength(password)) {
     this.invalidate('password', 'PasswordToShort')
     return false
   }
-
-  this.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
-  this.password = crypto
-    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
+  const passwordObj = {
+    salt: null,
+    password: null,
+    passwordUpdated: null,
+  }
+  passwordObj.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
+  passwordObj.password = crypto
+    .pbkdf2Sync(password, passwordObj.salt, 10000, 512, 'sha512')
     .toString('hex')
-  this.passwordUpdated = new Date(new Date().getTime()).toUTCString()
-}
+  passwordObj.passwordUpdated = new Date(new Date().getTime()).toUTCString()
 
+  this.passwordHistory.unshift(passwordObj)
+}
 UserSchema.methods.checkPasswordLength = function (password) {
   // check if password length is greater below 16.
-  if(password.length < 16) {
+  if (password.length < 16) {
     console.error('"Invalid Password. Password is to short"')
     return false
   }
   return true
 }
-
+UserSchema.methods.getCurrentPasswordObject = function () {
+  if (this.passwordHistory && this.passwordHistory.length)
+    return this.passwordHistory[0]
+  else return {}
+}
 UserSchema.methods.isExpired = function () {
   const days = 90
-  const date = this.passwordUpdated
-  const expireDate = new Date(Date.now() + days * 24*60*60*1000).toUTCString();
+  const expireDate = new Date(this.getCurrentPasswordObject().passwordUpdated)
+  expireDate.setDate(expireDate.getDate()+days)
 
   // check if password is expired
-  if(date && date < expireDate) {
-    console.error("Password expired")
+  if (new Date() > expireDate) {
+    console.error('Password expired')
     return true
   }
   return false
@@ -104,11 +117,21 @@ UserSchema.methods.isExpired = function () {
 
 // check if the given password is the same with the one in the record
 UserSchema.methods.isValidPassword = function (password) {
+  const currPassword = this.getCurrentPasswordObject()
   var hash = crypto
-    .pbkdf2Sync(password, this.salt, 10000, 512, 'sha512')
+    .pbkdf2Sync(password, currPassword.salt, 10000, 512, 'sha512')
     .toString('hex')
-  return this.password === hash
+  return currPassword.password === hash
 }
+
+UserSchema.methods.isPasswordUsed = function (password) {
+  return this.passwordHistory.some((item) => {
+    const passwordCheck = crypto
+      .pbkdf2Sync(password, item.salt, 10000, 512, 'sha512')
+      .toString('hex');
+    return passwordCheck === item.password;
+  });
+};
 
 // generate JWT token
 UserSchema.methods.generateJWT = function () {
@@ -132,28 +155,36 @@ UserSchema.methods.toObjectWithToken = function () {
 }
 
 // check password strength
-UserSchema.methods.isPasswordStrong = function () {
-  return isPasswordStrong.test(this.password)
+UserSchema.methods.isPasswordStrong = function (password) {
+  return isPasswordStrong.test(password)
 }
 
 // automatically generate password hash if the password is modified
 UserSchema.pre('validate', function (next) {
-  if (this.isModified('password')) {
-    if (this.isPasswordStrong()) {
-      this.setPassword(this.password)
-    } else {
-      this.invalidate('password', 'invalidUserPassword')
-    }
+  if(!this.password)
+    this.invalidate('password', 'noPassword')
+  else if(!this.isPasswordStrong(this.password)){
+    this.invalidate('password', 'weakPassword')
+  } else if(this.isPasswordUsed(this.password)){
+    this.invalidate('password', 'usedPassword')
+  } else {
+    console.log('setPassword', this.password)
+    this.setPassword(this.password)
   }
   next()
 })
 
-// Object output transformation
+UserSchema.virtual('password').set(function (password) {
+  this._password = password
+}).get(function(){
+  return this._password
+})
+
+// // Object output transformation
 UserSchema.set('toObject', {
   transform: (doc, converted) => {
     delete converted._id
-    delete converted.password
-    delete converted.salt
+    delete converted.passwordHistory
   },
 })
 
@@ -161,8 +192,7 @@ UserSchema.set('toObject', {
 UserSchema.set('toObject', {
   transform: (doc, converted) => {
     delete converted._id
-    delete converted.password
-    delete converted.salt
+    delete converted.passwordHistory
     delete converted.deleted
   },
 })
