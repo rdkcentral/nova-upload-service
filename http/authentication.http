@@ -3,6 +3,10 @@
 ## Variables
 # @host=http://localhost:3000
 @host=http://localhost:3000
+
+# Email, password and token variables contain dummy values, used
+# only for running local tests. They are not associated with any real
+# user account or real access
 @email=test@example.com
 @password=Welcome123!
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
