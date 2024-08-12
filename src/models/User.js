@@ -29,42 +29,42 @@ const isPasswordStrong =
   /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-\/:-@[-`{-~]).{16,}$/
 
 // User
-const PasswordSchema = new mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true }, // Automatically generate _id
-  password: { type: String, required: true },
-  passwordUpdated: { type: Date, default: Date.now },
-  salt: { type: String, required: true },
-});
+// const PasswordSchema = new mongoose.Schema({
+//   _id: { type: mongoose.Schema.Types.ObjectId, auto: true }, // Automatically generate _id
+//   password: { type: String, required: true },
+//   passwordUpdated: { type: Date, default: Date.now },
+//   salt: { type: String, required: true },
+// })
 
 const UserSchema = new mongoose.Schema(
   {
     email: {
-      type: String,
+      $type: String,
       required: true,
       unique: true,
       index: true,
       match: [isEmailRegex, 'invalidUserEmail'],
     },
     type: {
-      type: String,
+      $type: String,
       enum: ['dev', 'mvpd', 'admin'],
       default: 'dev',
     },
     passwordHistory: {
-      type: [Object], //Should be PasswordSchema, but it is not working
+      $type: [Object], //Should be PasswordSchema, but it is not working
       default: [],
       required: true,
     },
     status: {
-      type: String,
+      $type: String,
       default: 'ok',
     },
     lastLoginAt: {
-      type: Date,
+      $type: Date,
       default: null,
     },
   },
-  { timestamps: true }
+  { typeKey: '$type', timestamps: true }
 )
 
 // unique field validator
@@ -105,7 +105,7 @@ UserSchema.methods.getCurrentPasswordObject = function () {
 UserSchema.methods.isExpired = function () {
   const days = 90
   const expireDate = new Date(this.getCurrentPasswordObject().passwordUpdated)
-  expireDate.setDate(expireDate.getDate()+days)
+  expireDate.setDate(expireDate.getDate() + days)
 
   // check if password is expired
   if (new Date() > expireDate) {
@@ -128,10 +128,10 @@ UserSchema.methods.isPasswordUsed = function (password) {
   return this.passwordHistory.some((item) => {
     const passwordCheck = crypto
       .pbkdf2Sync(password, item.salt, 10000, 512, 'sha512')
-      .toString('hex');
-    return passwordCheck === item.password;
-  });
-};
+      .toString('hex')
+    return passwordCheck === item.password
+  })
+}
 
 // generate JWT token
 UserSchema.methods.generateJWT = function () {
@@ -161,11 +161,10 @@ UserSchema.methods.isPasswordStrong = function (password) {
 
 // automatically generate password hash if the password is modified
 UserSchema.pre('validate', function (next) {
-  if(!this.password)
-    this.invalidate('password', 'noPassword')
-  else if(!this.isPasswordStrong(this.password)){
+  if (!this.password) this.invalidate('password', 'noPassword')
+  else if (!this.isPasswordStrong(this.password)) {
     this.invalidate('password', 'weakPassword')
-  } else if(this.isPasswordUsed(this.password)){
+  } else if (this.isPasswordUsed(this.password)) {
     this.invalidate('password', 'usedPassword')
   } else {
     console.log('setPassword', this.password)
@@ -174,9 +173,11 @@ UserSchema.pre('validate', function (next) {
   next()
 })
 
-UserSchema.virtual('password').set(function (password) {
+UserSchema.virtual('password')
+  .set(function (password) {
   this._password = password
-}).get(function(){
+  })
+  .get(function () {
   return this._password
 })
 
