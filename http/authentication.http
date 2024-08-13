@@ -44,3 +44,20 @@ Authorization: Bearer {{token}}
   "email": "foo@bar.com",
   "password": "{{password}}"
 }
+
+### Reset password
+GET   {{host}}/admin/users/resetpassword HTTP/1.1
+content-type: application/json
+
+{
+  "email": "{{email}}",
+}
+
+POST  {{host}}/admin/users/resetpassword HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}

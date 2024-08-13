@@ -18,10 +18,19 @@
  */
 
 const router = require('express').Router({ mergeParams: true })
-const { authRequired } = require('../middlewares/auth')
+const { authRequired, actionAuthRequired } = require('../middlewares/auth')
 
 router.post('/', require('../endpoints/users/createUser'))
 router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
 router.patch('/me', authRequired, require('../endpoints/users/updateUserInfo'))
+router.get(
+  '/resetpassword',
+  require('../endpoints/users/requestResetUserPassword')
+)
+router.post(
+  '/resetpassword',
+  actionAuthRequired,
+  require('../endpoints/users/resetUserPassword')
+)
 
 module.exports = router

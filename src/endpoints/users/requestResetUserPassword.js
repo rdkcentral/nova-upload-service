@@ -1,10 +1,10 @@
-/**
+/*
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast
+ * Copyright 2024 RDK Management
  *
- * Licensed under the Apache License, Version 2.0 (the License);
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,40 +16,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 const UserModel = require('../../models/User').model
+const ExpireTokenModel = require('../../models/ExpireToken').model
 
 module.exports = async (req, res) => {
-  let { email, password } = req.body
+  let { email } = req.body
 
   email = email ? email.toString() : ''
-  password = password ? password.toString() : ''
 
   const user = await UserModel.findOne({ email })
 
-  if (user && user.isValidPassword(password)) {
-    // Check it the password is expired (90days)
-    if (user.isExpired()) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'PasswordExpired',
-      })
-    }
+  if (user && email) {
+    const token = await ExpireTokenModel.create({
+      email: email,
+      action: 'resetpassword',
+    })
 
-    try {
-      // update lastlogin
-      await UserModel.updateOne({ email }, { lastLoginAt: new Date() })
-    } catch (err) {
-      return res.sendStatus(500)
-    }
-    return res.status(201).json({
-      data: user.toObjectWithToken(),
+    return res.status(200).json({
+      data: token,
       status: 'success',
     })
   }
 
   return res.status(401).json({
     status: 'error',
-    message: 'invalidUserCredentials',
+    message: 'invalidPasswordResetRequest',
   })
 }
