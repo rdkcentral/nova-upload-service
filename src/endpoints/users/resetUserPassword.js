@@ -19,6 +19,7 @@
 
 const UserModel = require('../../models/User').model
 const errorResponse = require('../../helpers/errorResponse')
+const ExpireTokenModel = require('../../models/ExpireToken').model
 
 module.exports = async (req, res) => {
   console.log('reset', req.user)
@@ -42,6 +43,8 @@ module.exports = async (req, res) => {
     }
 
     await user.save()
+    const token = req.headers.authorization.split(' ').pop()
+    await ExpireTokenModel.deleteOne({ token })
     res.json({
       data: user.toObject(),
       status: 'success',

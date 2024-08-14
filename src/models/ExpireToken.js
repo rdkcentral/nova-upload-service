@@ -46,7 +46,7 @@ ExpireTokenSchema.methods.generateJWT = function () {
       role: this.role,
       email: this.email,
       iat: now,
-      exp: now + 60,
+      exp: now + 10 * 60, //10 minutes
       nbf: now,
     },
     process.env.JWT_SECRET_KEY
@@ -59,6 +59,22 @@ ExpireTokenSchema.pre('validate', function (next) {
   this.expireAt = new Date(decoded.exp * 1000)
   next()
 })
+
+ExpireTokenSchema.virtual('role')
+  .set(function (role) {
+    this._role = role
+  })
+  .get(function () {
+    return this._role
+  })
+
+ExpireTokenSchema.virtual('email')
+  .set(function (email) {
+    this._email = email
+  })
+  .get(function () {
+    return this._email
+  })
 module.exports = {
   schema: ExpireTokenSchema,
   model: mongoose.model('ExpireToken', ExpireTokenSchema),

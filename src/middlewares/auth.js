@@ -29,7 +29,6 @@ const authRequired = async (req, res, next) => {
     let decoded
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-
       if (decoded.role) {
         if (
           decoded.role === 'resetpassword' &&
@@ -54,6 +53,8 @@ const authRequired = async (req, res, next) => {
     if (isAuthenticated) {
       req.user = decoded
       next()
+    } else {
+      res.sendStatus(403)
     }
   } else {
     res.sendStatus(403)
