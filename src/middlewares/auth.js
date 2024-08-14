@@ -22,57 +22,38 @@ const ExpireTokenModel = require('../models/ExpireToken').model
 
 // any endpoint requires authentication/login must use this middleware to check
 // this will be replaced as we progress because we will need different permissions of each user type
-const authRequired = (req, res, next) => {
+const authRequired = async (req, res, next) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(' ').pop()
     let isAuthenticated = false
-    let currentUser
-
+    let decoded
     try {
-      currentUser = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      isAuthenticated = true
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+
+      if (decoded.role) {
+        if (
+          decoded.role === 'resetpassword' &&
+          req.route.path === '/resetpassword'
+        ) {
+          const dbToken = await ExpireTokenModel.findOne({ token })
+          if (dbToken) {
+            isAuthenticated = true
+          }
+        } else if (
+          decoded.role === 'admin' ||
+          decoded.role === 'mvpd' ||
+          decoded.role === 'dev'
+        ) {
+          isAuthenticated = true
+        }
+      }
     } catch (error) {
       res.sendStatus(403)
     }
 
     if (isAuthenticated) {
-      req.user = currentUser
+      req.user = decoded
       next()
-    }
-  } else {
-    res.sendStatus(403)
-  }
-}
-
-const actionAuthRequired = async (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ').pop()
-    let isAuthenticated = false
-    let reqObject
-
-    try {
-      reqObject = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      console.log('reqObject', reqObject)
-      const dbToken = await ExpireTokenModel.findOne({
-        email: reqObject.email,
-        token,
-      })
-
-      if (
-        dbToken &&
-        reqObject.action === 'resetpassword' &&
-        req.route.path === '/resetpassword'
-      )
-        isAuthenticated = true
-    } catch (error) {
-      res.sendStatus(403)
-    }
-
-    if (isAuthenticated) {
-      req.obj = reqObject
-      next()
-    } else {
-      res.sendStatus(403)
     }
   } else {
     res.sendStatus(403)
@@ -81,5 +62,4 @@ const actionAuthRequired = async (req, res, next) => {
 
 module.exports = {
   authRequired,
-  actionAuthRequired,
 }

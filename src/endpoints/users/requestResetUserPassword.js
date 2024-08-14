@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
   if (user && email) {
     const token = await ExpireTokenModel.create({
       email: email,
-      action: 'resetpassword',
+      role: 'resetpassword',
     })
 
     return res.status(200).json({

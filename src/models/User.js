@@ -139,6 +139,7 @@ UserSchema.methods.generateJWT = function () {
     {
       id: this.id,
       email: this.email,
+      role: this.type,
     },
     process.env.JWT_SECRET_KEY,
     { expiresIn: parseInt(process.env.JWT_VALID_FOR) }
@@ -175,11 +176,11 @@ UserSchema.pre('validate', function (next) {
 
 UserSchema.virtual('password')
   .set(function (password) {
-  this._password = password
+    this._password = password
   })
   .get(function () {
-  return this._password
-})
+    return this._password
+  })
 
 // // Object output transformation
 UserSchema.set('toObject', {

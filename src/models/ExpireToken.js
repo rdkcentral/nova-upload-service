@@ -22,17 +22,16 @@ const jwt = require('jsonwebtoken')
 
 const ExpireTokenSchema = new mongoose.Schema(
   {
-    action: {
-      $type: String,
-      required: true,
-    },
     token: {
       $type: String,
       required: true,
     },
-    email: {
-      $type: String,
-      required: true,
+    createdAt: {
+      $type: Date,
+    },
+    expireAt: {
+      $type: Date,
+      expires: 1,
     },
   },
   { typeKey: '$type', timestamps: true }
@@ -40,19 +39,24 @@ const ExpireTokenSchema = new mongoose.Schema(
 
 // generate JWT token
 ExpireTokenSchema.methods.generateJWT = function () {
+  const now = Math.floor(Date.now() / 1000)
   return jwt.sign(
     {
       id: this.id,
-      action: this.action,
+      role: this.role,
       email: this.email,
+      iat: now,
+      exp: now + 60,
+      nbf: now,
     },
-    process.env.JWT_SECRET_KEY,
-    { expiresIn: 10 * 60 * 1000 }
+    process.env.JWT_SECRET_KEY
   )
 }
 ExpireTokenSchema.pre('validate', function (next) {
-  console.log('ExpireTokenSchema', this)
   this.token = this.generateJWT()
+  const decoded = jwt.verify(this.token, process.env.JWT_SECRET_KEY)
+  this.createdAt = new Date(decoded.iat * 1000)
+  this.expireAt = new Date(decoded.exp * 1000)
   next()
 })
 module.exports = {

@@ -18,7 +18,7 @@
  */
 
 const router = require('express').Router({ mergeParams: true })
-const { authRequired, actionAuthRequired } = require('../middlewares/auth')
+const { authRequired } = require('../middlewares/auth')
 
 router.post('/', require('../endpoints/users/createUser'))
 router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
@@ -29,7 +29,7 @@ router.get(
 )
 router.post(
   '/resetpassword',
-  actionAuthRequired,
+  authRequired,
   require('../endpoints/users/resetUserPassword')
 )
 
