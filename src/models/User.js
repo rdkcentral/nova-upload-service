@@ -26,7 +26,7 @@ const softDelete = require('./plugins/softDelete')
 // regexes
 const isEmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 const isPasswordStrong =
-  /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-\/:-@[-`{-~]).{16,}$/
+  /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!-/:-@[-`{-~]).{16,}$/
 
 // User
 // const PasswordSchema = new mongoose.Schema({
@@ -72,10 +72,6 @@ UserSchema.plugin(mongooseUniqueValidator)
 
 // set/generate password from clear-text pasword
 UserSchema.methods.setPassword = function (password) {
-  if (!this.checkPasswordLength(password)) {
-    this.invalidate('password', 'PasswordToShort')
-    return false
-  }
   const passwordObj = {
     salt: null,
     password: null,
@@ -87,7 +83,7 @@ UserSchema.methods.setPassword = function (password) {
     .toString('hex')
   passwordObj.passwordUpdated = new Date(new Date().getTime()).toUTCString()
 
-  this.passwordHistory.unshift(passwordObj)
+  this.passwordHistory.push(passwordObj)
 }
 UserSchema.methods.checkPasswordLength = function (password) {
   // check if password length is greater below 16.
@@ -99,7 +95,7 @@ UserSchema.methods.checkPasswordLength = function (password) {
 }
 UserSchema.methods.getCurrentPasswordObject = function () {
   if (this.passwordHistory && this.passwordHistory.length)
-    return this.passwordHistory[0]
+    return this.passwordHistory[this.passwordHistory.length - 1]
   else return {}
 }
 UserSchema.methods.isExpired = function () {
@@ -163,7 +159,9 @@ UserSchema.methods.isPasswordStrong = function (password) {
 // automatically generate password hash if the password is modified
 UserSchema.pre('validate', function (next) {
   if (!this.password) this.invalidate('password', 'noPassword')
-  else if (!this.isPasswordStrong(this.password)) {
+  else if (!this.checkPasswordLength(this.password)) {
+    this.invalidate('password', 'PasswordToShort')
+  } else if (!this.isPasswordStrong(this.password)) {
     this.invalidate('password', 'weakPassword')
   } else if (this.isPasswordUsed(this.password)) {
     this.invalidate('password', 'usedPassword')

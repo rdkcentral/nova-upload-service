@@ -46,7 +46,7 @@ ExpireTokenSchema.methods.generateJWT = function () {
       role: this.role,
       email: this.email,
       iat: now,
-      exp: now + 10 * 60, //10 minutes
+      exp: now + parseInt(process.env.JWT_VALID_FOR),
       nbf: now,
     },
     process.env.JWT_SECRET_KEY
