@@ -99,7 +99,7 @@ UserSchema.methods.getCurrentPasswordObject = function () {
   else return {}
 }
 UserSchema.methods.isExpired = function () {
-  const days = 90
+  const days = parseInt(process.env.PASSWORD_VALID_FOR)
   const expireDate = new Date(this.getCurrentPasswordObject().passwordUpdated)
   expireDate.setDate(expireDate.getDate() + days)
 
