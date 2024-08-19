@@ -31,44 +31,32 @@ const sendEmail = async (to, subject, body) => {
     const client = new SESClient({
       region: process.env.AWS_DEFAULT_REGION,
     })
-    console.log('1')
     const input = {
-      // SendEmailRequest
-      Source: 'no-reply@custom.fireboltconnect.com', // required
+      Source: 'no-reply@custom.fireboltconnect.com',
       Destination: {
-        // Destination
         ToAddresses: to,
         // CcAddresses: ['STRING_VALUE'],
         // BccAddresses: ['STRING_VALUE'],
       },
       Message: {
-        // Message
         Subject: {
-          // Content
-          Data: subject, // required
+          Data: subject,
           Charset: 'UTF-8',
         },
         Body: {
-          // Body
-          Text: {
-            Data: 'This is the message body in text format.', // required
-            Charset: 'UTF-8',
-          },
           Html: {
-            Data: body, // required
+            Data: body,
             Charset: 'UTF-8',
           },
         },
       },
     }
-    console.log('2')
     const command = new SendEmailCommand(input)
-    console.log('3')
     const result = await client.send(command)
-    console.log('Email send result', result)
+    console.log('Email send successfully', result)
     return result
   } catch (error) {
-    console.log('Error sending email', error)
+    console.error('Error sending email', error)
     return null
   }
 }
