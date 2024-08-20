@@ -19,6 +19,10 @@
 const UserModel = require('../../models/User').model
 const ExpireTokenModel = require('../../models/ExpireToken').model
 const { sendEmail } = require('../../helpers/emailSender')
+const resetpasswordTemplate = require('fs').readFileSync(
+  './emailTemplate/resetPassword.html',
+  'utf8'
+)
 
 module.exports = async (req, res) => {
   let { email } = req.body
@@ -33,13 +37,16 @@ module.exports = async (req, res) => {
       role: 'resetpassword',
     })
 
-    const eMailBody = `Password Reset Token: ${token}
-    <a class="ulink" href="" target="_blank">Reset Link</a>.`
-    sendEmail([email], 'Reset password eMail', eMailBody)
+    const emailSubject = 'Nova reset your password'
+    const eMailBody = resetpasswordTemplate
+      .replace('{{DOMAIN}}', req.get('origin'))
+      .replace('{{EMAIL}}', email)
+      .replace('{{JWT_TOKEN}}', token.token)
+    await sendEmail([email], emailSubject, eMailBody)
 
     return res.status(200).json({
-      data: token,
-      status: 'success1',
+      // data: token,
+      status: 'success',
     })
   }
 
