@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
 
     const emailSubject = 'Nova reset your password'
     const eMailBody = resetpasswordTemplate
-      .replace('{{DOMAIN}}', req.get('origin'))
+      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
       .replace('{{EMAIL}}', email)
       .replace('{{JWT_TOKEN}}', token.token)
     await sendEmail([email], emailSubject, eMailBody)

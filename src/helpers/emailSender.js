@@ -53,7 +53,7 @@ const sendEmail = async (to, subject, body) => {
     }
     const command = new SendEmailCommand(input)
     const result = await client.send(command)
-    console.log('Email send successfully', result)
+    console.log('Email send successfully', result.MessageId)
     return result
   } catch (error) {
     console.error('Error sending email', error)
