@@ -23,10 +23,10 @@ const ExpireTokenModel = require('../models/ExpireToken').model
 // any endpoint requires authentication/login must use this middleware to check
 // this will be replaced as we progress because we will need different permissions of each user type
 const authRequired = async (req, res, next) => {
+  let isAuthenticated = false
+  let decoded
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(' ').pop()
-    let isAuthenticated = false
-    let decoded
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
       if (decoded.role) {
@@ -47,15 +47,13 @@ const authRequired = async (req, res, next) => {
         }
       }
     } catch (error) {
-      res.sendStatus(403)
+      isAuthenticated = false
     }
+  }
 
-    if (isAuthenticated) {
-      req.user = decoded
-      next()
-    } else {
-      res.sendStatus(403)
-    }
+  if (isAuthenticated) {
+    req.user = decoded
+    next()
   } else {
     res.sendStatus(403)
   }
