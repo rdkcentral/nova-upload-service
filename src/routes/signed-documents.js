@@ -21,16 +21,16 @@ const router = require('express').Router({ mergeParams: true })
 const { authRequired } = require('../middlewares/auth')
 
 router.get(
-  '/admin/signeddocument',
+  '/',
   require('../endpoints/signed-document/getDocument')
 )
 router.post(
-  '/admin/signeddocument',
+  '/',
   authRequired,
   require('../endpoints/signed-document/createDocument')
 )
 router.post(
-  '/admin/signeddocument/sign',
+  '/sign',
   authRequired,
   require('../endpoints/signed-document/signDocument')
 )
