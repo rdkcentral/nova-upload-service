@@ -26,27 +26,29 @@ const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses')
  * @param {Buffer} body image buffer
  * @returns a promise
  */
-const sendEmail = async (to, subject, body) => {
+const sendEmail = async (to, subject, htmlBody, txtBody) => {
   try {
     const client = new SESClient({
       region: process.env.AWS_DEFAULT_REGION,
     })
     const input = {
-      Source: 'no-reply@custom.fireboltconnect.com',
+      Source: process.env.EMAIL_FROM,
       Destination: {
         ToAddresses: to,
-        // CcAddresses: ['STRING_VALUE'],
-        // BccAddresses: ['STRING_VALUE'],
       },
       Message: {
         Subject: {
-          Data: subject,
           Charset: 'UTF-8',
+          Data: subject,
         },
         Body: {
           Html: {
-            Data: body,
             Charset: 'UTF-8',
+            Data: htmlBody,
+          },
+          Text: {
+            Charset: 'UTF-8',
+            Data: txtBody,
           },
         },
       },
