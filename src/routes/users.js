@@ -23,8 +23,8 @@ const { authRequired } = require('../middlewares/auth')
 router.post('/', require('../endpoints/users/createUser'))
 router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
 router.patch('/me', authRequired, require('../endpoints/users/updateUserInfo'))
-router.get(
-  '/resetpassword',
+router.post(
+  '/requestresetpassword',
   require('../endpoints/users/requestResetUserPassword')
 )
 router.post(
