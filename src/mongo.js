@@ -29,9 +29,6 @@ mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   autoIndex: true,
-  authSource: 'admin',
-  user: 'root',
-  pass: 'example',
 })
 
 const outputOptions = {
