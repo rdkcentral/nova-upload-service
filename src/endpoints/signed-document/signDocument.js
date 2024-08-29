@@ -17,13 +17,25 @@
  * limitations under the License.
  */
 const SignedDocumentModel = require('../../models/SignedDocument').model
+const UserModel = require('../../models/User').model
 const errorResponse = require('../../helpers/errorResponse')
+const SignedUserDocumentModel = require('../../models/User').signedDocumentModel
 
 module.exports = async (req, res) => {
   try {
-    const document = await SignedDocumentModel.create(req.body)
+    const { userId, documentId } = req.body
+    const document = await SignedDocumentModel.findOne({ _id: documentId })
+    const user = await UserModel.findOne({ _id: userId })
+    const signedDocument = await SignedUserDocumentModel.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      title: req.body.title,
+      documentId: documentId
+    })
+    user.signedDocuments.push(signedDocument)
+
+    await UserModel.updateOne({_id: userId}, { signedDocuments: user.signedDocuments })
     res.status(201).json({
-      data: document,
       status: 'success',
     })
   } catch (e) {
