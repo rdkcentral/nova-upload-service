@@ -17,22 +17,29 @@
  * limitations under the License.
  */
 
-const router = require('express').Router({ mergeParams: true })
-const { authRequired } = require('../middlewares/auth')
+const UserModel = require('../../models/User').model
+const errorResponse = require('../../helpers/errorResponse')
 
-router.post('/', require('../endpoints/users/createUser'))
-router.patch('/', authRequired, require('../endpoints/users/validateUser'))
+module.exports = async (req, res) => {
+  try {
+    console.log('req', req.user.id)
+    const user = await UserModel.findOne({ email: req.user.email })
 
-router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
-router.patch('/me', authRequired, require('../endpoints/users/updateUserInfo'))
-router.post(
-  '/requestresetpassword',
-  require('../endpoints/users/requestResetUserPassword')
-)
-router.post(
-  '/resetpassword',
-  authRequired,
-  require('../endpoints/users/resetUserPassword')
-)
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'not found',
+      })
+    }
+    user.status = 'ok'
+    console.log('user', user)
 
-module.exports = router
+    await user.save()
+    res.json({
+      data: user.toObject(),
+      status: 'success',
+    })
+  } catch (e) {
+    return errorResponse.send(res, 'userValidateFailed', e)
+  }
+}

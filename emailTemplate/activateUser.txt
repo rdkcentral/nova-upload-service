@@ -1,0 +1,11 @@
+A request has been received to create your Nova account.
+We are sending you a curl request below to activate this account.
+Open your terminal and send it to Nova api.
+If you did not create this account you can ignore this email.
+
+curl --location --request PATCH '{{URI}}/admin/users/'
+  --header 'Content-Type: application/json'
+  --header 'Authorization: Bearer {{JWT_TOKEN}}'
+  --data-raw '{
+      "email":"{{EMAIL}}"
+  }'
