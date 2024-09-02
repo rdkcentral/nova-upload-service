@@ -21,15 +21,14 @@ const mongoose = require('mongoose')
 
 let connectionString = process.env.MONGODB_URL
 if (!connectionString) {
-  const mongodb_credentials = JSON.parse(process.env.MONGODB_CREDENTIALS)
+  const mongodb_username = process.env.MONGODB_USERNAME
+  const mongodb_password = process.env.MONGODB_PASSWORD
   const mongodb_name = process.env.MONGODB_NAME
   const mongodb_host = process.env.MONGODB_HOST
   const mongodb_port = process.env.MONGODB_PORT
   const mongodb_params = process.env.MONGODB_PARAMS
-  connectionString = `mongodb://${
-    mongodb_credentials.username
-  }:${encodeURIComponent(
-    mongodb_credentials.password
+  connectionString = `mongodb://${mongodb_username}:${encodeURIComponent(
+    mongodb_password
   )}@${mongodb_host}:${mongodb_port}/${mongodb_name}?${mongodb_params}`
 }
 
