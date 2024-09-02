@@ -23,7 +23,10 @@ const errorResponse = require('../../helpers/errorResponse')
 module.exports = async (req, res) => {
   try {
     console.log('req', req.user.id)
-    const user = await UserModel.findOne({ email: req.user.email })
+    const user = await UserModel.findOneAndUpdate(
+      { email: req.user.email },
+      { $set: { status: 'ok' } }
+    )
 
     if (!user) {
       return res.status(404).json({
@@ -31,10 +34,7 @@ module.exports = async (req, res) => {
         message: 'not found',
       })
     }
-    user.status = 'ok'
-    console.log('user', user)
 
-    await user.save()
     res.json({
       data: user.toObject(),
       status: 'success',
