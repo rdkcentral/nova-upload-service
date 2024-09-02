@@ -60,8 +60,8 @@ module.exports = async (req, res) => {
       status: 'success',
     })
   } catch (e) {
-    await UserModel.deleteOne({ _id: savedUser._id })
-    await ExpireTokenModel.deleteOne({ _id: token._id })
+    if (savedUser) await UserModel.deleteOne({ _id: savedUser._id })
+    if (token) await ExpireTokenModel.deleteOne({ _id: token._id })
     errorResponse.send(res, 'userCreationFailed', e)
   }
 }
