@@ -172,11 +172,6 @@ UserSchema.methods.isPasswordStrong = function (password) {
 
 // automatically generate password hash if the password is modified
 UserSchema.pre('validate', function (next) {
-
-  console.log('------------------------')
-
-  console.log('OTP', this.generateOTP())
-
   if (!this.password) this.invalidate('password', 'noPassword')
   else if (!this.checkPasswordLength(this.password)) {
     this.invalidate('password', 'PasswordToShort')
@@ -185,7 +180,6 @@ UserSchema.pre('validate', function (next) {
   } else if (this.isPasswordUsed(this.password)) {
     this.invalidate('password', 'usedPassword')
   } else {
-    console.log('setPassword', this.password)
     this.setPassword(this.password)
   }
   next()
