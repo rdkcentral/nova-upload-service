@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     const documentId = user && user.signedDocuments && user.signedDocuments.at(-1).documentId || null
     const lastSignedId = document && document.id || null
     // Validate latest signed DocumentID
-    if (!documentId || !lastSignedId || (documentId && lastSignedId && documentId !== lastSignedId)) {
+    if (!documentId || !lastSignedId || documentId !== lastSignedId) {
       return res.status(400).json({
         status: 'error',
         message: 'ralaNotSigned',
