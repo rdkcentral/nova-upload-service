@@ -19,9 +19,18 @@
 
 const mongoose = require('mongoose')
 
-const connectionString =
-  process.env.MONGODB_URL ||
-  `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`
+let connectionString = process.env.MONGODB_URL
+if (!connectionString) {
+  const mongodb_username = process.env.MONGODB_USERNAME
+  const mongodb_password = process.env.MONGODB_PASSWORD
+  const mongodb_name = process.env.MONGODB_NAME
+  const mongodb_host = process.env.MONGODB_HOST
+  const mongodb_port = process.env.MONGODB_PORT
+  const mongodb_params = process.env.MONGODB_PARAMS
+  connectionString = `mongodb://${mongodb_username}:${encodeURIComponent(
+    mongodb_password
+  )}@${mongodb_host}:${mongodb_port}/${mongodb_name}?${mongodb_params}`
+}
 
 mongoose.set('strictQuery', false)
 
@@ -29,6 +38,7 @@ mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   autoIndex: true,
+  authSource: process.env.MONGODB_AUTHSOURCE,
 })
 
 const outputOptions = {
