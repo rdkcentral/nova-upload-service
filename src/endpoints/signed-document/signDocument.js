@@ -26,13 +26,12 @@ module.exports = async (req, res) => {
     const { userId, documentId } = req.body
     const document = await SignedDocumentModel.findOne({ _id: documentId })
     const user = await UserModel.findOne({ _id: userId })
-    const signedDocument = await SignedUserDocumentModel.create({
+    user.signedDocuments.push({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       title: req.body.title,
       documentId: documentId
     })
-    user.signedDocuments.push(signedDocument)
 
     await UserModel.updateOne({_id: userId}, { signedDocuments: user.signedDocuments })
     res.status(201).json({

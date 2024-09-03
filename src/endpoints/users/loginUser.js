@@ -18,6 +18,7 @@
  */
 
 const UserModel = require('../../models/User').model
+const SignedDocumentModel = require('../../models/SignedDocument').model
 
 module.exports = async (req, res) => {
   let { email, password } = req.body
@@ -33,6 +34,17 @@ module.exports = async (req, res) => {
       return res.status(401).json({
         status: 'error',
         message: 'PasswordExpired',
+      })
+    }
+
+    const documents = await SignedDocumentModel.find({ type: 'rala' }).sort({ createdAt: -1 }).limit(1);
+    const documentId = user && user.signedDocuments && user.signedDocuments.at(-1).documentId || null
+    const lastSignedId = documents && documents[0] && documents[0].id || null
+    // Validate latest signed DocumentID
+    if (documentId && lastSignedId && documentId !== lastSignedId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'ralaNotSigned',
       })
     }
 
