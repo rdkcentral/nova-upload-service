@@ -57,7 +57,8 @@ const UserSchema = new mongoose.Schema(
     },
     status: {
       $type: String,
-      default: 'ok',
+      default: 'unactivated',
+      enum: ['unactivated', 'inactive', 'ok'],
     },
     lastLoginAt: {
       $type: Date,

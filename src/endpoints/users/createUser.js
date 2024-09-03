@@ -18,16 +18,50 @@
  */
 
 const UserModel = require('../../models/User').model
+const ExpireTokenModel = require('../../models/ExpireToken').model
 const errorResponse = require('../../helpers/errorResponse')
 
+const { sendEmail } = require('../../helpers/emailSender')
+const activateUserHtmlTemplate = require('fs').readFileSync(
+  './emailTemplate/activateUser.html',
+  'utf8'
+)
+const activateUserTxtTemplate = require('fs').readFileSync(
+  './emailTemplate/activateUser.txt',
+  'utf8'
+)
+
 module.exports = async (req, res) => {
+  let savedUser
+  let token
   try {
-    const savedUser = await UserModel.create(req.body)
+    savedUser = await UserModel.create(req.body)
+    token = await ExpireTokenModel.create({
+      email: savedUser.email,
+      role: 'activateuser',
+    })
+    const emailSubject = 'Nova activate your account'
+    const eMailHtmlBody = activateUserHtmlTemplate
+      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
+      .replace('{{EMAIL}}', savedUser.email)
+      .replace('{{JWT_TOKEN}}', token.token)
+    const eMailTxtBody = activateUserTxtTemplate
+      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
+      .replace('{{EMAIL}}', savedUser.email)
+      .replace('{{JWT_TOKEN}}', token.token)
+    await sendEmail(
+      [savedUser.email],
+      emailSubject,
+      eMailHtmlBody,
+      eMailTxtBody
+    )
+
     res.status(201).json({
-      data: savedUser.toObjectWithToken(),
       status: 'success',
     })
   } catch (e) {
+    if (savedUser) await UserModel.deleteOne({ _id: savedUser._id })
+    if (token) await ExpireTokenModel.deleteOne({ _id: token._id })
     errorResponse.send(res, 'userCreationFailed', e)
   }
 }

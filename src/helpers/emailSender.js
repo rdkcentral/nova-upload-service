@@ -59,7 +59,7 @@ const sendEmail = async (to, subject, htmlBody, txtBody) => {
     return result
   } catch (error) {
     console.error('Error sending email', error)
-    return null
+    throw new Error('Error sending email')
   }
 }
 
