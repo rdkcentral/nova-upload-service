@@ -37,11 +37,11 @@ module.exports = async (req, res) => {
       })
     }
 
-    const documents = await SignedDocumentModel.find({ type: 'rala' }).sort({ createdAt: -1 }).limit(1);
+    const documents = await SignedDocumentModel.findOne({ type: 'rala' }).sort({ createdAt: -1 })
     const documentId = user && user.signedDocuments && user.signedDocuments.at(-1).documentId || null
-    const lastSignedId = documents && documents[0] && documents[0].id || null
+    const lastSignedId = documents && documents.id || null
     // Validate latest signed DocumentID
-    if (documentId && lastSignedId && documentId !== lastSignedId) {
+    if (!documentId || !lastSignedId || (documentId && lastSignedId && documentId !== lastSignedId)) {
       return res.status(400).json({
         status: 'error',
         message: 'ralaNotSigned',
