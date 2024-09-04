@@ -75,6 +75,7 @@ ExpireTokenSchema.virtual('email')
   .get(function () {
     return this._email
   })
+
 module.exports = {
   schema: ExpireTokenSchema,
   model: mongoose.model('ExpireToken', ExpireTokenSchema),

@@ -36,6 +36,15 @@ const isPasswordStrong =
 //   salt: { type: String, required: true },
 // })
 
+// User Signed Documents
+const UserSignedDocumentSchema = new mongoose.Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  title: { type: String, required: true },
+  signedAt:  { type: Date, default: Date.now },
+  documentId: { type: String, required: true },
+})
+
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -63,6 +72,11 @@ const UserSchema = new mongoose.Schema(
     lastLoginAt: {
       $type: Date,
       default: null,
+    },
+    signedDocuments: {
+      $type: [Object],
+      default: [],
+      required: true,
     },
   },
   { typeKey: '$type', timestamps: true }
@@ -167,7 +181,6 @@ UserSchema.pre('validate', function (next) {
   } else if (this.isPasswordUsed(this.password)) {
     this.invalidate('password', 'usedPassword')
   } else {
-    console.log('setPassword', this.password)
     this.setPassword(this.password)
   }
   next()
@@ -202,5 +215,7 @@ UserSchema.plugin(softDelete)
 
 module.exports = {
   schema: UserSchema,
+  signedDocumentSchema: UserSignedDocumentSchema,
   model: mongoose.model('User', UserSchema),
+  signedDocumentModel: mongoose.model('UserSignedDocument', UserSignedDocumentSchema)
 }

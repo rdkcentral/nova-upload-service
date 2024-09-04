@@ -43,6 +43,10 @@ app.use(
   require('./routes/application-versions')
 )
 
+// signdocument paths
+app.use('/admin/signeddocuments', require('./routes/signed-documents'))
+
+
 // http 404 error handler
 app.use((req, res) => {
   res.status(404).json({
