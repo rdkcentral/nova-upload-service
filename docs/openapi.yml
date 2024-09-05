@@ -5,7 +5,7 @@ info:
   version: 1.0.0
   title: Nova Upload Service documentation
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:3000/admin'
     description: Local Server
 tags:
   - name: Authentication
@@ -436,7 +436,7 @@ paths:
           $ref: '#/paths/~1users/post/responses/400'
         '401':
           $ref: '#/paths/~1users~1me/get/responses/401'
-  '/applications/:applicationId':
+  '/applications/{applicationId}':
     parameters:
       - name: applicationId
         in: path
@@ -502,7 +502,7 @@ paths:
                   versions:
                     type: array
                     items:
-                      $ref: '#/paths/~1applications~1%3AapplicationId~1versions~1%3AversionId/get/responses/200/content/application~1json/schema'
+                      $ref: '#/paths/~1applications~1%7BapplicationId%7D~1versions~1%7BversionId%7D/get/responses/200/content/application~1json/schema'
                   changeLog:
                     type: array
                     items:
@@ -585,7 +585,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/paths/~1applications~1%3AapplicationId/get/responses/200/content/application~1json/schema'
+                    $ref: '#/paths/~1applications~1%7BapplicationId%7D/get/responses/200/content/application~1json/schema'
                   status:
                     type: string
                     enum:
@@ -629,7 +629,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/401'
         '404':
           $ref: '#/paths/~1users~1me/get/responses/404'
-  '/applications/:applicationId/restore':
+  '/applications/{applicationId}/restore':
     parameters:
       - name: applicationId
         in: path
@@ -667,7 +667,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/401'
         '404':
           $ref: '#/paths/~1users~1me/get/responses/404'
-  '/applications/:applicationId/versions':
+  '/applications/{applicationId}/versions':
     parameters:
       - name: applicationId
         in: path
@@ -692,14 +692,14 @@ paths:
             schema:
               required:
                 - version
-                - changeLog
+                - changelog
               type: object
               properties:
                 version:
                   type: string
                   description: A unique identifier for the app version
                   example: v5.4.1
-                changeLog:
+                changelog:
                   type: string
                   description: Log for the version create
                   example: v5.4.1 has been released
@@ -712,7 +712,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/paths/~1applications~1%3AapplicationId~1versions~1%3AversionId/get/responses/200/content/application~1json/schema'
+                    $ref: '#/paths/~1applications~1%7BapplicationId%7D~1versions~1%7BversionId%7D/get/responses/200/content/application~1json/schema'
                   status:
                     type: string
                     enum:
@@ -743,14 +743,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/paths/~1applications~1%3AapplicationId~1versions~1%3AversionId/get/responses/200/content/application~1json/schema'
+                  $ref: '#/paths/~1applications~1%7BapplicationId%7D~1versions~1%7BversionId%7D/get/responses/200/content/application~1json/schema'
         '400':
           $ref: '#/paths/~1users/post/responses/400'
         '401':
           $ref: '#/paths/~1users~1me/get/responses/401'
         '404':
           $ref: '#/paths/~1users~1me/get/responses/404'
-  '/applications/:applicationId/versions/:versionId':
+  '/applications/{applicationId}/versions/{versionId}':
     parameters:
       - name: applicationId
         in: path
@@ -843,14 +843,14 @@ paths:
             schema:
               required:
                 - version
-                - changeLog
+                - changelog
               type: object
               properties:
                 version:
                   type: string
                   description: A unique identifier for the app version
                   example: v5.4.1
-                changeLog:
+                changelog:
                   type: string
                   description: Log for the version create
                   example: v5.4.1 has been released
@@ -863,7 +863,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/paths/~1applications~1%3AapplicationId~1versions~1%3AversionId/get/responses/200/content/application~1json/schema'
+                    $ref: '#/paths/~1applications~1%7BapplicationId%7D~1versions~1%7BversionId%7D/get/responses/200/content/application~1json/schema'
                   status:
                     type: string
                     enum:
@@ -907,7 +907,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/401'
         '404':
           $ref: '#/paths/~1users~1me/get/responses/404'
-  '/applications/:applicationId/versions/:versionId/restore':
+  '/applications/{applicationId}/versions/{versionId}/restore':
     parameters:
       - name: applicationId
         in: path
@@ -938,6 +938,67 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+                    default: success
+                    description: Status for overall request
+        '400':
+          $ref: '#/paths/~1users/post/responses/400'
+        '401':
+          $ref: '#/paths/~1users~1me/get/responses/401'
+        '404':
+          $ref: '#/paths/~1users~1me/get/responses/404'
+  '/applications/{applicationId}/versions/{versionId}/upload':
+    parameters:
+      - name: applicationId
+        in: path
+        required: true
+        description: The ID of the application to retrieve
+        schema:
+          type: string
+      - name: versionId
+        in: path
+        required: true
+        description: The ID of the application version to retrieve
+        schema:
+          type: string
+    post:
+      tags:
+        - Application versions
+      summary: Upload application into version
+      description: Upload a zip file as part of an application version
+      operationId: uploadApplication
+      security:
+        - JWT:
+            - user
+      requestBody:
+        required: true
+        description: Upload a zip file containing application data
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The zip file containing application data
+                  example: Archive.zip
+      responses:
+        '200':
+          description: Application uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/paths/~1applications~1%7BapplicationId%7D~1versions~1%7BversionId%7D/get/responses/200/content/application~1json/schema'
                   status:
                     type: string
                     enum:
