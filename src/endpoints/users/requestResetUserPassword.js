@@ -35,25 +35,32 @@ module.exports = async (req, res) => {
 
   const user = await UserModel.findOne({ email })
 
-  if (user && email) {
-    const token = await ExpireTokenModel.create({
-      email: email,
-      role: 'resetpassword',
-    })
+  const otp = user.generateOTP()
 
-    const emailSubject = 'Nova reset your password'
-    const eMailHtmlBody = resetpasswordHtmlTemplate
-      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-      .replace('{{EMAIL}}', email)
-      .replace('{{JWT_TOKEN}}', token.token)
-    const eMailTxtBody = resetpasswordTxtTemplate
-      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-      .replace('{{EMAIL}}', email)
-      .replace('{{JWT_TOKEN}}', token.token)
-    await sendEmail([email], emailSubject, eMailHtmlBody, eMailTxtBody)
+  console.log('generateOTP: ', otp)
+
+  if (user && email) {
+    // const token = await ExpireTokenModel.create({
+    //   email: email,
+    //   role: 'resetpassword',
+    // })
+
+    user.otp = otp
+    await user.save()
+
+    // const emailSubject = 'Nova reset your password'
+    // const eMailHtmlBody = resetpasswordHtmlTemplate
+    //   .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
+    //   .replace('{{EMAIL}}', email)
+    //   .replace('{{JWT_TOKEN}}', token.token)
+    // const eMailTxtBody = resetpasswordTxtTemplate
+    //   .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
+    //   .replace('{{EMAIL}}', email)
+    //   .replace('{{JWT_TOKEN}}', token.token)
+    // await sendEmail([email], emailSubject, eMailHtmlBody, eMailTxtBody)
 
     return res.status(200).json({
-      // data: token,
+      data: otp,
       status: 'success',
     })
   }

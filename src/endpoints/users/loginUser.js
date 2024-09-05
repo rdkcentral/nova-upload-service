@@ -27,7 +27,6 @@ module.exports = async (req, res) => {
   password = password ? password.toString() : ''
 
   const user = await UserModel.findOne({ email })
-
   if (user && user.isValidPassword(password)) {
     // Check it the password is expired (90days)
     if (user.isExpired()) {
@@ -35,6 +34,13 @@ module.exports = async (req, res) => {
         status: 'error',
         message: 'PasswordExpired',
       })
+    }
+
+    console.log('-------------', user.findPasswordObject(password))
+    const passwordObject = user.findPasswordObject(password)
+    console.log('-----------------------', await UserModel.findOne( { 'passwordHistory.password' : passwordObject.password }))
+    if (passwordObject) {
+      // await UserModel.updateOne({ email }, { lastLoginAt: new Date() })
     }
 
     const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({ createdAt: -1 })
