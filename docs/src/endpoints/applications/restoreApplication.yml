@@ -1,5 +1,5 @@
 tags:
-- Applications
+  - Warehouse API
 summary: "Restores an application deleted before"
 description: "Restores an application deleted before"
 operationId: "restoreApplication"

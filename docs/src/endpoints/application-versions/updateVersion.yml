@@ -1,5 +1,5 @@
 tags:
-- Application versions
+  - Warehouse API
 summary: "Updates application version data"
 description: "Updates application  version data"
 operationId: "updateApplication"
