@@ -2,6 +2,10 @@
 
 ## Variables
 @host=http://localhost:3000
+
+# Application ID and Version ID variables contain dummy values, used
+# only for running local tests. They are not associated with any real
+# application
 @application_id = 6542b9e43f2495872e109b3a
 @version_id = 6542bae73f2495872e109b46
 

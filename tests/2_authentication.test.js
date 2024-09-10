@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast
+ * Copyright 2023 Comcast Cable Communications Management, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,9 @@ const test = require('tape')
 const request = require('supertest')
 const { initApp } = require('./setup')
 
+// Email and password variables contain dummy values, used
+// only for running local tests. They are not associated with any real
+// user account or real access
 const email = 'test@foo.com'
 const newEmail = 'newtest@foo.com'
 const password = 'Hello1213'
