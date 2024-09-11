@@ -11,11 +11,8 @@ servers:
 
 tags:
   - name: "Identity API"
-    description: 
   - name: "Upload API"
-    description: 
   - name: "Warehouse API"
-    description: 
 
 security:
   - JWT: []
