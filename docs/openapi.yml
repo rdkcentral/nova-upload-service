@@ -9,11 +9,8 @@ servers:
     description: Local Server
 tags:
   - name: Identity API
-    description: null
   - name: Upload API
-    description: null
   - name: Warehouse API
-    description: null
 security:
   - JWT: []
 paths:
