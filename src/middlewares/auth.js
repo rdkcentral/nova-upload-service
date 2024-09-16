@@ -30,7 +30,6 @@ const authRequired = async (req, res, next) => {
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
       if (decoded.role) {
-        console.log('Role', decoded, 'Route', req.route)
         if (
           (decoded.role === 'resetpassword' &&
             req.route.path === '/resetpassword') ||

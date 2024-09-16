@@ -41,7 +41,7 @@ const UserSignedDocumentSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   title: { type: String, required: true },
-  signedAt:  { type: Date, default: Date.now },
+  signedAt: { type: Date, default: Date.now },
   documentId: { type: String, required: true },
 })
 
@@ -217,5 +217,8 @@ module.exports = {
   schema: UserSchema,
   signedDocumentSchema: UserSignedDocumentSchema,
   model: mongoose.model('User', UserSchema),
-  signedDocumentModel: mongoose.model('UserSignedDocument', UserSignedDocumentSchema)
+  signedDocumentModel: mongoose.model(
+    'UserSignedDocument',
+    UserSignedDocumentSchema
+  ),
 }
