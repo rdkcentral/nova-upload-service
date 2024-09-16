@@ -10,14 +10,9 @@ servers:
     description: Local Server
 
 tags:
-  - name: Authentication
-    description: Login endpoint
-  - name: Users
-    description: User endpoints
-  - name: Applications
-    description: Application endpoints
-  - name: Application versions
-    description: Application version endpoint
+  - name: "Identity API"
+  - name: "Upload API"
+  - name: "Warehouse API"
 
 security:
   - JWT: []

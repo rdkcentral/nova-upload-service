@@ -8,21 +8,16 @@ servers:
   - url: 'http://localhost:3000/admin'
     description: Local Server
 tags:
-  - name: Authentication
-    description: Login endpoint
-  - name: Users
-    description: User endpoints
-  - name: Applications
-    description: Application endpoints
-  - name: Application versions
-    description: Application version endpoint
+  - name: Identity API
+  - name: Upload API
+  - name: Warehouse API
 security:
   - JWT: []
 paths:
   /users:
     post:
       tags:
-        - Users
+        - Identity API
       summary: Creates user
       description: The user sign up operation that can be used by anyone.
       operationId: createUser
@@ -99,7 +94,7 @@ paths:
   /users/me:
     get:
       tags:
-        - Users
+        - Identity API
       summary: Gets user data for logged in user
       description: Gets user data for logged in user
       operationId: getUserInfo
@@ -186,7 +181,7 @@ paths:
                     example: Not found
     patch:
       tags:
-        - Users
+        - Identity API
       summary: Updates user data
       description: 'Updates user data (email and password), requires current password.'
       operationId: updateUserInfo
@@ -241,7 +236,7 @@ paths:
   /login:
     post:
       tags:
-        - Authentication
+        - Identity API
       summary: Creates authentication token
       description: Creates authentication token for the user
       operationId: login user
@@ -286,7 +281,7 @@ paths:
   /applications:
     post:
       tags:
-        - Applications
+        - Warehouse API
       summary: Creates application
       description: Creates application record
       operationId: createApplication
@@ -359,7 +354,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/401'
     get:
       tags:
-        - Applications
+        - Warehouse API
       summary: Gets the list of applications
       description: Gets the list of applications managed by the logged-in user
       operationId: listApplications
@@ -446,7 +441,7 @@ paths:
           type: string
     get:
       tags:
-        - Applications
+        - Warehouse API
       summary: Gets a specific application with given app Id
       description: Gets a specific application with given app Id
       operationId: getApplication
@@ -529,7 +524,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/404'
     put:
       tags:
-        - Applications
+        - Warehouse API
       summary: Updates application data
       description: Updates application data
       operationId: updateApplication
@@ -601,7 +596,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/404'
     delete:
       tags:
-        - Applications
+        - Warehouse API
       summary: Deletes an application
       description: Deletes an application
       operationId: deleteApplication
@@ -639,7 +634,7 @@ paths:
           type: string
     patch:
       tags:
-        - Applications
+        - Warehouse API
       summary: Restores an application deleted before
       description: Restores an application deleted before
       operationId: restoreApplication
@@ -677,7 +672,7 @@ paths:
           type: string
     post:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Creates application version
       description: Creates application version
       operationId: createApplicationVersion
@@ -728,7 +723,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/404'
     get:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Gets the list of application versions for a given application
       description: Gets the list of application versions for a given application
       operationId: listApplicationVersionss
@@ -766,7 +761,7 @@ paths:
           type: string
     get:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Gets a specific application version with given app Id and version Id
       description: Gets a specific application version with given app Id and version Id
       operationId: getApplicationVersion
@@ -828,7 +823,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/404'
     put:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Updates application version data
       description: Updates application  version data
       operationId: updateApplication
@@ -879,7 +874,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/404'
     delete:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Deletes an application version
       description: Deletes an application version
       operationId: deleteApplicationVersion
@@ -923,7 +918,7 @@ paths:
           type: string
     patch:
       tags:
-        - Application versions
+        - Warehouse API
       summary: Restores an application deleted before
       description: Restores an application deleted before
       operationId: restoreApplication
@@ -967,7 +962,7 @@ paths:
           type: string
     post:
       tags:
-        - Application versions
+        - Upload API
       summary: Upload application into version
       description: Upload a zip file as part of an application version
       operationId: uploadApplication

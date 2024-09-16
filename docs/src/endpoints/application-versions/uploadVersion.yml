@@ -1,5 +1,5 @@
 tags:
-  - Application versions
+  - Upload API
 summary: "Upload application into version"
 description: "Upload a zip file as part of an application version"
 operationId: "uploadApplication"
