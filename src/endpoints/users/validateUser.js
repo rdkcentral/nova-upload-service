@@ -34,10 +34,11 @@ module.exports = async (req, res) => {
       })
     }
 
-    res.json({
-      data: user.toObject(),
-      status: 'success',
-    })
+    if (req.query.callbackUrl) {
+      return res.redirect(req.query.callbackUrl)
+    }
+
+    res.send('OK')
   } catch (e) {
     return errorResponse.send(res, 'userValidateFailed', e)
   }
