@@ -96,6 +96,33 @@ paths:
                     example:
                       - dataInvalid
                       - identifierNotUnique
+  /users/validate:
+    get:
+      tags:
+        - Users
+      summary: Validates user email
+      description: Validates user email
+      operationId: validateUserEmail
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: The token to validate the user email
+          schema:
+            type: string
+        - name: callbackUrl
+          in: query
+          required: false
+          description: The URL to redirect after validation
+          schema:
+            type: string
+      responses:
+        '200':
+          description: '`OK`'
+        '302':
+          description: 'Redirect to the callback URL when provided'
+        '401':
+          $ref: '#/paths/~1users~1me/get/responses/401'
   /users/me:
     get:
       tags:
@@ -951,6 +978,7 @@ paths:
           $ref: '#/paths/~1users~1me/get/responses/401'
         '404':
           $ref: '#/paths/~1users~1me/get/responses/404'
+
 components:
   securitySchemes:
     JWT:
