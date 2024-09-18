@@ -24,40 +24,48 @@ const ExpireTokenModel = require('../models/ExpireToken').model
 // this will be replaced as we progress because we will need different permissions of each user type
 const authRequired = async (req, res, next) => {
   let isAuthenticated = false
-  let decoded
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ').pop()
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      if (decoded.role) {
-        console.log('Role', decoded, 'Route', req.route)
-        if (
-          (decoded.role === 'resetpassword' &&
-            req.route.path === '/resetpassword') ||
-          (decoded.role === 'activateuser' && req.route.path === '/')
-        ) {
-          const dbToken = await ExpireTokenModel.findOne({ token })
-          if (dbToken) {
-            isAuthenticated = true
-          }
-        } else if (
-          decoded.role === 'admin' ||
-          decoded.role === 'mvpd' ||
-          decoded.role === 'dev'
-        ) {
+  let decoded, token
+
+  if (req.method === 'GET' && req.query.token) {
+    token = req.query.token
+  } else if (req.headers.authorization) {
+    token = req.headers.authorization.split(' ').pop()
+  } else {
+    res.status(403).send('No token provided')
+  }
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    if (decoded.role) {
+      if (
+        (decoded.role === 'resetpassword' &&
+          req.route.path === '/resetpassword') ||
+        (decoded.role === 'activateuser' && req.route.path === '/validate')
+      ) {
+        const dbToken = await ExpireTokenModel.findOne({ token })
+        if (dbToken) {
           isAuthenticated = true
         }
+      } else if (
+        decoded.role === 'admin' ||
+        decoded.role === 'mvpd' ||
+        decoded.role === 'dev'
+      ) {
+        isAuthenticated = true
       }
-    } catch (error) {
-      isAuthenticated = false
     }
+  } catch (error) {
+    isAuthenticated = false
   }
 
   if (isAuthenticated) {
     req.user = decoded
     next()
   } else {
-    res.sendStatus(403)
+    res.status(401).send({
+      status: 'error',
+      message: 'Authorization required',
+    })
   }
 }
 

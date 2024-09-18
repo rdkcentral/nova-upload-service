@@ -23,6 +23,10 @@ requestBody:
             format: password
             pattern: '^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$'
             description: "The password must contain at least one uppercase letter, one number, and one lowercase letter, and must be at least 8 characters long."
+          callbackUrl:
+            type: string
+            format: uri
+            description: The URL to redirect after successful registration
 responses:
   201:
     description: "User is created"

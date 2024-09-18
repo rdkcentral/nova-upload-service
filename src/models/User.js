@@ -115,9 +115,9 @@ UserSchema.methods.getCurrentPasswordObject = function () {
   else return {}
 }
 UserSchema.methods.isExpired = function () {
-  const days = parseInt(process.env.PASSWORD_VALID_FOR)
+  const seconds = parseInt(process.env.PASSWORD_VALID_FOR)
   const expireDate = new Date(this.getCurrentPasswordObject().passwordUpdated)
-  expireDate.setDate(expireDate.getDate() + days)
+  expireDate.setSeconds(expireDate.getSeconds() + seconds)
 
   // check if password is expired
   if (new Date() > expireDate) {

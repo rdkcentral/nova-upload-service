@@ -34,6 +34,9 @@ paths:
       $ref: "./endpoints/users/getUserInfo.yml"
     patch:
       $ref: "./endpoints/users/updateUserInfo.yml"
+  /users/validate:
+    get:
+      $ref: "./endpoints/users/validateUser.yml"
 
   # /login
   /login:

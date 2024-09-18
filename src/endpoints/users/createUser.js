@@ -35,11 +35,32 @@ module.exports = async (req, res) => {
   let savedUser
   let token
   try {
-    savedUser = await UserModel.create(req.body)
+    const { callbackUrl, ...user } = req.body
+
+    savedUser = await UserModel.create(user)
     token = await ExpireTokenModel.create({
       email: savedUser.email,
       role: 'activateuser',
     })
+
+    // url regex to validate the callback url
+    const urlRegex = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    )
+
+    if (callbackUrl && !urlRegex.test(callbackUrl)) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Invalid callback url',
+      })
+    }
+
     const emailSubject = 'Nova activate your account'
     const eMailHtmlBody = activateUserHtmlTemplate
       .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
