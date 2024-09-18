@@ -86,11 +86,12 @@ const UserSchema = new mongoose.Schema(
 UserSchema.plugin(mongooseUniqueValidator)
 
 // set/generate password from clear-text pasword
-UserSchema.methods.setPassword = function (password) {
+UserSchema.methods.setPassword = function (password, otp) {
   const passwordObj = {
     salt: null,
     password: null,
     passwordUpdated: null,
+    otp: otp ? true : false,
   }
   passwordObj.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
   passwordObj.password = crypto
@@ -144,6 +145,22 @@ UserSchema.methods.isPasswordUsed = function (password) {
   })
 }
 
+// this.getCurrentPasswordObject() ????
+UserSchema.methods.findPasswordObject = function (password) {
+  let foundPasswordObject
+  this.passwordHistory.some((item) => {
+    const passwordCheck = crypto
+      .pbkdf2Sync(password, item.salt, 10000, 512, 'sha512')
+      .toString('hex')
+
+    if (passwordCheck === item.password) {
+      foundPasswordObject = item
+      return true
+    }
+  })
+  return foundPasswordObject
+}
+
 // generate JWT token
 UserSchema.methods.generateJWT = function () {
   return jwt.sign(
@@ -157,9 +174,10 @@ UserSchema.methods.generateJWT = function () {
   )
 }
 
-UserSchema.methods.toObjectWithToken = function () {
+UserSchema.methods.toObjectWithToken = function (token) {
   const user = this.toObject()
-  user.token = this.generateJWT()
+  user.token = token ? token : this.generateJWT()
+
   user.tokenExpiresAt = new Date(
     new Date().getTime() + process.env.JWT_VALID_FOR * 1000
   ).toUTCString()
@@ -171,10 +189,52 @@ UserSchema.methods.isPasswordStrong = function (password) {
   return isPasswordStrong.test(password)
 }
 
+UserSchema.methods.isPasswordOTP = function (password) {
+  return this.passwordHistory.some((item) => {
+    if (item && item.password === password && item.otp) return true
+  })
+}
+
+UserSchema.methods.generateOTP = function () {
+  // return Math.random().toString(36).slice(-16);
+  // Define character sets
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz'
+  const numbers = '0123456789'
+  const specialCharacters = '!@#$%^&*()-_=+[]{}|;:,.<>?/~`'
+
+  // Ensure password has at least one character from each required set
+  let password = [
+    uppercase[Math.floor(Math.random() * uppercase.length)],
+    lowercase[Math.floor(Math.random() * lowercase.length)],
+    numbers[Math.floor(Math.random() * numbers.length)],
+    specialCharacters[Math.floor(Math.random() * specialCharacters.length)],
+  ]
+
+  // Combine all character sets for random selection of the remaining characters
+  const allCharacters = uppercase + lowercase + numbers + specialCharacters
+
+  // Fill the rest of the password length with random characters
+  for (let i = password.length; i < 16; i++) {
+    password.push(
+      allCharacters[Math.floor(Math.random() * allCharacters.length)]
+    )
+  }
+
+  // Shuffle the password array to ensure randomness
+  password = password.sort(() => Math.random() - 0.5)
+
+  // Convert the array to a string and return the password
+  return password.join('')
+}
+
 // automatically generate password hash if the password is modified
 UserSchema.pre('validate', function (next) {
-  if (!this.password) this.invalidate('password', 'noPassword')
-  else if (!this.checkPasswordLength(this.password)) {
+  if (this.otp) {
+    this.setPassword(this.otp, true)
+  } else if (!this.password) {
+    this.invalidate('password', 'noPassword')
+  } else if (!this.checkPasswordLength(this.password)) {
     this.invalidate('password', 'PasswordToShort')
   } else if (!this.isPasswordStrong(this.password)) {
     this.invalidate('password', 'weakPassword')
@@ -192,6 +252,14 @@ UserSchema.virtual('password')
   })
   .get(function () {
     return this._password
+  })
+
+UserSchema.virtual('otp')
+  .set(function (password) {
+    this._otp = password
+  })
+  .get(function () {
+    return this._otp
   })
 
 // // Object output transformation

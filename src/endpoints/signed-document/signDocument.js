@@ -30,10 +30,13 @@ module.exports = async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       title: req.body.title,
-      documentId: documentId
+      documentId: documentId,
     })
 
-    await UserModel.updateOne({_id: userId}, { signedDocuments: user.signedDocuments })
+    await UserModel.updateOne(
+      { _id: userId },
+      { signedDocuments: user.signedDocuments }
+    )
     res.status(201).json({
       status: 'success',
     })
