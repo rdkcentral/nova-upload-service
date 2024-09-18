@@ -21,7 +21,13 @@ const router = require('express').Router({ mergeParams: true })
 const { authRequired } = require('../middlewares/auth')
 
 router.post('/', require('../endpoints/users/createUser'))
-router.patch('/', authRequired, require('../endpoints/users/validateUser'))
+
+// User activation
+router.get(
+  '/validate',
+  authRequired,
+  require('../endpoints/users/validateUser')
+)
 
 router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
 router.patch('/me', authRequired, require('../endpoints/users/updateUserInfo'))
