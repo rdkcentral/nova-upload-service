@@ -26,11 +26,13 @@ module.exports = async (req, res) => {
   email = email ? email.toString() : ''
   password = password ? password.toString() : ''
   let token = false
+  const passwordObject = user.findPasswordObject(password)
+  const otp = passwordObject?.otp || false
 
   const user = await UserModel.findOne({ email })
   if (user && user.isValidPassword(password)) {
     // Check it the password is expired (90days)
-    if (user.isExpired()) {
+    if (user.isExpired(otp)) {
       return res.status(401).json({
         status: 'error',
         message: 'PasswordExpired',
@@ -38,8 +40,7 @@ module.exports = async (req, res) => {
     }
 
     // Change token while loggedin with OTP
-    const passwordObject = user.findPasswordObject(password)
-    if (passwordObject && passwordObject.otp) {
+    if (otp) {
       token = await ExpireTokenModel.create({
         email: email,
         role: 'resetpassword',
