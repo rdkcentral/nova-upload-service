@@ -22,7 +22,6 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    console.log('req', req.user.id)
     const user = await UserModel.findOneAndUpdate(
       { email: req.user.email },
       { $set: { status: 'ok' } }

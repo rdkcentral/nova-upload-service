@@ -174,9 +174,10 @@ UserSchema.methods.generateJWT = function () {
   )
 }
 
-UserSchema.methods.toObjectWithToken = function () {
+UserSchema.methods.toObjectWithToken = function (token) {
   const user = this.toObject()
-  user.token = this.generateJWT()
+  user.token = token ? token : this.generateJWT()
+
   user.tokenExpiresAt = new Date(
     new Date().getTime() + process.env.JWT_VALID_FOR * 1000
   ).toUTCString()

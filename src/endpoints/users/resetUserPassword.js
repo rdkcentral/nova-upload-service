@@ -22,8 +22,6 @@ const errorResponse = require('../../helpers/errorResponse')
 const ExpireTokenModel = require('../../models/ExpireToken').model
 
 module.exports = async (req, res) => {
-  console.log('reset', req.user)
-
   try {
     let { email, password } = req.body
 

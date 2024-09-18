@@ -19,12 +19,13 @@
 
 const UserModel = require('../../models/User').model
 const SignedDocumentModel = require('../../models/SignedDocument').model
+const ExpireTokenModel = require('../../models/ExpireToken').model
 
 module.exports = async (req, res) => {
   let { email, password } = req.body
-
   email = email ? email.toString() : ''
   password = password ? password.toString() : ''
+  let token = false
 
   const user = await UserModel.findOne({ email })
   if (user && user.isValidPassword(password)) {
@@ -36,19 +37,21 @@ module.exports = async (req, res) => {
       })
     }
 
-    console.log('-------------', user.findPasswordObject(password))
+    // Change token while loggedin with OTP
     const passwordObject = user.findPasswordObject(password)
-    console.log('-----------------------', await UserModel.findOne( { 'passwordHistory.password' : passwordObject.password }))
-    if (passwordObject) {
-      // await UserModel.updateOne({ email }, { lastLoginAt: new Date() })
+    if (passwordObject && passwordObject.otp) {
+      token = await ExpireTokenModel.create({
+        email: email,
+        role: 'resetpassword',
+      })
     }
 
     const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({ createdAt: -1 })
-    const documentId = user && user.signedDocuments && user.signedDocuments.at(-1).documentId || null
+    const documentId = user && user.signedDocuments && user.signedDocuments.length > 0 && user.signedDocuments.at(-1).documentId || null
     const lastSignedId = document && document.id || null
     // Validate latest signed DocumentID
     if (!documentId || !lastSignedId || documentId !== lastSignedId) {
-      return res.status(400).json({
+      return res.status(451).json({
         status: 'error',
         message: 'ralaNotSigned',
       })
@@ -61,7 +64,7 @@ module.exports = async (req, res) => {
       return res.sendStatus(500)
     }
     return res.status(201).json({
-      data: user.toObjectWithToken(),
+      data: user.toObjectWithToken(token.token),
       status: 'success',
     })
   }

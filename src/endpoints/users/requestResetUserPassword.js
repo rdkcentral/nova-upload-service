@@ -17,52 +17,44 @@
  * limitations under the License.
  */
 const UserModel = require('../../models/User').model
-const ExpireTokenModel = require('../../models/ExpireToken').model
 const { sendEmail } = require('../../helpers/emailSender')
 const resetpasswordHtmlTemplate = require('fs').readFileSync(
-  './emailTemplate/resetPassword.html',
+  './emailTemplate/otpPassword.html',
   'utf8'
 )
 const resetpasswordTxtTemplate = require('fs').readFileSync(
-  './emailTemplate/resetPassword.txt',
+  './emailTemplate/otpPassword.txt',
   'utf8'
 )
 
 module.exports = async (req, res) => {
   let { email } = req.body
-
   email = email ? email.toString() : ''
 
   const user = await UserModel.findOne({ email })
-
-  const otp = user.generateOTP()
-
-  console.log('generateOTP: ', otp)
-
   if (user && email) {
-    // const token = await ExpireTokenModel.create({
-    //   email: email,
-    //   role: 'resetpassword',
-    // })
+    try {
+      const otp = user.generateOTP()
+      user.otp = otp
+      await user.save()
 
-    user.otp = otp
-    await user.save()
+      const emailSubject = 'Nova reset your password'
+      const eMailHtmlBody = resetpasswordHtmlTemplate
+        .replace('{{OTP}}', otp)
+      const eMailTxtBody = resetpasswordTxtTemplate
+        .replace('{{OTP}}', otp)
+      await sendEmail([email], emailSubject, eMailHtmlBody, eMailTxtBody)
 
-    // const emailSubject = 'Nova reset your password'
-    // const eMailHtmlBody = resetpasswordHtmlTemplate
-    //   .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-    //   .replace('{{EMAIL}}', email)
-    //   .replace('{{JWT_TOKEN}}', token.token)
-    // const eMailTxtBody = resetpasswordTxtTemplate
-    //   .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-    //   .replace('{{EMAIL}}', email)
-    //   .replace('{{JWT_TOKEN}}', token.token)
-    // await sendEmail([email], emailSubject, eMailHtmlBody, eMailTxtBody)
-
-    return res.status(200).json({
-      data: otp,
-      status: 'success',
-    })
+      return res.status(200).json({
+        data: otp,
+        status: 'success',
+      })
+    } catch (e) {
+      return res.status(401).json({
+        status: 'error',
+        message: e,
+      })
+    }
   }
 
   return res.status(401).json({

@@ -22,7 +22,6 @@ const ApplicationVersionModel = require('../../models/ApplicationVersion').model
 
 module.exports = async (req, res) => {
   try {
-    console.log(req.params)
     let data = await ApplicationVersionModel.find({
       applicationId: req.params.applicationId,
       userId: req.user.id,
