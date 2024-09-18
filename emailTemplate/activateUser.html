@@ -170,7 +170,7 @@
                   <td align="center" valign="top">
                     <![endif]-->
                     <div style="padding:20px;">
-                      <h1 style="margin:30px 0">Nova reset your password</h1>
+                      <h1 style="margin:30px 0">Nova activate your account</h1>
                     </div>
                     <!--[if true]>
                   </td>
@@ -181,21 +181,16 @@
                     <div style="padding:20px;">
                       <p style="margin: 0 0 8px;">A request has been received to create your Nova account.
                       </p>
-                      <p style="margin: 0 0 8px;">We are sending you a curl request below to activate this account.
+                      <p style="margin: 0 0 8px;">Please click the button below to activate your account. If you did not create this account you can ignore this email.
                       </p>
-                      <p style="margin: 0 0 8px;">Open your terminal and send it to Nova api.
+
+                      <p style="margin: 24px 0;">
+                        <a href="{{URI}}" target="_blank" style="display: inline-block; background-color: #00A6D5; padding: 1.25rem 1rem; color: white; ">Activate account</a>
                       </p>
-                      <p style="margin: 0 0 8px;">If you did not create this account you can ignore this email.
-                      </p>
-                      <p>
-                      </p>
-                      <code>curl --location --request PATCH '{{URI}}/admin/users/'
-                        --header 'Content-Type: application/json'
-                        --header 'Authorization: Bearer {{JWT_TOKEN}}'
-                        --data-raw '{
-                            "email":"{{EMAIL}}"
-                        }'
-                        </code>
+
+                      <p>Or copy the url below and paste it in your browser:</p>
+
+                      <code style="margin: 24px 0;">{{URI}}</code>
 
                     </div>
                     <!--[if true]>
