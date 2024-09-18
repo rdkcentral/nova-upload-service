@@ -1,10 +1,10 @@
-/**
+/*
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast Cable Communications Management, LLC
+ * Copyright 2024 RDK Management
  *
- * Licensed under the Apache License, Version 2.0 (the License);
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -20,25 +20,16 @@
 const router = require('express').Router({ mergeParams: true })
 const { authRequired } = require('../middlewares/auth')
 
-router.post('/', require('../endpoints/users/createUser'))
-
-// User activation
-router.get(
-  '/validate',
-  authRequired,
-  require('../endpoints/users/validateUser')
-)
-
-router.get('/me', authRequired, require('../endpoints/users/getUserInfo'))
-router.patch('/me', authRequired, require('../endpoints/users/updateUserInfo'))
+router.get('/', require('../endpoints/signed-document/getDocument'))
 router.post(
-  '/requestresetpassword',
-  require('../endpoints/users/requestResetUserPassword')
+  '/',
+  authRequired,
+  require('../endpoints/signed-document/createDocument')
 )
 router.post(
-  '/resetpassword',
+  '/sign',
   authRequired,
-  require('../endpoints/users/resetUserPassword')
+  require('../endpoints/signed-document/signDocument')
 )
 
 module.exports = router

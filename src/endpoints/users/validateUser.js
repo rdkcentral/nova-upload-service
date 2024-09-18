@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast Cable Communications Management, LLC
+ * Copyright 2023 Comcast
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,29 @@
  * limitations under the License.
  */
 
+const UserModel = require('../../models/User').model
 const errorResponse = require('../../helpers/errorResponse')
-const ApplicationVersionModel = require('../../models/ApplicationVersion').model
 
 module.exports = async (req, res) => {
   try {
-    let data = await ApplicationVersionModel.find({
-      applicationId: req.params.applicationId,
-      userId: req.user.id,
-    }).catch((e) => {
-      throw new Error('applicationVersionList failed', { cause: e })
-    })
+    const user = await UserModel.findOneAndUpdate(
+      { email: req.user.email },
+      { $set: { status: 'ok' } }
+    )
 
-    return res.status(200).json({
-      data: data || [],
-      status: 'success',
-    })
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'not found',
+      })
+    }
+
+    if (req.query.callbackUrl) {
+      return res.redirect(req.query.callbackUrl)
+    }
+
+    res.send('OK')
   } catch (e) {
-    return errorResponse.send(res, e.message, e)
+    return errorResponse.send(res, 'userValidateFailed', e)
   }
 }

@@ -347,3 +347,5 @@ test('PATCH /admin/users/me - Update email for logged in user', function (assert
       })
   })
 })
+
+// TODO: create test for GET /admin/users/validate endpoint, with and without a callbackUrl

@@ -18,16 +18,76 @@
  */
 
 const UserModel = require('../../models/User').model
+const ExpireTokenModel = require('../../models/ExpireToken').model
 const errorResponse = require('../../helpers/errorResponse')
 
+const { sendEmail } = require('../../helpers/emailSender')
+const activateUserHtmlTemplate = require('fs').readFileSync(
+  './emailTemplate/activateUser.html',
+  'utf8'
+)
+const activateUserTxtTemplate = require('fs').readFileSync(
+  './emailTemplate/activateUser.txt',
+  'utf8'
+)
+
 module.exports = async (req, res) => {
+  let savedUser
+  let token
   try {
-    const savedUser = await UserModel.create(req.body)
+    const { callbackUrl, ...user } = req.body
+
+    // url regex to validate the callback url
+    const urlRegex = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    )
+
+    if (callbackUrl && !urlRegex.test(callbackUrl)) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Invalid callback url',
+      })
+    }
+
+    savedUser = await UserModel.create(user)
+    token = await ExpireTokenModel.create({
+      email: savedUser.email,
+      role: 'activateuser',
+    })
+
+    let validationUrl = `${req.protocol}://${req.headers.host}?token=${token.token}`
+    if (callbackUrl) {
+      validationUrl += `&callbackUrl=${encodeURIComponent(callbackUrl)}`
+    }
+
+    const emailSubject = 'Nova activate your account'
+    const eMailHtmlBody = activateUserHtmlTemplate.replaceAll(
+      '{{URI}}',
+      validationUrl
+    )
+    const eMailTxtBody = activateUserTxtTemplate.replaceAll(
+      '{{URI}}',
+      validationUrl
+    )
+    await sendEmail(
+      [savedUser.email],
+      emailSubject,
+      eMailHtmlBody,
+      eMailTxtBody
+    )
+
     res.status(201).json({
-      data: savedUser.toObjectWithToken(),
       status: 'success',
     })
   } catch (e) {
+    if (savedUser) await UserModel.deleteOne({ _id: savedUser._id })
+    if (token) await ExpireTokenModel.deleteOne({ _id: token._id })
     errorResponse.send(res, 'userCreationFailed', e)
   }
 }

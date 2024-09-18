@@ -18,16 +18,53 @@
  */
 
 const UserModel = require('../../models/User').model
+const SignedDocumentModel = require('../../models/SignedDocument').model
+const ExpireTokenModel = require('../../models/ExpireToken').model
 
 module.exports = async (req, res) => {
   let { email, password } = req.body
-
   email = email ? email.toString() : ''
   password = password ? password.toString() : ''
+  let token = false
+  const passwordObject = user.findPasswordObject(password)
+  const otp = passwordObject?.otp || false
 
   const user = await UserModel.findOne({ email })
-
   if (user && user.isValidPassword(password)) {
+    // Check it the password is expired (90days)
+    if (user.isExpired(otp)) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'PasswordExpired',
+      })
+    }
+
+    // Change token while loggedin with OTP
+    if (otp) {
+      token = await ExpireTokenModel.create({
+        email: email,
+        role: 'resetpassword',
+      })
+    }
+
+    const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({
+      createdAt: -1,
+    })
+    const documentId =
+      (user &&
+        user.signedDocuments &&
+        user.signedDocuments.length > 0 &&
+        user.signedDocuments.at(-1).documentId) ||
+      null
+    const lastSignedId = (document && document.id) || null
+    // Validate latest signed DocumentID
+    if (!documentId || !lastSignedId || documentId !== lastSignedId) {
+      return res.status(451).json({
+        status: 'error',
+        message: 'ralaNotSigned',
+      })
+    }
+
     try {
       // update lastlogin
       await UserModel.updateOne({ email }, { lastLoginAt: new Date() })
@@ -35,7 +72,7 @@ module.exports = async (req, res) => {
       return res.sendStatus(500)
     }
     return res.status(201).json({
-      data: user.toObjectWithToken(),
+      data: user.toObjectWithToken(token.token),
       status: 'success',
     })
   }

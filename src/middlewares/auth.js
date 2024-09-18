@@ -18,28 +18,54 @@
  */
 
 const jwt = require('jsonwebtoken')
+const ExpireTokenModel = require('../models/ExpireToken').model
 
 // any endpoint requires authentication/login must use this middleware to check
 // this will be replaced as we progress because we will need different permissions of each user type
-const authRequired = (req, res, next) => {
-  if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ').pop()
-    let isAuthenticated = false
-    let currentUser
+const authRequired = async (req, res, next) => {
+  let isAuthenticated = false
+  let decoded, token
 
-    try {
-      currentUser = jwt.verify(token, process.env.JWT_SECRET_KEY)
-      isAuthenticated = true
-    } catch (error) {
-      res.sendStatus(403)
-    }
-
-    if (isAuthenticated) {
-      req.user = currentUser
-      next()
-    }
+  if (req.method === 'GET' && req.query.token) {
+    token = req.query.token
+  } else if (req.headers.authorization) {
+    token = req.headers.authorization.split(' ').pop()
   } else {
-    res.sendStatus(403)
+    res.status(403).send('No token provided')
+  }
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    if (decoded.role) {
+      if (
+        (decoded.role === 'resetpassword' &&
+          req.route.path === '/resetpassword') ||
+        (decoded.role === 'activateuser' && req.route.path === '/validate')
+      ) {
+        const dbToken = await ExpireTokenModel.findOne({ token })
+        if (dbToken) {
+          isAuthenticated = true
+        }
+      } else if (
+        decoded.role === 'admin' ||
+        decoded.role === 'mvpd' ||
+        decoded.role === 'dev'
+      ) {
+        isAuthenticated = true
+      }
+    }
+  } catch (error) {
+    isAuthenticated = false
+  }
+
+  if (isAuthenticated) {
+    req.user = decoded
+    next()
+  } else {
+    res.status(401).send({
+      status: 'error',
+      message: 'Authorization required',
+    })
   }
 }
 
