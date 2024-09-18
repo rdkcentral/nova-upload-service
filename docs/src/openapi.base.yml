@@ -6,7 +6,7 @@ info:
   title: Nova Upload Service documentation
 
 servers:
-  - url: http://localhost:3000/admin
+  - url: http://localhost:3000
     description: Local Server
 
 tags:
