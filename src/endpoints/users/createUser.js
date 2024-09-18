@@ -37,12 +37,6 @@ module.exports = async (req, res) => {
   try {
     const { callbackUrl, ...user } = req.body
 
-    savedUser = await UserModel.create(user)
-    token = await ExpireTokenModel.create({
-      email: savedUser.email,
-      role: 'activateuser',
-    })
-
     // url regex to validate the callback url
     const urlRegex = new RegExp(
       '^(https?:\\/\\/)?' + // protocol
@@ -61,15 +55,26 @@ module.exports = async (req, res) => {
       })
     }
 
+    savedUser = await UserModel.create(user)
+    token = await ExpireTokenModel.create({
+      email: savedUser.email,
+      role: 'activateuser',
+    })
+
+    let validationUrl = `${req.protocol}://${req.headers.host}?token=${token.token}`
+    if (callbackUrl) {
+      validationUrl += `&callbackUrl=${encodeURIComponent(callbackUrl)}`
+    }
+
     const emailSubject = 'Nova activate your account'
-    const eMailHtmlBody = activateUserHtmlTemplate
-      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-      .replace('{{EMAIL}}', savedUser.email)
-      .replace('{{JWT_TOKEN}}', token.token)
-    const eMailTxtBody = activateUserTxtTemplate
-      .replace('{{URI}}', `${req.protocol}://${req.headers.host}`)
-      .replace('{{EMAIL}}', savedUser.email)
-      .replace('{{JWT_TOKEN}}', token.token)
+    const eMailHtmlBody = activateUserHtmlTemplate.replaceAll(
+      '{{URI}}',
+      validationUrl
+    )
+    const eMailTxtBody = activateUserTxtTemplate.replaceAll(
+      '{{URI}}',
+      validationUrl
+    )
     await sendEmail(
       [savedUser.email],
       emailSubject,
