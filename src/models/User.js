@@ -118,7 +118,9 @@ UserSchema.methods.getCurrentPasswordObject = function () {
 }
 
 UserSchema.methods.isExpired = function (otp) {
-  const days = parseInt(otp ? process.env.OTP_VALID_FOR : process.env.PASSWORD_VALID_FOR)
+  const seconds = parseInt(
+    otp ? process.env.OTP_VALID_FOR : process.env.PASSWORD_VALID_FOR
+  )
   const expireDate = new Date(this.getCurrentPasswordObject().passwordUpdated)
   expireDate.setSeconds(expireDate.getSeconds() + seconds)
 
