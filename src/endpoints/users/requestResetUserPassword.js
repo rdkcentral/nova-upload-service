@@ -39,10 +39,8 @@ module.exports = async (req, res) => {
       await user.save()
 
       const emailSubject = 'Nova reset your password'
-      const eMailHtmlBody = resetpasswordHtmlTemplate
-        .replace('{{OTP}}', otp)
-      const eMailTxtBody = resetpasswordTxtTemplate
-        .replace('{{OTP}}', otp)
+      const eMailHtmlBody = resetpasswordHtmlTemplate.replace('{{OTP}}', otp)
+      const eMailTxtBody = resetpasswordTxtTemplate.replace('{{OTP}}', otp)
       await sendEmail([email], emailSubject, eMailHtmlBody, eMailTxtBody)
 
       return res.status(200).json({

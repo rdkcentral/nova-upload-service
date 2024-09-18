@@ -21,7 +21,9 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
-    const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({ createdAt: -1 });
+    const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({
+      createdAt: -1,
+    })
 
     res.status(201).json({
       data: document,

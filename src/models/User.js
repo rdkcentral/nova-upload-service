@@ -41,7 +41,7 @@ const UserSignedDocumentSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   title: { type: String, required: true },
-  signedAt:  { type: Date, default: Date.now },
+  signedAt: { type: Date, default: Date.now },
   documentId: { type: String, required: true },
 })
 
@@ -91,7 +91,7 @@ UserSchema.methods.setPassword = function (password, otp) {
     salt: null,
     password: null,
     passwordUpdated: null,
-    otp: otp ? true : false
+    otp: otp ? true : false,
   }
   passwordObj.salt = crypto.randomBytes(16).toString('hex') // generate different salt for each user
   passwordObj.password = crypto
@@ -191,40 +191,41 @@ UserSchema.methods.isPasswordStrong = function (password) {
 
 UserSchema.methods.isPasswordOTP = function (password) {
   return this.passwordHistory.some((item) => {
-    if (item && item.password === password && item.otp)
-    return true
+    if (item && item.password === password && item.otp) return true
   })
 }
 
 UserSchema.methods.generateOTP = function () {
   // return Math.random().toString(36).slice(-16);
-    // Define character sets
-    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-    const numbers = '0123456789';
-    const specialCharacters = '!@#$%^&*()-_=+[]{}|;:,.<>?/~`';
+  // Define character sets
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz'
+  const numbers = '0123456789'
+  const specialCharacters = '!@#$%^&*()-_=+[]{}|;:,.<>?/~`'
 
-    // Ensure password has at least one character from each required set
-    let password = [
-      uppercase[Math.floor(Math.random() * uppercase.length)],
-      lowercase[Math.floor(Math.random() * lowercase.length)],
-      numbers[Math.floor(Math.random() * numbers.length)],
-      specialCharacters[Math.floor(Math.random() * specialCharacters.length)]
-    ];
+  // Ensure password has at least one character from each required set
+  let password = [
+    uppercase[Math.floor(Math.random() * uppercase.length)],
+    lowercase[Math.floor(Math.random() * lowercase.length)],
+    numbers[Math.floor(Math.random() * numbers.length)],
+    specialCharacters[Math.floor(Math.random() * specialCharacters.length)],
+  ]
 
-    // Combine all character sets for random selection of the remaining characters
-    const allCharacters = uppercase + lowercase + numbers + specialCharacters;
+  // Combine all character sets for random selection of the remaining characters
+  const allCharacters = uppercase + lowercase + numbers + specialCharacters
 
-    // Fill the rest of the password length with random characters
-    for (let i = password.length; i < 16; i++) {
-      password.push(allCharacters[Math.floor(Math.random() * allCharacters.length)]);
-    }
+  // Fill the rest of the password length with random characters
+  for (let i = password.length; i < 16; i++) {
+    password.push(
+      allCharacters[Math.floor(Math.random() * allCharacters.length)]
+    )
+  }
 
-    // Shuffle the password array to ensure randomness
-    password = password.sort(() => Math.random() - 0.5);
+  // Shuffle the password array to ensure randomness
+  password = password.sort(() => Math.random() - 0.5)
 
-    // Convert the array to a string and return the password
-    return password.join('');
+  // Convert the array to a string and return the password
+  return password.join('')
 }
 
 // automatically generate password hash if the password is modified
@@ -251,7 +252,7 @@ UserSchema.virtual('password')
   })
   .get(function () {
     return this._password
-})
+  })
 
 UserSchema.virtual('otp')
   .set(function (password) {
@@ -259,7 +260,7 @@ UserSchema.virtual('otp')
   })
   .get(function () {
     return this._otp
-})
+  })
 
 // // Object output transformation
 UserSchema.set('toObject', {
@@ -284,5 +285,8 @@ module.exports = {
   schema: UserSchema,
   signedDocumentSchema: UserSignedDocumentSchema,
   model: mongoose.model('User', UserSchema),
-  signedDocumentModel: mongoose.model('UserSignedDocument', UserSignedDocumentSchema)
+  signedDocumentModel: mongoose.model(
+    'UserSignedDocument',
+    UserSignedDocumentSchema
+  ),
 }

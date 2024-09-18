@@ -20,10 +20,7 @@
 const router = require('express').Router({ mergeParams: true })
 const { authRequired } = require('../middlewares/auth')
 
-router.get(
-  '/',
-  require('../endpoints/signed-document/getDocument')
-)
+router.get('/', require('../endpoints/signed-document/getDocument'))
 router.post(
   '/',
   authRequired,
