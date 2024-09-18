@@ -1,5 +1,5 @@
 tags:
-- Application versions
+  - Warehouse API
 summary: "Creates application version"
 description: "Creates application version"
 operationId: "createApplicationVersion"
@@ -13,14 +13,14 @@ requestBody:
       schema:
         required:
           - version
-          - changeLog
+          - changelog
         type: object
         properties:
           version:
             type: string
             description: A unique identifier for the app version
             example: v5.4.1
-          changeLog:
+          changelog:
             type: string
             description: Log for the version create
             example: v5.4.1 has been released

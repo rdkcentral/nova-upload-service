@@ -1,5 +1,5 @@
 tags:
-- Application versions
+  - Warehouse API
 summary: "Gets the list of application versions for a given application"
 description: "Gets the list of application versions for a given application"
 operationId: "listApplicationVersionss"

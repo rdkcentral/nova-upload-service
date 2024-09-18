@@ -1,5 +1,5 @@
 tags:
-- Authentication
+  - Identity API
 summary: "Creates authentication token"
 description: "Creates authentication token for the user"
 operationId: "login user"

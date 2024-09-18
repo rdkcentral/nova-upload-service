@@ -1,5 +1,5 @@
 tags:
-- Applications
+  - Warehouse API
 summary: "Gets the list of applications"
 description: "Gets the list of applications managed by the logged-in user"
 operationId: "listApplications"

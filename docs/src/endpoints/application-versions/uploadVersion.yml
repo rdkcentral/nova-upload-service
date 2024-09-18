@@ -1,32 +1,28 @@
 tags:
-  - Warehouse API
-summary: "Updates application version data"
-description: "Updates application  version data"
-operationId: "updateApplication"
+  - Upload API
+summary: "Upload application into version"
+description: "Upload a zip file as part of an application version"
+operationId: "uploadApplication"
 security:
   - JWT: [user]
 requestBody:
   required: true
-  description: "App version data"
+  description: "Upload a zip file containing application data"
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        required:
-          - version
-          - changelog
         type: object
+        required:
+          - file
         properties:
-          version:
+          file:
             type: string
-            description: A unique identifier for the app version
-            example: v5.4.1
-          changelog:
-            type: string
-            description: Log for the version create
-            example: v5.4.1 has been released
+            format: binary
+            description: "The zip file containing application data"
+            example: "Archive.zip"
 responses:
   200:
-    description: "Application version is updated"
+    description: "Application uploaded"
     content:
       application/json:
         schema:

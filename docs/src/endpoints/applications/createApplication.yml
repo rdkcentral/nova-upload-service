@@ -1,5 +1,5 @@
 tags:
-- Applications
+  - Warehouse API
 summary: "Creates application"
 description: "Creates application record"
 operationId: "createApplication"

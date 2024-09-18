@@ -2,7 +2,7 @@
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast
+ * Copyright 2023 Comcast Cable Communications Management, LLC
  *
  * Licensed under the Apache License, Version 2.0 (the License);
  * you may not use this file except in compliance with the License.
@@ -174,6 +174,7 @@ test('DELETE /admin/applications/:id - Remove non-existing application', functio
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
+        // 01e125710000000000000000 is a non  existing token, not associated with any real, production token
         .delete('/admin/applications/01e125710000000000000000') // object id belongs to 1970-01-01 00:00:01
         .set({ Authorization: `Bearer ${token}` })
         .expect(404)
@@ -215,6 +216,7 @@ test('DELETE /admin/applications/:id/restore - Try to restore non-existing appli
   initApp().then((app) => {
     userToken(app).then((token) => {
       request(app)
+        // 01e125710000000000000000 is a non  existing token, not associated with any real, production token
         .patch('/applications/01e125710000000000000000/restore') // object id belongs to 1970-01-01 00:00:01
         .set({ Authorization: `Bearer ${token}` })
         .expect(404)

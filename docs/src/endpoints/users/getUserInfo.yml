@@ -1,5 +1,5 @@
 tags:
-- Users
+  - Identity API
 summary: "Gets user data for logged in user"
 description: "Gets user data for logged in user"
 operationId: "getUserInfo"

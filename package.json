@@ -17,7 +17,7 @@
     "coverage": "c8 npm run test",
     "report": "c8 report",
     "docs:serve": "http-server ./docs -p 7700 -c-1 --open=index.html",
-    "docs:merge": "swagger-cli bundle docs/src/openapi.base.yml --outfile docs/openapi.yml --type yaml",
+    "docs:merge": "swagger-cli bundle docs/src/openapi.base.yml --outfile docs/dist/openapi.yml --type yaml",
     "docs:dev": "nodemon -e yml -w docs/src --exec 'npm run docs:merge && npm run docs:serve'"
   },
   "nodemonConfig": {
