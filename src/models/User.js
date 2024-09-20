@@ -43,6 +43,7 @@ const UserSignedDocumentSchema = new mongoose.Schema({
   title: { type: String, required: true },
   signedAt: { type: Date, default: Date.now },
   documentId: { type: String, required: true },
+  company: { type: String, required: true },
 })
 
 const UserSchema = new mongoose.Schema(
