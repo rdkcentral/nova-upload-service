@@ -12,6 +12,7 @@
     "start": "node src/server.js",
     "start:dev": "NODE_ENV=development nodemon -r ./dotenv.js src/server.js",
     "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix",
     "coverage": "c8 npm run test",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.654.0",
+    "@vitest/coverage-v8": "^2.1.1",
     "aws-sdk-client-mock": "^4.0.1",
     "c8": "^8.0.0",
     "eslint": "^8.19.0",
