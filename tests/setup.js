@@ -17,16 +17,26 @@
  * limitations under the License.
  */
 
-const { MongoMemoryServer } = require('mongodb-memory-server')
+import { beforeAll } from 'vitest'
+import { MongoMemoryServer } from 'mongodb-memory-server'
+import supertest from 'supertest'
 
-let app
+import { globalUser } from '../mocks/user.js'
 
-export const initApp = async function () {
-  if (app) return app
-  return MongoMemoryServer.create().then(async (mongoServer) => {
-    process.env.MONGODB_URL = mongoServer.getUri()
-    const mod = await import('../src/app.js')
-    app = mod.default
-    return app
-  })
-}
+export let app, token
+
+beforeAll(async () => {
+  const mongoServer = await MongoMemoryServer.create()
+  process.env.MONGODB_URL = mongoServer.getUri()
+
+  const mod = await import('../src/app.js')
+  app = mod.default
+
+  const response = await supertest(app).post('/admin/users').send(globalUser)
+
+  await supertest(app).get('/admin/users/validate?token=' + response.body.token)
+
+  const result = await supertest(app).post('/admin/login').send(globalUser)
+
+  token = result.body.data.token
+})

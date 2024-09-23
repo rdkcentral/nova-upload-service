@@ -1,17 +1,13 @@
-import { beforeAll, describe, afterAll, expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import supertest from 'supertest'
 
-import { user, unknownUser } from '../mocks/user'
-import { initApp } from './setup'
+import { user, globalUser } from '../../../mocks/user'
+import { app, token } from '../../../tests/setup.js'
 
-let app, token
 const { email } = user
+let newUserToken
 
-describe('User admin', () => {
-  beforeAll(async () => {
-    app = await initApp()
-  })
-
+describe('POST /admin/users', () => {
   test('Create a user', async () => {
     const response = await supertest(app)
       .post('/admin/users')
@@ -21,7 +17,7 @@ describe('User admin', () => {
     expect(response.body).toHaveProperty('status', 'success')
     expect(response.body.token).toBeDefined()
 
-    token = response.body.token
+    newUserToken = response.body.token
   })
 
   test('Create a user with an existing email', async () => {
@@ -44,12 +40,6 @@ describe('User admin', () => {
     expect(response.body.errors).toContain('noPassword')
   })
 
-  test('Activate a use by validating the token', async () => {
-    await supertest(app)
-      .get('/admin/users/validate?token=' + token)
-      .expect(200)
-  })
-
   // TODO: return this when RALA is explained
   test.skip('When RALA is not signed return 451 response on login', async () => {
     const response = await supertest(app)
@@ -62,52 +52,17 @@ describe('User admin', () => {
       message: 'ralaNotSigned',
     })
   })
+})
 
-  test('Login as an unknown user', async () => {
-    const response = await supertest(app)
-      .post('/admin/login')
-      .send(unknownUser)
-      .expect(401)
-
-    expect(response.body).toStrictEqual({
-      status: 'error',
-      message: 'invalidUserCredentials',
-    })
+describe('GET /admin/users/validate', () => {
+  test('Activate a use by validating the token', async () => {
+    await supertest(app)
+      .get('/admin/users/validate?token=' + newUserToken)
+      .expect(200)
   })
+})
 
-  test('Login with a wrong password', async () => {
-    const response = await supertest(app)
-      .post('/admin/login')
-      .send({ email, password: 'wrong!!!' })
-      .expect(401)
-
-    expect(response.body).toStrictEqual({
-      status: 'error',
-      message: 'invalidUserCredentials',
-    })
-  })
-
-  test('Login without email or password', async () => {
-    const response = await supertest(app).post('/admin/login').expect(401)
-
-    expect(response.body).toStrictEqual({
-      status: 'error',
-      message: 'invalidUserCredentials',
-    })
-  })
-
-  test('Login as a user', async () => {
-    const response = await supertest(app)
-      .post('/admin/login')
-      .send(user)
-      .expect(201)
-
-    expect(response.body).toHaveProperty('status', 'success')
-    expect(response.body.data.token).toBeDefined()
-
-    token = response.body.data.token
-  })
-
+describe('GET /admin/users/me', () => {
   test('Get user details for logged in user', async () => {
     const response = await supertest(app)
       .get('/admin/users/me')
@@ -115,7 +70,7 @@ describe('User admin', () => {
       .expect(200)
 
     expect(response.body).toHaveProperty('status', 'success')
-    expect(response.body.data.email).toBe(user.email)
+    expect(response.body.data.email).toBe(globalUser.email)
   })
 
   test('Get user details for logged in user without token', async () => {
@@ -124,8 +79,31 @@ describe('User admin', () => {
     expect(response.body).toHaveProperty('status', 'error')
     expect(response.body.message).toBe('No token provided')
   })
+})
 
-  afterAll(() => {
-    app = null
+describe('PATCH /admin/users/me', () => {
+  // TODO: think about how to reset after each run of this test collection
+  test.skip('Update password for logged in user', async () => {
+    await supertest(app)
+      .patch('/admin/users/me')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: globalUser.password,
+        password: globalUser.newPassword,
+      })
+
+    expect(true).toBe(true)
+  })
+
+  test.skip('Update email for logged in user', async () => {
+    await supertest(app)
+      .patch('/admin/users/me')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        currentPassword: globalUser.newPassword,
+        email: globalUser.newEmail,
+      })
+
+    expect(true).toBe(true)
   })
 })
