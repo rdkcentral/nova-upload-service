@@ -21,7 +21,7 @@
 
 const test = require('tape')
 const request = require('supertest')
-const { initApp, userToken, createApplication } = require('./setup')
+const { initApp, userToken, createApplication } = require('./_setup')
 
 let applicationVersion
 

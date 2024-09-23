@@ -21,7 +21,7 @@
 
 const test = require('tape')
 const request = require('supertest')
-const { initApp, userToken } = require('./setup')
+const { initApp, userToken } = require('./_setup')
 
 let applicationId
 const name = 'My test App'

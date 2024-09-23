@@ -21,7 +21,7 @@
 
 const test = require('tape')
 const request = require('supertest')
-const { initApp } = require('./setup')
+const { initApp } = require('../setup')
 
 test('GET /404 - 404', function (assert) {
   initApp().then((app) => {

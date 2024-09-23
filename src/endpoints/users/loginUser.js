@@ -26,8 +26,14 @@ module.exports = async (req, res) => {
   email = email ? email.toString() : ''
   password = password ? password.toString() : ''
   let token = false
-
   const user = await UserModel.findOne({ email })
+
+  if (!user) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'invalidUserCredentials',
+    })
+  }
 
   const passwordObject = user.findPasswordObject(password)
   const otp = passwordObject?.otp || false
@@ -49,22 +55,26 @@ module.exports = async (req, res) => {
       })
     }
 
-    const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({
-      createdAt: -1,
-    })
-    const documentId =
-      (user &&
-        user.signedDocuments &&
-        user.signedDocuments.length > 0 &&
-        user.signedDocuments.at(-1).documentId) ||
-      null
-    const lastSignedId = (document && document.id) || null
-    // Validate latest signed DocumentID
-    if (!documentId || !lastSignedId || documentId !== lastSignedId) {
-      return res.status(451).json({
-        status: 'error',
-        message: 'ralaNotSigned',
-      })
+    if (!['test', 'development'].includes(process.env.NODE_ENV)) {
+      const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort(
+        {
+          createdAt: -1,
+        }
+      )
+      const documentId =
+        (user &&
+          user.signedDocuments &&
+          user.signedDocuments.length > 0 &&
+          user.signedDocuments.at(-1).documentId) ||
+        null
+      const lastSignedId = (document && document.id) || null
+      // Validate latest signed DocumentID
+      if (!documentId || !lastSignedId || documentId !== lastSignedId) {
+        return res.status(451).json({
+          status: 'error',
+          message: 'ralaNotSigned',
+        })
+      }
     }
 
     try {

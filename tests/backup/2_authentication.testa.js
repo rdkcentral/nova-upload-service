@@ -21,7 +21,7 @@
 
 const test = require('tape')
 const request = require('supertest')
-const { initApp } = require('./setup')
+const { initApp } = require('./_setup')
 
 // Email and password variables contain dummy values, used
 // only for running local tests. They are not associated with any real
