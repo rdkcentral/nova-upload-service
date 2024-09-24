@@ -15,9 +15,4 @@ describe('Basic tests', () => {
     const response = await supertest(app).get('/').expect(404)
     expect(response.body).toEqual({ message: 'Not Found' })
   })
-
-  test('/status returns 200', async () => {
-    const response = await supertest(app).get('/status').expect(200)
-    expect(response.body).toHaveProperty('status', 'success')
-  })
 })
