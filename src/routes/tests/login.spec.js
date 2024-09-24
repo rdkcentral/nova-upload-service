@@ -2,9 +2,7 @@ import { describe, expect, test } from 'vitest'
 import supertest from 'supertest'
 
 import { globalUser, user, unknownUser } from '../../../mocks/user'
-import { app } from '../../../tests/setup.js'
-
-let token
+import { app } from '../../../tests/setup'
 
 const { email } = user
 
@@ -50,7 +48,5 @@ describe('POST /admin/login', () => {
 
     expect(response.body).toHaveProperty('status', 'success')
     expect(response.body.data.token).toBeDefined()
-
-    token = response.body.data.token
   })
 })

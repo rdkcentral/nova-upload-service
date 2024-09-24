@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import supertest from 'supertest'
 
 import { application } from '../../../mocks/application'
-import { app, token } from '../../../tests/setup.js'
+import { app, token } from '../../../tests/setup'
 
 let applicationId
 

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import supertest from 'supertest'
 
 import { user, globalUser } from '../../../mocks/user'
-import { app, token } from '../../../tests/setup.js'
+import { app, token } from '../../../tests/setup'
 
 const { email } = user
 let newUserToken
