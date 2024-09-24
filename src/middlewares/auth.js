@@ -31,7 +31,10 @@ const authRequired = async (req, res, next) => {
   } else if (req.headers.authorization) {
     token = req.headers.authorization.split(' ').pop()
   } else {
-    res.status(403).send('No token provided')
+    return res.status(403).send({
+      status: 'error',
+      message: 'No token provided',
+    })
   }
 
   try {
@@ -55,17 +58,15 @@ const authRequired = async (req, res, next) => {
       }
     }
   } catch (error) {
-    isAuthenticated = false
+    return res.status(401).send({
+      status: 'error',
+      message: 'Authorization required',
+    })
   }
 
   if (isAuthenticated) {
     req.user = decoded
     next()
-  } else {
-    res.status(401).send({
-      status: 'error',
-      message: 'Authorization required',
-    })
   }
 }
 

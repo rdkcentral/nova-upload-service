@@ -17,50 +17,26 @@
  * limitations under the License.
  */
 
-const { MongoMemoryServer } = require('mongodb-memory-server')
-const request = require('supertest')
+import { beforeAll } from 'vitest'
+import { MongoMemoryServer } from 'mongodb-memory-server'
+import supertest from 'supertest'
 
-let app
+import { globalUser } from '../mocks/user.js'
 
-const initApp = async function () {
-  if (app) return app
-  return MongoMemoryServer.create().then(async (mongoServer) => {
-    process.env.MONGODB_URL = mongoServer.getUri()
-    const mod = await import('../src/app.js')
-    app = mod.default
-    return app
-  })
-}
+export let app, token
 
-let token
+beforeAll(async () => {
+  const mongoServer = await MongoMemoryServer.create()
+  process.env.MONGODB_URL = mongoServer.getUri()
 
-const userToken = async function (app) {
-  if (token) return token
-  return request(app)
-    .post('/admin/users')
-    .send({ email: 'test@test.com', password: 'Password1234' })
-    .then((res) => {
-      token = res.body.data.token
-      return token
-    })
-}
+  const mod = await import('../src/app.js')
+  app = mod.default
 
-let application
+  const response = await supertest(app).post('/admin/users').send(globalUser)
 
-const createApplication = async function (app) {
-  if (application) return application
-  return request(app)
-    .post('/admin/applications')
-    .send({ name: 'My App', identifier: 'appidentifier' })
-    .set({ Authorization: `Bearer ${token}` })
-    .then((res) => {
-      application = res.body.data
-      return application
-    })
-}
+  await supertest(app).get('/admin/users/validate?token=' + response.body.token)
 
-module.exports = {
-  initApp,
-  userToken,
-  createApplication,
-}
+  const result = await supertest(app).post('/admin/login').send(globalUser)
+
+  token = result.body.data.token
+})

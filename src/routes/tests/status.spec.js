@@ -1,10 +1,10 @@
-/**
+/*
  * If not stated otherwise in this file or this component's LICENSE file the
  * following copyright and licenses apply:
  *
- * Copyright 2023 Comcast Cable Communications Management, LLC
+ * Copyright 2024 RDK Management
  *
- * Licensed under the Apache License, Version 2.0 (the License);
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,20 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { describe, expect, test } from 'vitest'
+import supertest from 'supertest'
 
-const globby = require('globby')
+import { app } from '../../../tests/setup'
 
-globby(['**/**.test.js']).then(function (files) {
-  files
-    .filter(function (file) {
-      return !/^node_modules/i.test(file)
-    })
-    .sort(function (a, b) {
-      return parseInt(a.split('/').pop()) < parseInt(b.split('/').pop())
-        ? -1
-        : 1
-    })
-    .forEach(function (file) {
-      import('../' + file)
-    })
+describe('GET /status', () => {
+  test('Status returns 200', async () => {
+    const response = await supertest(app).get('/status').expect(200)
+    expect(response.body).toHaveProperty('status', 'success')
+  })
 })
