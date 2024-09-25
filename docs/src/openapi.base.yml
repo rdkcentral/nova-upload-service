@@ -32,6 +32,12 @@ paths:
   /users/validate:
     get:
       $ref: "./endpoints/users/validateUser.yml"
+  /users/requestresetpassword:
+    post:
+      $ref: "./endpoints/users/requestResetPassword.yml"
+  /users/resetpassword:
+    post:
+      $ref: "./endpoints/users/resetPassword.yml"
 
   # /login
   /login:
