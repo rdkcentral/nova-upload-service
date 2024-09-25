@@ -4,22 +4,29 @@
   "description": "Nova Upload Service",
   "author": "Michiel van der Geest <hello@michielvandergeest.com>",
   "contributors": [
-    "Uğur Aslan <ugur@uguraslan.net>"
+    "Uğur Aslan <ugur@uguraslan.net>",
+    "Maurits Meester <maurits_meester@comcast.com>"
   ],
   "license": "Apache-2.0",
   "main": "src/server.js",
   "scripts": {
+    "--- ▶️ Application Tools ---": "",
     "start": "node src/server.js",
     "start:dev": "NODE_ENV=development nodemon -r ./dotenv.js src/server.js",
+    "--- 🧪 Tests ---": "",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix",
     "coverage": "c8 npm run test",
     "report": "c8 report",
+    "--- 🖌️ Linting ---": "",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "--- 🖼 Docs ---": "",
     "docs:serve": "http-server ./docs -p 7700 -c-1 --open=index.html",
     "docs:merge": "swagger-cli bundle docs/src/openapi.base.yml --outfile docs/dist/openapi.yml --type yaml",
-    "docs:dev": "nodemon -e yml -w docs/src --exec 'npm run docs:merge && npm run docs:serve'"
+    "docs:dev": "nodemon -e yml -w docs/src --exec 'npm run docs:merge && npm run docs:serve'",
+    "--- 🤓 Developer Tools ---": "",
+    "seed:demo-data": "node data/mongo/seed.js"
   },
   "nodemonConfig": {
     "ignore": [
