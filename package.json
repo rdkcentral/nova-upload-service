@@ -26,7 +26,7 @@
     "docs:merge": "swagger-cli bundle docs/src/openapi.base.yml --outfile docs/dist/openapi.yml --type yaml",
     "docs:dev": "nodemon -e yml -w docs/src --exec 'npm run docs:merge && npm run docs:serve'",
     "--- 🤓 Developer Tools ---": "",
-    "seed:demo-data": "node data/mongo/seed.js"
+    "seed:demo-data": "NODE_ENV=development node dev/seed/index.js"
   },
   "nodemonConfig": {
     "ignore": [
