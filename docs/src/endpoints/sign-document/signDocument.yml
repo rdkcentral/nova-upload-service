@@ -1,0 +1,61 @@
+tags:
+  - Sign Document (RALA)
+summary: "Sign the latests document"
+description: "Sign the latests document"
+operationId: "signDocument"
+security:
+  - JWT: [user]
+requestBody:
+  required: true
+  description: "Create document DATA"
+  content:
+    application/json:
+      schema:
+        required:
+          - userId
+          - documentId
+          - firstName
+          - lastName
+          - title
+          - company
+        type: object
+        properties:
+          userId:
+            type: string
+            description: A unique user ID as per the created profile
+            example: string
+          documentId:
+            type: string
+            description: A unique document ID as per the last created document (RALA)
+            example: string
+          firstname:
+            type: string
+            description: Your firstname
+            example: John
+          lastname:
+            type: string
+            description: Your lastname
+            example: Johnson
+          title:
+            type: string
+            description: Your job title
+            example: Developer
+          company:
+            type: string
+            description: Your company name
+            example: RDKM
+responses:
+  200:
+    description: "Latest Document"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  401:
+    $ref: "../../errors/http401.yml"

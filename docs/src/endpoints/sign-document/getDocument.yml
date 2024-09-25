@@ -1,0 +1,24 @@
+tags:
+  - Sign Document (RALA)
+summary: "Gets the latest signed document"
+description: "Gets the latest signed document"
+operationId: "getSignedDocument"
+security:
+  - JWT: [user]
+responses:
+  200:
+    description: "Latest Document"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "../../schemas/SignedDocument.yml"
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'success'
+              description: Status for overall request
+  401:
+    $ref: "../../errors/http401.yml"
