@@ -1,7 +1,7 @@
 tags:
   - Sign Document (RALA)
-summary: "Gets the latest signed document"
-description: "Gets the latest signed document"
+summary: "Get the latest signed document"
+description: "Get the latest signed document"
 operationId: "getSignedDocument"
 security:
   - JWT: [user]
