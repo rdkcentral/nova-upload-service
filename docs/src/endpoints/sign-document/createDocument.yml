@@ -1,0 +1,35 @@
+tags:
+  - Sign Document (RALA)
+summary: "Create signed document"
+description: "Create signed document"
+operationId: "createDocument"
+security:
+  - JWT: [user]
+requestBody:
+  required: true
+  description: "Create document DATA"
+  content:
+    application/json:
+      schema:
+        required:
+          - content
+          - version
+        type: object
+        properties:
+          version:
+            type: string
+            description: A unique Document version number
+            example: v1.0.0
+          content:
+            type: string
+            description: "Document (RALA) text"
+            example: lorem ipsum......
+responses:
+  200:
+    description: "Create document"
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/SignedDocument.yml"
+  401:
+    $ref: "../../errors/http401.yml"

@@ -1,0 +1,32 @@
+
+type: object
+properties:
+    version:
+      type: string
+      example: "1.0.1"
+      description: "Latest signed document version"
+    createdAt:
+      type: string
+      format: date-time
+      default: null
+      example: "2024-08-22T11:58:23.173Z"
+      description: "Create time of the last signed document"
+    content:
+      type: string
+      example: "Lorum Ipsum......"
+      description: "Document (RALA) text"
+    type:
+      type: string
+      example: "rala"
+      description: "Document Type"
+      default: "rala"
+    updatedAt:
+      type: string
+      format: date-time
+      default: null
+      example: "2024-08-22T11:58:23.173Z"
+      description: "Last updated time of the signed document"
+    id:
+      type: string
+      example: "88c72871f6ac1c0f5f13ce03"
+      description: "Latest signed document ID"

@@ -11,6 +11,7 @@ servers:
 
 tags:
   - name: "Identity API"
+  - name: "Sign Document (RALA)"
   - name: "Upload API"
   - name: "Warehouse API"
 
@@ -37,6 +38,16 @@ paths:
   /login:
     post:
       $ref: "./endpoints/users/loginUser.yml"
+
+  # /signeddocuments
+  /signeddocuments:
+    post:
+      $ref: "./endpoints/sign-document/createDocument.yml"
+    get:
+      $ref: "./endpoints/sign-document/getDocument.yml"
+  /signeddocuments/sign:
+    post:
+      $ref: "./endpoints/sign-document/signDocument.yml"
 
   # applications
   /applications:
