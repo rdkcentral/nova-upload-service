@@ -66,25 +66,32 @@ module.exports = async (req, res) => {
       validationUrl += `&callbackUrl=${encodeURIComponent(callbackUrl)}`
     }
 
-    const emailSubject = 'Nova activate your account'
-    const eMailHtmlBody = activateUserHtmlTemplate.replaceAll(
-      '{{URI}}',
-      validationUrl
-    )
-    const eMailTxtBody = activateUserTxtTemplate.replaceAll(
-      '{{URI}}',
-      validationUrl
-    )
-    await sendEmail(
-      [savedUser.email],
-      emailSubject,
-      eMailHtmlBody,
-      eMailTxtBody
-    )
+    if (['test', 'development'].includes(process.env.NODE_ENV)) {
+      res.status(201).json({
+        status: 'success',
+        token: token.token,
+      })
+    } else {
+      const emailSubject = 'Nova activate your account'
+      const eMailHtmlBody = activateUserHtmlTemplate.replaceAll(
+        '{{URI}}',
+        validationUrl
+      )
+      const eMailTxtBody = activateUserTxtTemplate.replaceAll(
+        '{{URI}}',
+        validationUrl
+      )
+      await sendEmail(
+        [savedUser.email],
+        emailSubject,
+        eMailHtmlBody,
+        eMailTxtBody
+      )
 
-    res.status(201).json({
-      status: 'success',
-    })
+      res.status(201).json({
+        status: 'success',
+      })
+    }
   } catch (e) {
     if (savedUser) await UserModel.deleteOne({ _id: savedUser._id })
     if (token) await ExpireTokenModel.deleteOne({ _id: token._id })

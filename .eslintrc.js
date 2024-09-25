@@ -27,6 +27,7 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:prettier/recommended', 'prettier'],
   parserOptions: {
     ecmaVersion: 'latest',
+    sourceType: 'module',
   },
   rules: {
     indent: ['error', 2],
