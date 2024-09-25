@@ -16,6 +16,10 @@
  * limitations under the License.
  */
 
+if (process.env.NODE_ENV === 'development') {
+  require('dotenv').config()
+}
+
 const { seed: seedDocument } = require('./document.js')
 
 const run = async () => {
