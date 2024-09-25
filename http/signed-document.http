@@ -8,6 +8,7 @@
 @firstname=john
 @lastname=johnson
 @title=coo
+@company=RDK
 @token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDJiOTNlM2YyNDk1ODcyZTEwOWIzMyIsImVtYWlsIjoidGVzdEBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODg3MTYxNCwiZXhwIjoxNjk5MDQ0NDE0fQ.FST71CR1gtqEAd0NS8829lJFsQktElyFyHGQ6yIAXFk
 
 GET   {{host}}/admin/signeddocument HTTP/1.1
@@ -37,4 +38,5 @@ Authorization: Bearer {{token}}
   "firstname": "{{firstname}}",
   "lastname": "{{lastname}}",
   "title": "{{title}}",
+  "company": "{{company}}",
 }

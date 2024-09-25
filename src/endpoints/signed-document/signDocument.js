@@ -23,14 +23,15 @@ const SignedUserDocumentModel = require('../../models/User').signedDocumentModel
 
 module.exports = async (req, res) => {
   try {
-    const { userId, documentId } = req.body
+    const { firstName,  lastName, title, userId, documentId, company } = req.body
     const document = await SignedDocumentModel.findOne({ _id: documentId })
     const user = await UserModel.findOne({ _id: userId })
     user.signedDocuments.push({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      title: req.body.title,
-      documentId: documentId,
+      firstName,
+      lastName,
+      title,
+      documentId,
+      company
     })
 
     await UserModel.updateOne(
