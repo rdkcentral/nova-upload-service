@@ -70,6 +70,11 @@ const authRequired = async (req, res, next) => {
   if (isAuthenticated) {
     req.user = decoded
     next()
+  } else {
+    res.status(401).send({
+      status: 'error',
+      message: 'Authorization required',
+    })
   }
 }
 
