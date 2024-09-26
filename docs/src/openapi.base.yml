@@ -8,7 +8,7 @@ info:
 servers:
   - url: http://localhost:3000/admin
     description: Local Server
-  - url: https://api.qa.fireboltconnect.com
+  - url: https://api.qa.fireboltconnect.com/admin
     description: QA Firebolt Connect
     
 tags:
