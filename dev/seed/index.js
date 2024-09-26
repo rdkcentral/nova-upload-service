@@ -23,8 +23,10 @@ if (process.env.NODE_ENV === 'development') {
 const { seed: seedDocument } = require('./document.js')
 
 const run = async () => {
-  await seedDocument()
-  process.exit(1)
+  await seedDocument(process.env.NODE_ENV === 'development')
+  if (process.env.NODE_ENV === 'development') {
+    process.exit(1)
+  }
 }
 
 run()

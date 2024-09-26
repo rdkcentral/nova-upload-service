@@ -20,12 +20,14 @@ const {
   model: SignedDocumentModel,
 } = require('../../src/models/SignedDocument.js')
 
-const seed = async () => {
+const seed = async (output = false) => {
   try {
     const result = await SignedDocumentModel.create(signedDocument)
 
-    console.log('Document seeded:')
-    console.log(result)
+    if (output) {
+      console.log('Document seeded:')
+      console.log(result)
+    }
   } catch (error) {
     throw new Error(error)
   }

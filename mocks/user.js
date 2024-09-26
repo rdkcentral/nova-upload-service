@@ -21,6 +21,9 @@ export const globalUser = {
   password: 'uGqoKHjPXxmoNu-Q48qE',
   newPassword: 'cfdNfHk9GjFk97Z!Rk-u',
   invalidPassword: 'invalid',
+  firstname: 'Global',
+  lastNme: 'User',
+  title: 'CHO',
 }
 
 export const user = {
