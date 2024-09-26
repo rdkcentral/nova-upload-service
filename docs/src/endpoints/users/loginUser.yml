@@ -39,3 +39,32 @@ responses:
               description: Status for overall request
   400:
     $ref: "../../errors/http400.yml"
+  451:
+    description: "User has not signed the RALA agreement"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: ['success', 'error']
+              default: 'error'
+              description: Status for overall request
+            code:
+              type: string
+              default: 'ralaNotSigned'
+            message:
+              type: string
+              default: 'Before logging in you need to sign the latest RALA document, please use the sign rala endpoint as described in the API reference, using the provided token and document id from this response'
+            data:
+              type: object
+              properties:
+                token:
+                  type: string
+                  default: 'token'
+                tokenExpiresAt:
+                  type: string
+                  format: date-time
+                rala:
+                  $ref: '../../schemas/SignedDocument.yml'
