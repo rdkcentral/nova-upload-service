@@ -48,7 +48,7 @@ app.use(
 )
 
 // signdocument paths
-app.use('/admin/signeddocuments', require('./routes/signed-documents'))
+app.use('/admin/signeddocuments/latest', require('./routes/signed-documents'))
 
 // http 404 error handler
 app.use((req, res) => {
