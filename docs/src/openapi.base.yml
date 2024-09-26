@@ -51,6 +51,7 @@ paths:
   /signeddocuments:
     post:
       $ref: "./endpoints/sign-document/createDocument.yml"
+  /signeddocuments/latest:
     get:
       $ref: "./endpoints/sign-document/getDocument.yml"
   /signeddocuments/sign:
