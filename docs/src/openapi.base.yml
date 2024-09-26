@@ -1,8 +1,13 @@
 openapi: 3.0.0
 info:
   description: |
-    Nova Upload Service reference documentation.
-  version: 1.0.0
+    To get started with our Nova Upload Service API, you first need to create an account (via Identity API - /admin/users) or log in (via Identity API - /admin/login) to your existing account.
+    </br>Once you’re logged in, you can use the authorization (Green AUTHORIZE button) option provided below to authenticate your requests. This authorization will enable you to make all API calls securely.
+    </br></br>Make sure you follow the steps to obtain your access token, which is necessary for accessing the various endpoints of our API.
+    </br></br>
+    This documentation allows you to test API calls directly using the "Try it Out" button. Simply click this button to enable input fields where you can provide the necessary request body/parameters.
+    </br>Once you've entered your data, hit the "Execute" button to send the request. You'll receive a response right here, making it easy to explore and understand our API functionality.
+    </br></br>Happy testing!
   title: Nova Upload Service documentation
 
 servers:
@@ -10,7 +15,7 @@ servers:
     description: Local Server
   - url: https://api.qa.fireboltconnect.com
     description: QA Firebolt Connect
-    
+
 tags:
   - name: "Identity API"
   - name: "Sign Document (RALA)"
