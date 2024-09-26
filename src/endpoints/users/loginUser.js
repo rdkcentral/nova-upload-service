@@ -55,7 +55,7 @@ module.exports = async (req, res) => {
       })
     }
 
-    if (!['test', 'development'].includes(process.env.NODE_ENV)) {
+    if (!['test'].includes(process.env.NODE_ENV)) {
       const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort(
         {
           createdAt: -1,
@@ -72,7 +72,10 @@ module.exports = async (req, res) => {
       if (!documentId || !lastSignedId || documentId !== lastSignedId) {
         return res.status(451).json({
           status: 'error',
-          message: 'ralaNotSigned',
+          code: 'ralaNotSigned',
+          message:
+            'Before logging in you need to sign the latest RALA document, follow the next GET request to get the document and sign the document following the api reference provided',
+          next: '/admin/signeddocuments',
         })
       }
     }
