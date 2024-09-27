@@ -25,9 +25,10 @@ module.exports = async (req, res) => {
       createdAt: -1,
     })
 
-    res.status(201).json({
+    res.status(200).json({
       data: document,
       status: 'success',
+      message: 'To sign a document follow the api reference',
     })
   } catch (e) {
     errorResponse.send(res, 'getDocumentFailed', e)

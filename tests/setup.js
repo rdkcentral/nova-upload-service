@@ -32,11 +32,27 @@ beforeAll(async () => {
   const mod = await import('../src/app.js')
   app = mod.default
 
-  const response = await supertest(app).post('/admin/users').send(globalUser)
+  require('../dev/seed/index.js')
+
+  const { firstName, lastName, title, ...user } = globalUser
+  const response = await supertest(app).post('/admin/users').send(user)
 
   await supertest(app).get('/admin/users/validate?token=' + response.body.token)
 
-  const result = await supertest(app).post('/admin/login').send(globalUser)
-
-  token = result.body.data.token
+  const result = await supertest(app).post('/admin/login').send(user)
+  if (result.body.status === 'error' && result.body.code === 'ralaNotSigned') {
+    await supertest(app)
+      .post('/admin/signeddocuments/sign')
+      .set('Authorization', `Bearer ${result.body.data.token}`)
+      .send({
+        firstName,
+        lastName,
+        title,
+        documentId: result.body.data.rala.id,
+      })
+    const reloginResult = await supertest(app).post('/admin/login').send(user)
+    token = reloginResult.body.data.token
+  } else {
+    token = result.body.data.token
+  }
 })

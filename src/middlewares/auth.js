@@ -40,13 +40,16 @@ const authRequired = async (req, res, next) => {
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
     if (decoded.role) {
-      if (
-        (decoded.role === 'resetpassword' &&
-          req.route.path === '/resetpassword') ||
-        (decoded.role === 'activateuser' && req.route.path === '/validate')
-      ) {
+      if (['resetpassord', 'activateuser', 'signrala'].includes(decoded.role)) {
         const dbToken = await ExpireTokenModel.findOne({ token })
-        if (dbToken) {
+        if (
+          dbToken &&
+          ((decoded.role === 'resetpassword' &&
+            req.route.path === '/resetpassword') ||
+            (decoded.role === 'activateuser' &&
+              req.route.path === '/validate') ||
+            (decoded.role === 'signrala' && req.route.path === '/sign'))
+        ) {
           isAuthenticated = true
         }
       } else if (
@@ -67,6 +70,11 @@ const authRequired = async (req, res, next) => {
   if (isAuthenticated) {
     req.user = decoded
     next()
+  } else {
+    res.status(401).send({
+      status: 'error',
+      message: 'Authorization required',
+    })
   }
 }
 

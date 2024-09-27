@@ -55,26 +55,35 @@ module.exports = async (req, res) => {
       })
     }
 
-    if (!['test', 'development'].includes(process.env.NODE_ENV)) {
-      const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort(
-        {
-          createdAt: -1,
-        }
-      )
-      const documentId =
-        (user &&
-          user.signedDocuments &&
-          user.signedDocuments.length > 0 &&
-          user.signedDocuments.at(-1).documentId) ||
-        null
-      const lastSignedId = (document && document.id) || null
-      // Validate latest signed DocumentID
-      if (!documentId || !lastSignedId || documentId !== lastSignedId) {
-        return res.status(451).json({
-          status: 'error',
-          message: 'ralaNotSigned',
-        })
-      }
+    const document = await SignedDocumentModel.findOne({ type: 'rala' }).sort({
+      createdAt: -1,
+    })
+    const documentId =
+      (user &&
+        user.signedDocuments &&
+        user.signedDocuments.length > 0 &&
+        user.signedDocuments.at(-1).documentId) ||
+      null
+    const lastSignedId = (document && document.id) || null
+    // Validate latest signed DocumentID
+    if (!documentId || !lastSignedId || documentId !== lastSignedId) {
+      const ralaToken = await ExpireTokenModel.create({
+        userId: user.id,
+        email: email,
+        role: 'signrala',
+      })
+
+      return res.status(451).json({
+        status: 'error',
+        code: 'ralaNotSigned',
+        message:
+          'Before logging in you need to sign the latest RALA document, please use the sign rala endpoint as described in the API reference, using the provided token and document id from this response',
+        data: {
+          token: ralaToken.token,
+          tokenExpiresAt: ralaToken.expireAt,
+          rala: document,
+        },
+      })
     }
 
     try {

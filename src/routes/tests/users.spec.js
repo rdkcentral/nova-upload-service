@@ -58,17 +58,14 @@ describe('POST /admin/users', () => {
     expect(response.body.errors).toContain('noPassword')
   })
 
-  // TODO: return this when RALA is explained
-  test.skip('When RALA is not signed return 451 response on login', async () => {
+  test('When RALA is not signed return 451 response on login', async () => {
     const response = await supertest(app)
       .post('/admin/login')
       .send(user)
       .expect(451)
 
-    expect(response.body).toStrictEqual({
-      status: 'error',
-      message: 'ralaNotSigned',
-    })
+    expect(response.body).toHaveProperty('status', 'error')
+    expect(response.body).toHaveProperty('code', 'ralaNotSigned')
   })
 })
 

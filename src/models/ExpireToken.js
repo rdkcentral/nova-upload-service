@@ -42,7 +42,7 @@ ExpireTokenSchema.methods.generateJWT = function () {
   const now = Math.floor(Date.now() / 1000)
   return jwt.sign(
     {
-      id: this.id,
+      id: this.userId,
       role: this.role,
       email: this.email,
       iat: now,
@@ -74,6 +74,14 @@ ExpireTokenSchema.virtual('email')
   })
   .get(function () {
     return this._email
+  })
+
+ExpireTokenSchema.virtual('userId')
+  .set(function (id) {
+    this._userId = id
+  })
+  .get(function () {
+    return this._userId
   })
 
 module.exports = {
