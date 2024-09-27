@@ -40,7 +40,7 @@ const authRequired = async (req, res, next) => {
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
     if (decoded.role) {
-      if (['resetpassord', 'activateuser', 'signrala'].includes(decoded.role)) {
+      if (['resetpassword', 'activateuser', 'signrala'].includes(decoded.role)) {
         const dbToken = await ExpireTokenModel.findOne({ token })
         if (
           dbToken &&
