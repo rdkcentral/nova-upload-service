@@ -16,14 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+const SignedDocumentModel = require('../../models/SignedDocument').model
 const UserModel = require('../../models/User').model
 const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
     const { id: userId } = req.user
-
     const { firstName, lastName, title, documentId, company } = req.body
+
+    const document = await SignedDocumentModel.findOne({ _id: documentId })
+
+    if (!document) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Document to sign not found, please try again',
+      })
+    }
+
     const user = await UserModel.findOne({ _id: userId })
 
     user.signedDocuments.push({
