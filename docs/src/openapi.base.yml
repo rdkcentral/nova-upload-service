@@ -13,8 +13,6 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local Server
-  - url: https://api.qa.fireboltconnect.com
-    description: QA Firebolt Connect
 
 tags:
   - name: "Identity API"
