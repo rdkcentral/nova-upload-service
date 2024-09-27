@@ -58,7 +58,6 @@ describe('POST /admin/users', () => {
     expect(response.body.errors).toContain('noPassword')
   })
 
-  // TODO: return this when RALA is explained
   test('When RALA is not signed return 451 response on login', async () => {
     const response = await supertest(app)
       .post('/admin/login')
