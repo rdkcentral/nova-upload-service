@@ -25,10 +25,10 @@ const falseDocumentId = '66f406134efbc26c04d40ccb'
 const shortDocumentId = '66f406134efbc26c04d40cc'
 let documentId
 
-describe('GET /admin/signeddocuments', () => {
+describe('GET /admin/signeddocuments/latest', () => {
   test('Get latest signed document', async () => {
     const response = await supertest(app)
-      .get('/admin/signeddocuments')
+      .get('/admin/signeddocuments/latest')
       .expect(200)
     expect(response.body).toHaveProperty('status', 'success')
 
