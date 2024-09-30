@@ -21,6 +21,13 @@ const errorResponse = require('../../helpers/errorResponse')
 
 module.exports = async (req, res) => {
   try {
+    if (req?.user?.role !== 'admin') {
+      return res.status(403).send({
+        status: 'error',
+        message: `Forbidden with your role (${req?.user?.role}), only admin can create document`,
+      })
+    }
+
     const document = await SignedDocumentModel.create(req.body)
     res.status(201).json({
       data: document,

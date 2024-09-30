@@ -36,6 +36,16 @@ describe('GET /admin/signeddocuments/latest', () => {
   })
 })
 
+describe('POST /admin/signeddocuments', () => {
+  test('Return 403 when creating a signed document as a developer', async () => {
+    const response = await supertest(app)
+      .post('/admin/signeddocuments')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(403)
+    expect(response.body).toHaveProperty('status', 'error')
+  })
+})
+
 describe('POST /admin/signeddocuments/sign', () => {
   test('Return 403 when signing a document without a token', async () => {
     await supertest(app)
