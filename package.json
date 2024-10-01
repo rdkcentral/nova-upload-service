@@ -1,15 +1,17 @@
 {
   "name": "nova-upload-service",
-  "version": "1.0.50",
+  "version": "2.0.0",
+  "module": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "--- ▶️ Application Tools ---": "",
+    "dev": "bun run --watch src/index.ts",
+    "--- 🧪 Tests ---": "",
+    "test": "bun test !_poc-backup"
   },
   "dependencies": {
     "elysia": "latest"
   },
   "devDependencies": {
     "bun-types": "latest"
-  },
-  "module": "src/index.js"
+  }
 }
