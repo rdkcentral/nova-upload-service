@@ -9,9 +9,9 @@
     "test": "bun test !_poc-backup"
   },
   "dependencies": {
-    "elysia": "latest"
+    "elysia": "^1.1.17"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "bun-types": "^1.1.29"
   }
 }
