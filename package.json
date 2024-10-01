@@ -6,12 +6,16 @@
     "--- ▶️ Application Tools ---": "",
     "dev": "bun run --watch src/index.ts",
     "--- 🧪 Tests ---": "",
-    "test": "bun test !_poc-backup"
+    "test": "bun test",
+    "--- 🤓 Developer Tools ---": "",
+    "commit": "git-cz"
   },
   "dependencies": {
     "elysia": "^1.1.17"
   },
   "devDependencies": {
-    "bun-types": "^1.1.29"
+    "bun-types": "^1.1.29",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0"
   }
 }
