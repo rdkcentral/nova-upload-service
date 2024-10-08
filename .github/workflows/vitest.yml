@@ -23,12 +23,12 @@ jobs:
       - name: Run tests
         run: npm run test:coverage
         env:
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          JWT_VALID_FOR: ${{ vars.JWT_VALID_FOR }}
-          JWT_SHORT_VALID_FOR: ${{ vars.JWT_SHORT_VALID_FOR }}
-          PASSWORD_VALID_FOR: ${{ vars.PASSWORD_VALID_FOR }}
-          OTP_VALID_FOR: ${{ vars.OTP_VALID_FOR }}
+          JWT_SECRET_KEY: 'test'
+          AWS_S3_BUCKET: 'nova'
+          JWT_VALID_FOR: 10800
+          JWT_SHORT_VALID_FOR: 600
+          PASSWORD_VALID_FOR: 7776000
+          OTP_VALID_FOR: 900
 
       - name: "Report Coverage"
         # Set if: always() to also generate the report if tests are failing
