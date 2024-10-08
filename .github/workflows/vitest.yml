@@ -6,7 +6,9 @@ on:
 jobs:
   vitest-integration:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout
